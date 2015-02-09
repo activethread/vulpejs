@@ -1,0 +1,7 @@
+ul.pagination(ng-show="historyItems.length > 0 && historyPageSize > 1")
+ li(ng-class="{disabled: historyCurrentPage == 0}")
+  a(href ng-click="prevHistoryPage()") «
+ li(ng-repeat="n in range(historyPageSize)" ng-class="{active: n == historyCurrentPage}" ng-click="setHistoryPage()")
+  a(href ng-bind="n + 1")
+ li(ng-class="{disabled: historyCurrentPage == (historyPageSize -1) || historyItems.length == 0}")
+  a(href ng-click="nextHistoryPage()") »

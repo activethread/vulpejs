@@ -1,0 +1,13 @@
+- var modules="";
+if page.editor
+  - modules += ", 'textAngular'";
+if page.minicolors
+  - modules += ", 'minicolors'";
+if page.switch
+  - modules += ", 'toggle-switch'";
+if page.uploader
+  - modules += ", 'blueimp.fileupload'";
+if page.tree
+  - modules += ", 'ui.tree'";
+script.
+  application.ng.base = angular.module('app', ['app.controllers'#{modules}]);$(document).ready(function(){var language=$.cookie('appLanguage'),flag = 'br';if (language === 'en'){flag = 'us';}if (language === 'es'){flag = 'es';};$('#current-language').addClass('flag-icon-' + flag);});

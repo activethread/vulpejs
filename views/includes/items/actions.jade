@@ -1,0 +1,5 @@
+div.btn-group.pull-right
+ a.btn.btn-default.btn-xs(ng-click="$root.showing = !$root.showing; create()")
+  i.fa.fa-plus.fa-fw
+ a.btn.btn-default.btn-xs(ng-click="$root.showing = !$root.showing")
+  i.fa.fa-eye.fa-fw(id="items-{{name}}-toggle", ng-class="{'fa-eye-slash':!$root.showing}")

@@ -1,0 +1,21 @@
+div#main-default-actions(data-spy="affix" data-offset-top="90")
+ div.btn-group.pull-right
+  a.btn.btn-default(href="", ng-click="cancel(); submitted = false")
+   span(ng-hide="item._id")=__('Cancel')
+   span(ng-show="item._id")=__('Close')
+  a#newActionButton.btn.btn-default(href="", ng-click="create(); submitted = false")
+   =__('New')
+  button.btn.btn-default(type="submit")
+   =__('Save')
+  a.btn.btn-default.dropdown-toggle(data-toggle="dropdown")
+   span.caret
+  ul.dropdown-menu
+   li
+    button.btn.btn-link(type="submit", ng-click="save('NEW')")
+     i.fa.fa-plus.fa-fw
+     =__('Save & New')
+   li
+    button.btn.btn-link(type="submit", ng-click="save('CLOSE')")
+     i.fa.fa-save.fa-fw
+     =__('Save & Close')
+br

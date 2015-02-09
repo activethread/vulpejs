@@ -1,0 +1,135 @@
+unless input.model
+ - input.model = input.name;
+
+- var ngModel = 'item.' + input.model;
+if input.alias
+ - ngModel = input.alias + '.' + input.model;
+
+unless input.id
+ - input.id = page.controller.toLowerCase() + '-' + input.name;
+
+unless input.autofocus
+ - input.autofocus = false;
+
+unless input.required
+ - input.required = false;
+
+unless input.validate
+ - input.validate = '';
+
+unless input.validateWatch
+ - input.validateWatch = '';
+
+unless input.validateMessage
+ - input.validateMessage = '';
+ 
+unless input.className
+ - input.className = 'form-control';
+
+- var append = '';
+- var divAppend = '';
+- var divClass = ' ';
+if input.mask
+ - append += (append.length === 0 ? '' : '~') + input.mask;
+
+if input.autofocus
+ - append += (append.length === 0 ? '' : '~') + 'autofocus';
+
+if input.minicolors
+ - append += (append.length === 0 ? '' : '~') + 'minicolors';
+
+if input.lowerCase
+ - append += (append.length === 0 ? '' : '~') + 'lowercase';
+
+if input.upperCase
+ - append += (append.length === 0 ? '' : '~') + 'uppercase';
+
+if input.capitalize
+ - append += (append.length === 0 ? '' : '~') + 'capitalize';
+
+if input.capitalizeFirst
+ - append += (append.length === 0 ? '' : '~') + 'capitalize-first';
+
+if input.onlyNumbers
+ - append += (append.length === 0 ? '' : '~') + 'only-numbers';
+
+if input.requiredIf
+ - append += (append.length === 0 ? '' : '~') + 'ng-required:' + input.requiredIf;
+else if input.required
+ - append += (append.length === 0 ? '' : '~') + 'required';
+ 
+if input.showIf
+ - divAppend += (divAppend.length === 0 ? '' : '~') + 'ng-show:' + input.showIf;
+ - divClass += 'slide-down';
+
+if input.hideIf
+ - divAppend += (divAppend.length === 0 ? '' : '~') + 'ng-hide:' + input.hideIf;
+ - divClass += 'slide-down';
+
+if input.readonly
+ - append += (append.length === 0 ? '' : '~') + 'ng-readonly:' + input.readonly;
+
+if input.validate
+ - append += (append.length === 0 ? '' : '~') + 'ui-validate:'+input.validate;
+
+if input.validateWatch
+ - append += (append.length === 0 ? '' : '~') + 'ui-validate-watch:'+input.validateWatch;
+
+if input.ngChange
+ - append += (append.length === 0 ? '' : '~') + 'ng-change:'+input.ngChange;
+
+if input.ngClick
+ - append += (append.length === 0 ? '' : '~') + 'ng-click:'+input.ngClick;
+
+if input.toggle
+ - append += (append.length === 0 ? '' : '~') + 'toggle-switch';
+ - append += (append.length === 0 ? '' : '~') + 'model:'+ngModel;
+ if input.toggle.on
+  - append += (append.length === 0 ? '' : '~') + 'on-label:'+__(input.toggle.on);
+ if input.toggle.off
+  - append += (append.length === 0 ? '' : '~') + 'off-label:'+__(input.toggle.off);
+ if input.toggle.knob
+  - append += (append.length === 0 ? '' : '~') + 'knob-label:'+__(input.toggle.knob);
+ if input.className === 'form-control'
+  - input.className = '';
+else
+ - append += (append.length === 0 ? '' : '~') + 'ng-model:'+ngModel;
+ if input.type === 'checkbox' || input.type === 'group'
+  - input.className = '';
+
+- var label = __(input.label)
+
+if input.minicolors 
+ label.control-label(for=input.id)=label
+div(class="form-group#{divClass}" ng-class="{'has-error': mainForm." + input.name + ".$invalid && submitted}" append=divAppend)
+ unless input.minicolors
+  label.control-label(for=input.id)=label
+ if input.type === 'checkbox' || input.type === 'group'
+  br
+ if input.type === 'textarea'
+  textarea(class=input.className name=input.name id=input.id placeholder=label append=append)
+ else if input.type === 'editor'
+  text-angular(name=input.name id=input.id placeholder=label append=append)
+ else if input.type === 'select'
+  select(class=input.className name=input.name id=input.id append=append)
+   if input.options
+    each option in input.options
+     option(value=option.value)=__(option.label)
+   if input.ngOptions
+     option(ng-repeat='option in #{input.ngOptions.items}' value="{{option.#{input.ngOptions.value}}}") {{option.#{input.ngOptions.label}}}
+ else if input.type === 'group'
+  each option in input.options
+   - var model = "$root.group['"+input.name+option.value+"']";
+   div(toggle-switch class=input.className name=input.name model=model id=input.id knob-label=__(option.knob) on-label=__('Yes') off-label=__('No') ng-click="#{input.name}Switch(#{model} #{option.value});" append=append)
+   br
+ else
+  if input.group
+   div.input-group
+    input(type=input.type class=input.className name=input.name id=input.id placeholder=label append=append)
+    span.input-group-addon=input.group.value
+  if input.typeahead
+   input(type=input.type class=input.className name=input.name id=input.id placeholder=label typeahead=input.typeahead append=append)
+  else
+   input(type=input.type class=input.className name=input.name id=input.id placeholder=label append=append)
+ if input.validateMessage 
+  span(class="label label-danger" ng-cloak ng-show="mainForm.#{input.name}.$error.validator")=__(input.validateMessage)

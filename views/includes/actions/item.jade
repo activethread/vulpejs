@@ -1,0 +1,19 @@
+div(ng-class="{'btn-group':selectItem.email !== userDetails.email}")
+ a.btn.btn-primary.btn-xs(ng-click="find(selectItem._id)")
+  i.fa.fa-pencil.fa-fw
+  =__('Edit')
+ a.btn.btn-primary.btn-xs.dropdown-toggle(data-toggle="dropdown" href="#" ng-show="hasRoles(['SUPER','ADMIN']) && selectItem.email !== userDetails.email")
+  span.caret
+ ul.dropdown-menu(ng-show="hasRoles(['SUPER','ADMIN']) && selectItem.email !== userDetails.email")
+  li
+   a(ng-click="remove(selectItem._id)")
+    i.fa.fa-trash-o.fa-fw
+    =__('Delete')
+  li(ng-show="equals(selectItem, 'status', 'ACTIVE')")
+   a(ng-click="status(selectItem._id, 'INACTIVE')")
+    i.fa.fa-ban.fa-fw
+    =__('Deactivate')
+  li(ng-show="equals(selectItem, 'status', 'INACTIVE')")
+   a(ng-click="status(selectItem._id, 'ACTIVE')")
+    i.fa.fa-check-circle-o.fa-fw
+    =__('Activate')

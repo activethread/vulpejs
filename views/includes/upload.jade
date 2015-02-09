@@ -1,0 +1,71 @@
+form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multipart/form-data" data-file-upload="options" ng-class="{'fileupload-processing': processing() || loadingFiles}")
+  div.row.fileupload-buttonbar
+    div.col-lg-12
+     div.btn-group
+      span.btn.btn-success.fileinput-button(ng-class="{disabled: disabled}")
+        i.fa.fa-plus.fa-fw
+        span=__('Add files')
+        input(type="file" name="files[]" multiple ng-disabled="disabled")
+      button.btn.btn-primary.start(type="button" ng-click="submit()")
+        i.fa.fa-upload.fa-fw
+        span=__('Start upload')
+      button.btn.btn-warning.cancel(type="button" ng-click="cancel()")
+        i.fa.fa-ban.fa-fw
+        span=__('Cancel upload')
+      button.btn.btn-danger.delete(type="button" ng-click="removeAll()")
+        i.fa.fa-trash-o.fa-fw
+        span=__('Delete')
+  div.row.fileupload-progressbar
+    div.col-lg-12.fade(ng-class="{in: active()}")
+      div.progress.progress-striped.active(data-file-upload-progress="progress()")
+        div.progress-bar.progress-bar-success.text-center(data-ng-style="{width: num + '%'}") {{num + '%'}}
+      div.progress-extended &nbsp;
+  table.table.table-striped.table-bordered.table-hover.files.ng-cloak.slide-down(role="presentation" ng-show="queue.length > 0")
+   thead.fileupload-tableheader
+    tr
+     th.text-center(width="5%")
+      input.toggle(type="checkbox" ng-click="checkUncheckAll('queue')")
+     th(width="10.7%")=__('Preview')
+     th(width="49.3%")=__('File')
+     th(width="10%")=__('Length')
+     th(width="25%")=__('Actions')
+   tbody
+    tr.click.slide-down(ng-repeat="file in queue" ng-class="{'processing': file.$processing()}")
+      td.text-center
+        input(type="checkbox" ng-model="file.selected")
+      td(ng-switch data-on="!!file.thumbnailUrl")
+        div.preview(ng-switch-when="true")
+         a(ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery)
+          img.img-thumbnail(ng-src="{{file.thumbnailUrl}}" alt="")
+        div.preview(ng-switch-default file-upload-preview="file")
+      td(ng-click="click = !click; detail = file.name")
+        p(class="name" ng-switch data-on="!!file.url")
+          span(ng-switch-when="true" ng-switch data-on="!!file.thumbnailUrl")
+            a(ng-switch-when="true" ng-href="{{file.downloadUrl}}" title="{{file.name}}" download="{{file.name}}" data-gallery) {{file.name}}
+            a(ng-switch-default ng-href="{{file.downloadUrl}}" title="{{file.name}}" download="{{file.name}}") {{file.name}}
+          span(ng-switch-default) {{file.name}}
+        strong(ng-show="file.error" class="error text-danger") {{file.error}}
+      td
+        p(class="size") {{file.size | formatFileSize}}
+        div.progress.progress-striped.active.fade(ng-class="{pending: 'in'}[file.$state()]" data-file-upload-progress="file.$progress()")
+         div.progress-bar.progress-bar-success.text-center(ng-style="{width: num + '%'}") {{num + '%'}}
+      td
+        div.btn-group(ng-cloak ng-show="!file.$destroy")
+         button.btn.btn-primary.btn-sm.start(type="button" ng-click="file.$submit()" ng-hide="!file.$submit || options.autoUpload" ng-disabled="file.$state() == 'pending' || file.$state() == 'rejected'")
+          i.fa.fa-upload.fa-fw
+          =__('Start')
+         button.btn.btn-warning.btn-sm.cancel(type="button" ng-click="file.$cancel()" ng-hide="!file.$cancel")
+          i.fa.fa-ban.fa-fw
+          =__('Cancel')
+        div(ng-cloak ng-hide="!file.$destroy")
+          button.btn.btn-danger.btn-sm.destroy(type="button" ng-controller="FileDestroyController" ng-click="file.$destroy()")
+            i.fa.fa-trash-o.fa-fw
+            =__('Delete')
+div#blueimp-gallery.blueimp-gallery.blueimp-gallery-controls(data-filter=":even")
+  div.slides
+  h3.title
+  a.prev ‹
+  a.next ›
+  a.close ×
+  a.play-pause
+  ol.indicator

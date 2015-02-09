@@ -1,0 +1,10 @@
+unless page.main.submit
+ - page.main.submit='save()'
+form(name="mainForm", role="form", ng-submit=page.main.submit, submitted="submitted", novalidate shake-that)
+ div.panel.panel-default(ng-class="{'box-shadow':$root.showing}")
+  div.panel-heading=__(page.main.title)
+   include ../includes/main/actions
+  div.panel-body.slide-down(ng-cloak ng-show="$root.showing")
+   include ../includes/actions/default
+   - var inputs = page.main.inputs
+   include ../includes/main/inputs

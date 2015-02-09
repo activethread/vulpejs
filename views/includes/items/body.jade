@@ -1,0 +1,49 @@
+unless body
+ - var body = {items:[], actions:[]};
+tr.click.slide-down(ng-repeat='selectItem in items | filter:search | orderBy:predicate:reverse')
+ each item in body.items
+  td(class=item.className, ng-click="click = !click; detail = selectItem._id")
+   unless item.images
+    if item.filter
+     |{{selectItem.#{item.name}|#{item.filter}}}
+    else if item.i18n
+     |{{selectItem.#{item.name}|i18n}}
+    else
+     |{{selectItem.#{item.name}}}
+   if item.images
+    each image in item.images
+     img(src="/images/#{image.name}" ng-show=image.showIf title=__(image.title))
+   if item.detail
+    table.scale-fade(style="width: 100%", ng-show="click && detail === selectItem._id", ng-cloak)
+     tr
+      each hitem in item.detail.header.items
+       - var style = '';
+       if hitem.width
+        - style = 'width: ' + hitem.width + ';';
+       th(style=style)=__(hitem.label)
+     tr
+      each bitem in item.detail.body.items
+       unless bitem.className
+        - bitem.className = '';
+       unless bitem.style
+        - bitem.style = '';
+       td(class=bitem.className style=bitem.style)
+        if bitem.filter
+         |{{selectItem.#{bitem.name}|#{bitem.filter}}}
+        else if bitem.i18n
+         |{{selectItem.#{bitem.name}|i18n}}
+        else
+         |{{selectItem.#{bitem.name}}}
+ td
+   include ../actions/item
+    each action in body.actions
+     unless action.className
+      - action.className = '';
+     unless action.show
+      - action.show = '';
+     span=action.className
+     li(class=action.className, ng-show=action.show)
+      if action.link
+       a(ng-click=action.link.click)
+        i(class="fa #{action.link.icon} fa-fw")
+        =__(action.link.label)
