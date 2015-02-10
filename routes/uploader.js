@@ -1,6 +1,6 @@
 "use strict";
 var fs = require('fs');
-var uploader = require(global.appRoot + '/base/uploader')({
+var uploader = require(global.appRoot + '/vulpejs/uploader')({
   tmpDir: global.appRoot + '/public/uploaded/tmp',
   publicDir: global.appRoot + '/public/uploaded',
   uploadDir: global.appRoot + '/public/uploaded/files',

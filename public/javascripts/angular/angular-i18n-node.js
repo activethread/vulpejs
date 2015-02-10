@@ -67,7 +67,7 @@
 
             $http({
               method: "get",
-              url: base.ng.rootContext + "/i18n/" + locale,
+              url: vulpe.ng.rootContext + "/i18n/" + locale,
               cache: true
             }).success(function(translations) {
               $rootScope.i18n = translations;
@@ -144,7 +144,7 @@
             // Additionally, store the returned, translated term in the translation table.
             // The term is very unlikely to be actually translated now, as it was most
             // likely previously unknown in the users locale, but, hey.
-            $http.get(base.ng.rootContext + "/i18n/" + this.userLanguage + "/" + encodeURIComponent(name)).success(function(translated) {
+            $http.get(vulpe.ng.rootContext + "/i18n/" + this.userLanguage + "/" + encodeURIComponent(name)).success(function(translated) {
               $rootScope.i18n[name] = translated;
             });
           }
@@ -191,7 +191,7 @@
             // The term is very unlikely to be actually translated now, as it was most
             // likely previously unknown in the users locale, but, hey.
             var requestUri =
-              base.ng.rootContext + "/i18n/" +
+              vulpe.ng.rootContext + "/i18n/" +
               this.userLanguage +
               "/" +
               encodeURIComponent(singular) +

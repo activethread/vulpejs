@@ -266,7 +266,7 @@ for (var i = 0; i < defaultDiacriticsRemovalap.length; i++) {
   }
 }
 
-var base = {
+var vulpe = {
   ng: {
     rootContext: ''
   },
@@ -291,8 +291,8 @@ var base = {
       $('div[text-angular-toolbar]').find('.btn').addClass('btn-sm');
     },
     init: function() {
-      base.view.datetimepicker();
-      base.view.editor();
+      vulpe.view.datetimepicker();
+      vulpe.view.editor();
     }
   },
   util: {
@@ -328,7 +328,7 @@ var base = {
 
   $(function() {
     moment.locale(window.navigator.userLanguage || window.navigator.language);
-    base.view.init();
+    vulpe.view.init();
     if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
       var msViewportStyle = document.createElement('style');
       msViewportStyle.appendChild(document.createTextNode('@-ms-viewport{width:auto!important}'));

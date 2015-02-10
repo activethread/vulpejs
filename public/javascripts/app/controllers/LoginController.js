@@ -25,7 +25,7 @@ application.ng.base.controller('LoginController', ['$rootScope', '$scope', '$htt
       } else {
         $store.remove('remember');
       }
-      $http.post(base.ng.rootContext + '/login', $scope.user).success(function(data) {
+      $http.post(vulpe.ng.rootContext + '/login', $scope.user).success(function(data) {
         $messages.addSuccessMessage('Successfully logged in!');
         $authenticator.loginSuccessfully(data.user);
         $window.location = data.redirectTo;
@@ -43,7 +43,7 @@ application.ng.base.controller('LoginController', ['$rootScope', '$scope', '$htt
 
   $scope.forgotPassword = function() {
     if ($scope.user.username && $scope.user.username.length > 0) {
-      $window.location = base.ng.rootContext + '/forgot-password/' + $scope.user.username;
+      $window.location = vulpe.ng.rootContext + '/forgot-password/' + $scope.user.username;
     } else {
       $messages.addErrorMessage('Please enter your e-mail password reset.');
       $('#loginUsername').focus();

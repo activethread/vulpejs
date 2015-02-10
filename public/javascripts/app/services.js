@@ -463,7 +463,7 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
       filter: $rootScope.filter
     });
     filter += '/page/' + page;
-    $http.get(base.ng.rootContext + $rootScope.listUrl + filter).success(function(data) {
+    $http.get(vulpe.ng.rootContext + $rootScope.listUrl + filter).success(function(data) {
       $rootScope.items = data.items;
       $rootScope.pageSize = data.pageCount;
       $rootScope.listAfter(options);
@@ -475,7 +475,7 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
     if (!page) {
       page = 1;
     }
-    $http.get(base.ng.rootContext + $rootScope.name + '/history/' + $rootScope.item._id + '/page/' + page).success(function(data) {
+    $http.get(vulpe.ng.rootContext + $rootScope.name + '/history/' + $rootScope.item._id + '/page/' + page).success(function(data) {
       $rootScope.history = data.items;
       if ($rootScope.history.length !== 0) {
         $rootScope.historyPageSize = data.pageCount;
@@ -488,7 +488,7 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
 
   $rootScope.find = function(id) {
     $rootScope.findBefore(options);
-    $http.get(base.ng.rootContext + '/' + $rootScope.name + '/' + id).success(function(data) {
+    $http.get(vulpe.ng.rootContext + '/' + $rootScope.name + '/' + id).success(function(data) {
       $rootScope.item = data.item;
       $rootScope.showing = !$rootScope.showing;
       $rootScope.history = data.history.items;
@@ -567,7 +567,7 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
         $messages.cleanAllMessages();
         var user = $authenticator.userDetails();
         $rootScope.item.user = user.id;
-        $http.post(base.ng.rootContext + '/' + $rootScope.name, $rootScope.item).success(function(data) {
+        $http.post(vulpe.ng.rootContext + '/' + $rootScope.name, $rootScope.item).success(function(data) {
           $rootScope.item = data.item;
           if ($rootScope.saveType.length > 0) {
             if ($rootScope.saveType === 'NEW') {
@@ -593,7 +593,7 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
 
   $rootScope.status = function(id, status) {
     $messages.cleanAllMessages();
-    $http.post(base.ng.rootContext + '/' + $rootScope.name + '/status', {
+    $http.post(vulpe.ng.rootContext + '/' + $rootScope.name + '/status', {
       id: id,
       status: status
     }).success(function() {

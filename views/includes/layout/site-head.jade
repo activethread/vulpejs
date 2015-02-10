@@ -8,7 +8,7 @@ head
     if page.datetimePicker
       link(rel='stylesheet' href='/stylesheets/bootstrap-datetimepicker.min.css')
     link(rel='stylesheet' href='/stylesheets/font-awesome.min.css')
-    link(rel='stylesheet' href='/stylesheets/loading-bar.min.css')
+    link(rel='stylesheet' href='/stylesheets/flag-icon.min.css')
     if page.minicolors
       link(rel='stylesheet' href='/stylesheets/jquery.minicolors.min.css')
     if page.editor
@@ -19,12 +19,14 @@ head
       link(rel='stylesheet' href='/stylesheets/blueimp-gallery.min.css')
       link(rel='stylesheet' href='/stylesheets/jquery.fileupload.min.css')
       link(rel='stylesheet' href='/stylesheets/jquery.fileupload-ui.min.css')
+    if page.tree
+      link(rel='stylesheet' href='/stylesheets/angular-ui-tree.min.css')
     link(rel='stylesheet' href='/stylesheets/dialogs.min.css')
-    link(rel='stylesheet' href='/stylesheets/ng-animation.min.css')
     link(rel='stylesheet' href='/stylesheets/app-animation.min.css')
     link(rel='stylesheet' href='/stylesheets/style.min.css')
     script(src='/javascripts/moment.min.js' type='text/javascript')
     script(src='/javascripts/jquery/jquery.min.js' type='text/javascript')
+    script(src='/javascripts/jquery/jquery.cookie.min.js' type='text/javascript')
     script(src='/javascripts/jquery/jquery.hotkeys.min.js' type='text/javascript')
     if page.minicolors
       script(src='/javascripts/jquery/jquery.minicolors.min.js' type='text/javascript')
@@ -59,6 +61,8 @@ head
     if page.editor
       script(src='/javascripts/angular/textAngular.min.js' type='text/javascript')
       script(src='/javascripts/angular/textAngular-sanitize.min.js' type='text/javascript')
+    if page.tree
+      script(src='/javascripts/angular/angular-ui-tree.min.js' type='text/javascript')
     script(src='/javascripts/angular/ui-bootstrap-tpls.min.js' type='text/javascript')
     script(src='/javascripts/angular/ui-utils.min.js' type='text/javascript')
     script(src='/javascripts/angular/dialogs.min.js' type='text/javascript')
@@ -66,8 +70,9 @@ head
       script(src='/javascripts/jquery/uploader/jquery.fileupload-angular.min.js' type='text/javascript')
     script(src='/javascripts/app/directives.min.js' type='text/javascript')
     script(src='/javascripts/app/filters.min.js' type='text/javascript')
-    script(src='/javascripts/app/services.js' type='text/javascript')
+    script(src='/javascripts/app/services.min.js' type='text/javascript')
     script(src='/javascripts/app/controllers.min.js' type='text/javascript')
+    script(src='/javascripts/vulpe.min.js' type='text/javascript')
     script(src='/javascripts/app.min.js' type='text/javascript')
     if page.uploader
       script(src="/javascripts/jquery/cors/jquery.postmessage-transport.js")

@@ -17,7 +17,7 @@ var MongoStore = require('connect-mongo')(session);
 module.exports = function(options) {
   var app = express();
   // view engine setup
-  app.set('views', [global.appRoot + '/views', global.appRoot + '/base/views']);
+  app.set('views', [global.appRoot + '/views', global.appRoot + '/vulpejs/views']);
   app.set('view engine', 'jade');
 
   app.use(favicon(global.appRoot + '/public/images/favicon.ico'));
@@ -46,7 +46,7 @@ module.exports = function(options) {
     options.session = {
       mongo: {
         db: 'express',
-        host: 'apps.streaminggratis.com.br',
+        host: 'localhost',
         port: 27017,
         collection: 'session',
         autoReconnect: true
@@ -60,7 +60,7 @@ module.exports = function(options) {
     store: new MongoStore(options.session.mongo)
   }));
   app.use(methodOverride());
-  app.use(express.static(path.join(global.appRoot, 'base/public')));
+  app.use(express.static(path.join(global.appRoot, 'vulpejs/public')));
   app.use(express.static(path.join(global.appRoot, 'public')));
 
   return app;
