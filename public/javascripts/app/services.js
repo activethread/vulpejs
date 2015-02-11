@@ -200,9 +200,10 @@ app.factory('$messages', ['$rootScope', function($rootScope) {
  * @param   {Object}         $dialogs       Dialogs
  * @param   {Object}         $timeout       Timeout
  * @param   {Object}         i18n           I18N
+ * @param   {Object}         $store         $store
  * @returns {String|Boolean}
  */
-app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages', '$dialogs', '$timeout', 'i18n', function($rootScope, $http, $authenticator, $messages, $dialogs, $timeout, i18n) {
+app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages', '$dialogs', '$timeout', 'i18n', '$store', function($rootScope, $http, $authenticator, $messages, $dialogs, $timeout, i18n, $store) {
 
   $rootScope.onlyNumbers = /^\d+$/;
   $rootScope.showing = false;
@@ -334,7 +335,8 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
   };
 
   var options = {
-    $rootScope: $rootScope
+    $rootScope: $rootScope,
+    $store: $store
   };
 
   // PAGINATION CONFIG
@@ -680,11 +682,19 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
       if (label) {
         angular.forEach($rootScope[name], function(item) {
           item.label = '';
-          label.forEach(function(value) {
+          var properties = [];
+          var separator = ' - ';
+          if (angular.isArray(label)) {
+            properties = label;
+          } else if (angular.isObject(label)) {
+            properties = label.properties;
+            separator = label.separator;
+          }
+          properties.forEach(function(property) {
             if (item.label.length > 0) {
-              item.label += ' - ';
+              item.label += separator;
             }
-            item.label += item[value];
+            item.label += item[property];
           });
         });
       }

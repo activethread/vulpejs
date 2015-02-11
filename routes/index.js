@@ -126,57 +126,58 @@ exports.save = function(req, res, options) {
         res.status(500).json({
           error: error
         });
-      }
-      var content = JSON.stringify(oldItem);
-      var history = new History({
-        type: req.params.model,
-        cid: oldItem.id,
-        content: content,
-        user: item.user
-      });
-      history.save(function(error, obj) {
-        if (error) {
-          console.error(error);
-          res.status(500).json({
-            error: error
-          });
-        } else {
-          if (options.simple) {
-            options.data(oldItem, item);
-            oldItem.save(function(error, obj) {
-              if (error) {
-                console.error(error);
-                res.status(500).json({
-                  error: error
-                });
-              } else {
-                if (!exports.tryExecute(options.callback, obj, res)) {
-                  res.json({
-                    item: obj
-                  });
-                }
-              }
+      } else {
+        var content = JSON.stringify(oldItem);
+        var history = new History({
+          type: req.params.model,
+          cid: oldItem.id,
+          content: content,
+          user: item.user
+        });
+        history.save(function(error, obj) {
+          if (error) {
+            console.error(error);
+            res.status(500).json({
+              error: error
             });
           } else {
-            Model.findByIdAndUpdate(item._id, {
-              $set: options.data(item)
-            }, function(error, obj) {
-              if (error) {
-                console.error(error);
-                res.status(500).json({
-                  error: error
-                });
-              } else {
-                if (!exports.tryExecute(options.callback, obj, res)) {
-                  res.json({
-                    item: obj
+            if (options.simple) {
+              options.data(oldItem, item);
+              oldItem.save(function(error, obj) {
+                if (error) {
+                  console.error(error);
+                  res.status(500).json({
+                    error: error
                   });
+                } else {
+                  if (!exports.tryExecute(options.callback, obj, res)) {
+                    res.json({
+                      item: obj
+                    });
+                  }
                 }
-              }
-            });
+              });
+            } else {
+              Model.findByIdAndUpdate(item._id, {
+                $set: options.data(item)
+              }, function(error, obj) {
+                if (error) {
+                  console.error(error);
+                  res.status(500).json({
+                    error: error
+                  });
+                } else {
+                  if (!exports.tryExecute(options.callback, obj, res)) {
+                    res.json({
+                      item: obj
+                    });
+                  }
+                }
+              });
+            }
           }
-        }
-      });
+        });
+      }
     });
   } else {
     item.save(function(error, obj) {
@@ -238,11 +239,11 @@ exports.list = function(req, res) {
       res.status(500).json({
         error: error
       });
+    } else {
+      res.json({
+        items: items
+      });
     }
-
-    res.json({
-      items: items
-    });
   });
 };
 
@@ -350,25 +351,27 @@ exports.find = function(req, res, options) {
       res.status(500).json({
         error: error
       });
+    } else {
+      history({
+        type: req.params.model,
+        cid: item.id
+      }, page, function(error, history) {
+        if (error) {
+          res.status(500).json({
+            error: error
+          });
+        } else {
+          if (options && options.callback) {
+            exports.tryExecute(options.callback, item, res);
+          } else {
+            res.json({
+              item: item,
+              history: history
+            });
+          }
+        }
+      });
     }
-    history({
-      type: req.params.model,
-      cid: item.id
-    }, page, function(error, history) {
-      if (error) {
-        res.status(500).json({
-          error: error
-        });
-      }
-      if (options && options.callback) {
-        exports.tryExecute(options.callback, item, res);
-      } else {
-        res.json({
-          item: item,
-          history: history
-        });
-      }
-    });
   });
 };
 
@@ -519,11 +522,11 @@ exports.history = function(req, res) {
       res.status(500).json({
         error: error
       });
+    } else {
+      res.json({
+        items: items
+      });
     }
-
-    res.json({
-      items: items
-    });
   });
 };
 
