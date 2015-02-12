@@ -247,6 +247,14 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
   $rootScope.removeAfter = nothing;
 
   $rootScope.loadArrays = [];
+  $rootScope.loadProperties = [];
+  var loadProperties = function() {
+    if ($rootScope.loadProperties.length > 0) {
+      $rootScope.loadProperties.forEach(function(property) {
+        $rootScope.loadProperty(property);
+      })
+    }
+  };
 
   $rootScope.errorHandler = {};
 
@@ -269,68 +277,37 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
         $('#' + options.name + '-' + options.focus).focus();
       };
     }
-    if (angular.isFunction(options.hotkeys)) {
-      $rootScope.hotkeys = options.hotkeys;
-    }
+    $rootScope.hotkeys = options.hotkeys || nothing;
     if (options.list) {
-      if (angular.isFunction(options.list.filter)) {
+      if (options.list.filter) {
         $rootScope.listFilter = options.list.filter;
       }
-      if (angular.isFunction(options.list.before)) {
-        $rootScope.listBefore = options.list.before;
-      }
-      if (angular.isFunction(options.list.after)) {
-        $rootScope.listAfter = options.list.after;
-      }
+      $rootScope.listBefore = options.list.before || nothing;
+      $rootScope.listAfter = options.list.after || nothing;
     }
     if (options.actions) {
-      if (angular.isFunction(options.actions.newItem)) {
-        $rootScope.newItem = options.actions.newItem;
-      }
-      if (angular.isFunction(options.actions.focus)) {
+      $rootScope.newItem = options.actions.newItem || nothing;
+      if (options.actions.focus) {
         $rootScope.focus = options.actions.focus;
       }
-      if (angular.isFunction(options.actions.validate)) {
-        $rootScope.validate = options.actions.validate;
-      }
-      if (angular.isFunction(options.actions.createBefore)) {
-        $rootScope.createBefore = options.actions.createBefore;
-      }
-      if (angular.isFunction(options.actions.createAfter)) {
-        $rootScope.createAfter = options.actions.createAfter;
-      }
-      if (angular.isFunction(options.actions.findBefore)) {
-        $rootScope.findBefore = options.actions.findBefore;
-      }
-      if (angular.isFunction(options.actions.findAfter)) {
-        $rootScope.findAfter = options.actions.findAfter;
-      }
-      if (angular.isFunction(options.actions.saveBefore)) {
-        $rootScope.saveBefore = options.actions.saveBefore;
-      }
-      if (angular.isFunction(options.actions.saveAfter)) {
-        $rootScope.saveAfter = options.actions.saveAfter;
-      }
-      if (angular.isFunction(options.actions.removeBefore)) {
-        $rootScope.removeBefore = options.actions.removeBefore;
-      }
-      if (angular.isFunction(options.actions.removeAfter)) {
-        $rootScope.removeAfter = options.actions.removeAfter;
-      }
-      if (angular.isFunction(options.actions.cancelBefore)) {
-        $rootScope.cancelBefore = options.actions.cancelBefore;
-      }
-      if (angular.isFunction(options.actions.cancelAfter)) {
-        $rootScope.cancelAfter = options.actions.cancelAfter;
-      }
+      $rootScope.validate = options.actions.validate || nothing;
+      $rootScope.createBefore = options.actions.createBefore || nothing;
+      $rootScope.createAfter = options.actions.createAfter || nothing;
+      $rootScope.findBefore = options.actions.findBefore || nothing;
+      $rootScope.findAfter = options.actions.findAfter || nothing;
+      $rootScope.saveBefore = options.actions.saveBefore || nothing;
+      $rootScope.saveAfter = options.actions.saveAfter || nothing;
+      $rootScope.removeBefore = options.actions.removeBefore || nothing;
+      $rootScope.removeAfter = options.actions.removeAfter || nothing;
+      $rootScope.cancelBefore = options.actions.cancelBefore || nothing;
+      $rootScope.cancelAfter = options.actions.cancelAfter || nothing;
     }
-    if (options.load && options.load.arrays) {
-      $rootScope.loadArrays = options.load.arrays;
+    if (options.load) {
+      $rootScope.loadArrays = options.load.arrays || [];
+      $rootScope.loadProperties = options.load.properties || [];
     }
     if (options.error) {
-      if (angular.isFunction(options.error.handle)) {
-        $rootScope.errorHandler = options.error.handle;
-      }
+      $rootScope.errorHandler = options.error.handle || nothing;
     }
   };
 
@@ -501,6 +478,7 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
         });
       }
       $rootScope.findAfter(options);
+      loadProperties();
       $timeout(function() {
         $rootScope.focus();
       }, 100);
@@ -586,6 +564,7 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
             $rootScope.focus();
           }, 100);
           $rootScope.saveAfter(options);
+          loadProperties();
         }).error(function(data, status, header, config) {
           errorHandler('SAVE', data, status, header, config);
         });
@@ -675,7 +654,14 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
     return item ? item[property] === value : false;
   };
 
-  $rootScope.load = function(from, name, label) {
+  $rootScope.typeaheadOnSelect = function(rootProperty, $item, itemProperty) {
+    $rootScope.item[rootProperty] = $item[itemProperty];
+  };
+
+  $rootScope.loadArray = function(options) {
+    var from = options.from,
+      name = options.name,
+      label = options.label;
     $rootScope[name] = [];
     $http.get(from).success(function(data) {
       $rootScope[name] = data.items;
@@ -701,14 +687,52 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
     });
   };
 
+  $rootScope.loadProperty = function(options) {
+    var from = options.from,
+      to = options.to,
+      when = options.when,
+      fromParts = from.split('.'),
+      fromProperty = fromParts.splice(1, fromParts.length);
+    from = null;
+    var toParts = to.split('.'),
+      toProperty = toParts.splice(1, toParts.length);
+    to = null;
+    fromParts.forEach(function(part) {
+      if (from === null) {
+        from = $rootScope[part];
+      } else {
+        from = from[part];
+      }
+    });
+    toParts.forEach(function(part) {
+      if (to === null) {
+        to = $rootScope[part];
+      } else {
+        to = to[part];
+      }
+    });
+    if (angular.isArray(from)) {
+      var array = from;
+      for (var i = 0; i < array.length; i++) {
+        from = array[i];
+        if (eval(when)) {
+          to[toProperty] = from[fromProperty];
+          break;
+        }
+      }
+    }
+  };
+
   service.prototype.init = function() {
     $authenticator.userDetails();
     $rootScope.item = $rootScope.newItem(options);
     $rootScope.validate();
     $rootScope.list();
-    angular.forEach($rootScope.loadArrays, function(array) {
-      $rootScope.load(array.from, array.name, array.label || false);
-    });
+    if ($rootScope.loadArrays.length > 0) {
+      angular.forEach($rootScope.loadArrays, function(array) {
+        $rootScope.loadArray(array);
+      });
+    }
     $rootScope.hotkeys();
     $rootScope.tabsHotkeys();
     $rootScope.focus();
