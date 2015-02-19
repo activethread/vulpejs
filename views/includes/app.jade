@@ -10,4 +10,4 @@ if page.uploader
 if page.tree
   - modules += ", 'ui.tree'";
 script(type="text/javascript").
-  application.ng.base = angular.module('app', ['app.controllers'#{modules}]);$(document).ready(function(){var language=$.cookie('appLanguage'),flag = 'br';if (language === 'en'){flag = 'us';}if (language === 'es'){flag = 'es';};$('#current-language').addClass('flag-icon-' + flag);});
+  application.ng.base = angular.module('app', ['app.controllers'#{modules}]);

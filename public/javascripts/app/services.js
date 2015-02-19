@@ -205,6 +205,7 @@ app.factory('$messages', ['$rootScope', function($rootScope) {
  */
 app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages', '$dialogs', '$timeout', 'i18n', '$store', function($rootScope, $http, $authenticator, $messages, $dialogs, $timeout, i18n, $store) {
 
+  $rootScope.debug = false;
   $rootScope.onlyNumbers = /^\d+$/;
   $rootScope.showing = false;
   $rootScope.form = {};
@@ -262,16 +263,17 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
     status: ''
   };
 
+  var debug = function(opts) {
+    if ($rootScope.debug) {
+      console.debug(opts);
+    }
+  };
+
   var service = function(options) {
+    $rootScope.debug = options.debug || false;
     $rootScope.name = options.name;
-    if (options.listUrl) {
-      $rootScope.listUrl = options.listUrl;
-    } else {
-      $rootScope.listUrl = '/' + options.name + 's';
-    }
-    if (options.predicate) {
-      $rootScope.predicate = options.predicate;
-    }
+    $rootScope.listUrl = options.listUrl || '/' + options.name + 's';
+    $rootScope.predicate = options.predicate || '';
     if (options.focus) {
       $rootScope.focus = function() {
         $('#' + options.name + '-' + options.focus).focus();
@@ -297,7 +299,9 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
       $rootScope.findAfter = options.actions.findAfter || nothing;
       $rootScope.saveBefore = options.actions.saveBefore || nothing;
       $rootScope.saveAfter = options.actions.saveAfter || nothing;
-      $rootScope.removeBefore = options.actions.removeBefore || nothing;
+      if (options.actions.removeBefore) {
+        $rootScope.removeBefore = options.actions.removeBefore;
+      }
       $rootScope.removeAfter = options.actions.removeAfter || nothing;
       $rootScope.cancelBefore = options.actions.cancelBefore || nothing;
       $rootScope.cancelAfter = options.actions.cancelAfter || nothing;
@@ -313,7 +317,8 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
 
   var options = {
     $rootScope: $rootScope,
-    $store: $store
+    $store: $store,
+    $authenticator: $authenticator
   };
 
   // PAGINATION CONFIG
@@ -397,6 +402,10 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
   //
   $rootScope.create = function() {
     $rootScope.createBefore(options);
+    debug({
+      type: 'CREATE-BEFORE',
+      item: $rootScope.item
+    });
     $rootScope.item = $rootScope.newItem(options);
     $rootScope.showing = true;
     clearHistory();
@@ -404,6 +413,10 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
       $rootScope.focus();
     }, 100);
     $rootScope.createAfter(options);
+    debug({
+      type: 'CREATE-AFTER',
+      item: $rootScope.item
+    });
   };
 
   var clearHistory = function() {
@@ -414,10 +427,18 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
 
   $rootScope.cancel = function() {
     $rootScope.cancelBefore(options);
+    debug({
+      type: 'CANCEl-BEFORE',
+      item: $rootScope.item
+    });
     $rootScope.item = $rootScope.newItem(options);
     $rootScope.showing = false;
     clearHistory();
     $rootScope.cancelAfter(options);
+    debug({
+      type: 'CANCEl-AFTER',
+      item: $rootScope.item
+    });
   };
 
   $rootScope.historyCopy = function() {
@@ -438,6 +459,10 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
       $rootScope.currentPage = 0;
     }
     $rootScope.listBefore(options);
+    debug({
+      type: 'LIST-BEFORE',
+      items: $rootScope.items
+    });
     var filter = $rootScope.listFilter({
       filter: $rootScope.filter
     });
@@ -446,6 +471,10 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
       $rootScope.items = data.items;
       $rootScope.pageSize = data.pageCount;
       $rootScope.listAfter(options);
+      debug({
+        type: 'LIST-AFTER',
+        items: $rootScope.items
+      });
     });
   };
 
@@ -467,7 +496,11 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
 
   $rootScope.find = function(id) {
     $rootScope.findBefore(options);
-    $http.get(vulpe.ng.rootContext + '/' + $rootScope.name + '/' + id).success(function(data) {
+    debug({
+      type: 'FIND-BEFORE',
+      item: $rootScope.item
+    });
+    $http.get(base.ng.rootContext + '/' + $rootScope.name + '/' + id).success(function(data) {
       $rootScope.item = data.item;
       $rootScope.showing = !$rootScope.showing;
       $rootScope.history = data.history.items;
@@ -478,6 +511,10 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
         });
       }
       $rootScope.findAfter(options);
+      debug({
+        type: 'FIND-AFTER',
+        item: $rootScope.item
+      });
       loadProperties();
       $timeout(function() {
         $rootScope.focus();
@@ -544,6 +581,10 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
         $rootScope.saveType = type;
       } else {
         $rootScope.saveBefore(options);
+        debug({
+          type: 'SAVE-BEFORE',
+          item: $rootScope.item
+        });
         $messages.cleanAllMessages();
         var user = $authenticator.userDetails();
         $rootScope.item.user = user.id;
@@ -564,6 +605,10 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
             $rootScope.focus();
           }, 100);
           $rootScope.saveAfter(options);
+          debug({
+            type: 'SAVE-AFTER',
+            item: $rootScope.item
+          });
           loadProperties();
         }).error(function(data, status, header, config) {
           errorHandler('SAVE', data, status, header, config);
@@ -606,24 +651,32 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
     }
   };
 
-  $rootScope.nextTab = function() {
+  $rootScope.tabNext = function() {
     if ($rootScope.showing) {
       $($("li.ng-isolate-scope").get($rootScope.selectedTab + 1)).find("a").trigger("click");
     }
   };
 
-  $rootScope.previousTab = function() {
+  $rootScope.tabPrevious = function() {
     if ($rootScope.showing) {
       $($("li.ng-isolate-scope").get($rootScope.selectedTab - 1)).find("a").trigger("click");
     }
   };
 
+  $rootScope.tabFocus = function(focus) {
+    if (focus && focus.length > 0) {
+      $timeout(function() {
+        $rootScope.focusTo($rootScope.name + '-' + focus);
+      }, 100);
+    }
+  };
+
   $rootScope.tabsHotkeys = function() {
     $(document).bind("keydown.left", function(evt) {
-      $rootScope.previousTab();
+      $rootScope.tabPrevious();
       return false;
     }).bind("keydown.right", function(evt) {
-      $rootScope.nextTab();
+      $rootScope.tabNext();
       return false;
     });
   };
@@ -660,13 +713,13 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
 
   $rootScope.loadArray = function(options) {
     var from = options.from,
-      name = options.name,
+      to = options.to,
       label = options.label;
-    $rootScope[name] = [];
+    $rootScope[to] = [];
     $http.get(from).success(function(data) {
-      $rootScope[name] = data.items;
+      $rootScope[to] = data.items;
       if (label) {
-        angular.forEach($rootScope[name], function(item) {
+        angular.forEach($rootScope[to], function(item) {
           item.label = '';
           var properties = [];
           var separator = ' - ';

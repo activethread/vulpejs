@@ -290,9 +290,37 @@ var vulpe = {
     editor: function() {
       $('div[text-angular-toolbar]').find('.btn').addClass('btn-sm');
     },
+    inputs: function() {
+      $('input[append],select[append],textarea[append],div[append],text-angular[append]').each(function(index, input) {
+        var append = $(input).attr('append');
+        if (append) {
+          var parts = append.split('~');
+          parts.forEach(function(attr) {
+            if (attr) {
+              if (attr.indexOf(':') !== -1) {
+                var attrParts = attr.split(':');
+                $(input).attr(attrParts[0], attrParts[1]);
+              } else {
+                $(input).attr(attr, '');
+              }
+            }
+          });
+        }
+        $(input).removeAttr('append');
+      });
+    },
     init: function() {
-      vulpe.view.datetimepicker();
-      vulpe.view.editor();
+      base.view.datetimepicker();
+      base.view.editor();
+      var language = $.cookie('appLanguage'),
+        flag = 'br';
+      if (language === 'en') {
+        flag = 'us';
+      }
+      if (language === 'es') {
+        flag = 'es';
+      };
+      $('#current-language').addClass('flag-icon-' + flag);
     }
   },
   util: {

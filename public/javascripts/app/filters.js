@@ -178,8 +178,12 @@ app.filter('tel', function() {
 
 app.filter('excludeFrom', function() {
   return function(inputArray, filterCriteria) {
-    return inputArray.filter(function(item) {
-      return !filterCriteria || !angular.equals(item, filterCriteria);
-    });
+    var result = false;
+    if (inputArray) {
+      result = inputArray.filter(function(item) {
+        return !filterCriteria || !angular.equals(item, filterCriteria);
+      });
+    }
+    return result;
   };
 });

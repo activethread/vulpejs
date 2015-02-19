@@ -58,6 +58,9 @@ if input.requiredIf
 else if input.required
  - append += (append.length === 0 ? '' : '~') + 'required';
  
+if input.rows
+ - append += (append.length === 0 ? '' : '~') + 'rows:' + input.rows;
+
 if input.showIf
  - divAppend += (divAppend.length === 0 ? '' : '~') + 'ng-show:' + input.showIf;
  - divClass += 'slide-down';
@@ -82,7 +85,12 @@ if input.ngClick
  - append += (append.length === 0 ? '' : '~') + 'ng-click:'+input.ngClick;
 
 if input.typeahead && input.typeahead.onSelect
- - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select:'+input.typeahead.onSelect;
+ if input.typeahead.onSelect.indexOf('=') !== -1
+  - var typeaheadParts = input.typeahead.onSelect.split('=');
+  - var typeaheadOnSelect = "typeaheadOnSelect('"+typeaheadParts[0]+"', $item, '"+typeaheadParts[1]+"')";
+  - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select:'+typeaheadOnSelect;
+ else
+  - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select:'+input.typeahead.onSelect;
   
 if input.toggle
  - append += (append.length === 0 ? '' : '~') + 'toggle-switch';
@@ -119,7 +127,9 @@ div(class="form-group#{divClass}" ng-class="{'has-error': mainForm." + input.nam
     each option in input.options
      option(value=option.value)=__(option.label)
    if input.ngOptions
-     option(ng-repeat='option in #{input.ngOptions.items}' value="{{option.#{input.ngOptions.value}}}") {{option.#{input.ngOptions.label}}}
+     unless input.ngOptions.filter
+      - input.ngOptions.filter = '';
+     option(ng-repeat='option in #{input.ngOptions.items}#{input.ngOptions.filter}' value="{{option.#{input.ngOptions.value}}}") {{option.#{input.ngOptions.label}}}
  else if input.type === 'group'
   each option in input.options
    - var model = "$root.group['"+input.name+option.value+"']";

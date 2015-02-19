@@ -6,5 +6,17 @@ form(name="mainForm", role="form", ng-submit=page.main.submit, submitted="submit
    include ../includes/main/actions
   div.panel-body.slide-down(ng-cloak ng-show="$root.showing")
    include ../includes/actions/default
-   - var inputs = page.main.inputs
-   include ../includes/main/inputs
+   if page.main.tabs
+    tabset
+     each tab in page.main.tabs
+      - var select = "";
+      unless tab.focus
+      - select = "tabFocus('" + tab.focus + "')";
+      tab(heading=__(tab.title) select=select)
+       each input in tab.inputs
+        include ../includes/main/input
+   else
+    each input in page.main.inputs
+     include ../includes/main/input
+script(type="text/javascript").
+   vulpe.view.inputs();
