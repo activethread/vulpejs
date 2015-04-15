@@ -3,27 +3,70 @@ module.exports = function(options) {
     options = {};
   }
   var path = require('path');
-  global.appRoot = path.resolve(__dirname + '/../');
-  global.rootContext = '';
+  global.app = {
+    rootDir: path.resolve(__dirname + '/../'),
+    rootContext: '',
+    env: 'development',
+    debug: false,
+    callback: {
+      login: {
+        error: function(data) {},
+        success: function(data) {},
+        unauthorized: function(data) {}
+      },
+      logout: function(data) {},
+      save: {
+        success: function(data) {},
+        error: function(data) {}
+      },
+      remove: {
+        success: function(data) {},
+        error: function(data) {}
+      },
+      list: {
+        success: function(data) {},
+        error: function(data) {}
+      }
+    },
+    smtp: {
+      host: 'localhost',
+      port: 25,
+      auth: {
+        user: 'root@localhost',
+        pass: 'q1w2e3r4'
+      }
+    },
+    security: {
+      routes: [{
+        uri: '/**',
+        roles: ['SUPER', 'ADMIN']
+      }]
+    }
+  }
+  if (options.debug) {
+    global.app.debug = options.debug;
+  }
+  if (options.callback) {
+    global.app.callback = options.callback;
+  }
   if (options.rootContext) {
-    global.rootContext = options.rootContext;
+    global.app.rootContext = options.rootContext;
   }
   if (options.login) {
-    global.login = options.login;
+    global.app.login = options.login;
   }
+  if (options.security) {
+    global.app.security = options.security;
+  }
+  if (options.smtp) {
+    global.app.smtp = options.smtp;
+  }
+  if (options.env) {
+    global.app.env = options.env;
+  }
+
   // ASYNC
   var async = require('async');
-  // CRYPTO
-  var crypto = require('crypto');
-  var crypt = function(value) {
-    return crypto.createHash('sha256').update(value).digest('base64');
-  };
-  var shasum = function(value) {
-    return crypto.createHash('sha256').update(value).digest('hex');
-  };
-  var md5 = function(value) {
-    return crypto.createHash('md5').update(value).digest('hex');
-  };
   // APP MODELS
   require('./models').start(options);
   // EXPRESS
@@ -34,29 +77,7 @@ module.exports = function(options) {
   require('./i18n')(options, app);
   require('./routes/i18n')(app);
   // APP ROUTES
-  if (options.routes) {
-    options.routes.forEach(function(value) {
-      app.use(value.route, require(value.path));
-    });
-  } else {
-    app.use('/', require('../routes'));
-  }
-
-  // catch 404 and forward to error handler
-  app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-  });
-
-  // error handlers
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: app.get('env') === 'production' ? {} : err
-    });
-  });
+  require('./routes').start(app, options);
 
   return app;
 };

@@ -1,6 +1,30 @@
 extends layouts/error
 
 block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+  .row
+    .col-lg-12
+      .jumbotron
+        .text-center
+          h1=__('Opss!')
+          if error.status === 400
+            h2=__('Bad Request.')
+          else if error.status === 401
+            h2=__('Unauthorized.')
+          else if error.status === 403
+            h2=__('Forbidden.')
+          else if error.status === 404
+            h2=__('The requested URL was not found on this server.')
+              br
+              small=__('That’s all we know.')
+          else if  error.status === 500
+            h2=__('Internal Server Error.')
+          else if  error.status === 501
+            h2=__('Not implemented.')
+          else if  error.status === 502
+            h2=__('Bad Gateway.')
+          else if  error.status === 503
+            h2=__('Service Unavailable.')
+          else 
+            h1=__('Error: ') + (error.status ? error.status + ' - ' : '') + message
+            h2= error.status
+            //pre #{error.stack}

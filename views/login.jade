@@ -1,19 +1,19 @@
 extends layouts/login
 
 block content
- .login-container(ng-controller="LoginController")
-  form.form-signin(name="form" role="form" ng-submit='login()' method="post" autocomplete="off" novalidate shake-that submitted="submitted")
-   div.panel.panel-default.box-shadow
-    div.panel-heading
-     h3.panel-title=__('Access Control')
-    div.panel-body
-     div.form-group(ng-class="{'has-error': form.username.$invalid && submitted}")
-      input#loginUsername.form-control(type="email" name="username" ng-model="user.username" placeholder=__("Email") required autofocus)
-     div.form-group(ng-class="{'has-error': form.password.$invalid && submitted}")
-      input#loginPassword.form-control(type="password" name="password" ng-model="user.password" placeholder=__("Password") required)
-     label.checkbox
-      input(type="checkbox" id="rememberMe" name="rememberMe" value="true" ng-model="user.rememberMe")
-      =__("Remember me")
-     input(type="submit" class="btn btn-lg btn-primary btn-block" value=__('Sign In'))
-     input(type="button" class="btn btn-lg btn-default btn-block" value=__('I forgot my Password') ng-click="forgotPassword()")
- include includes/script
+  .login-container(ng-controller="LoginController")
+    form.form-signin(name="form" role="form" ng-submit='login()' method="post" autocomplete="off" novalidate shake-that submitted="submitted")
+      div.panel.panel-default.box-shadow
+        div.panel-heading
+          h3.panel-title=__('Access Control')
+        div.panel-body
+          div.form-group(ng-class="{'has-error': form.username.$invalid && submitted}")
+            input#loginUsername.form-control(type="email" name="username" ng-model="user.username" placeholder=__("Email") required autofocus)
+          div.form-group(ng-class="{'has-error': form.password.$invalid && submitted}")
+            input#loginPassword.form-control(type="password" name="password" ng-model="user.password" placeholder=__("Password") required)
+          label.checkbox
+            input(type="checkbox" id="rememberMe" name="rememberMe" value="true" ng-model="user.rememberMe")
+            =__("Remember me")
+          input(type="submit" class="btn btn-lg btn-primary btn-block" value=__('Sign In'))
+          input(type="button" class="btn btn-lg btn-default btn-block" value=__('I forgot my Password') ng-click="forgotPassword()")
+  include includes/script

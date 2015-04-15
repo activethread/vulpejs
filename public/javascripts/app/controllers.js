@@ -1,7 +1,7 @@
 'use strict';
 
 /* Controllers */
-var app = angular.module('app.controllers', ['app.directives', 'app.filters', 'app.services', 'angular-loading-bar', 'ui.utils', 'ui.utils.masks']);
+var app = angular.module('app.controllers', ['app.directives', 'app.filters', 'app.services', 'angular-loading-bar', 'ui.utils', 'ui.utils.masks', 'timer']);
 
 app.controller('MessagesController', ['$rootScope', '$scope', '$http', '$timeout', '$messages', 'i18n', function($rootScope, $scope, $http, $timeout, $messages, i18n) {
   $scope.messages = [];

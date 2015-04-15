@@ -9,6 +9,10 @@ div(ng-class="{'btn-group':selectItem.email !== userDetails.email}")
    a(ng-click="remove(selectItem._id)")
     i.fa.fa-trash-o.fa-fw
     =__('Delete')
+  li
+   a(ng-click="clone(selectItem)")
+    i.fa.fa-magic.fa-fw
+    =__('Clone')
   li(ng-show="equals(selectItem, 'status', 'ACTIVE')")
    a(ng-click="status(selectItem._id, 'INACTIVE')")
     i.fa.fa-ban.fa-fw

@@ -1,4 +1,4 @@
-application.ng.base.controller('LoginController', ['$rootScope', '$scope', '$http', '$timeout', '$messages', '$authenticator', '$window', '$cookies', '$store', function($rootScope, $scope, $http, $timeout, $messages, $authenticator, $window, $cookies, $store) {
+vulpejs.ng.app.controller('LoginController', ['$rootScope', '$scope', '$http', '$timeout', '$messages', '$authenticator', '$window', '$cookies', '$store', function($rootScope, $scope, $http, $timeout, $messages, $authenticator, $window, $cookies, $store) {
 
   $('#custom').html('');
 
@@ -11,7 +11,7 @@ application.ng.base.controller('LoginController', ['$rootScope', '$scope', '$htt
   $authenticator.logoutSuccessfully();
 
   if ($store.get('remember')) {
-    $scope.user = JSON.parse($store.get('remember'));
+    $scope.user = $store.get('remember');
   } else if ($cookies.remember) {
     $scope.user = JSON.parse($cookies.remember.substring(2));
     $scope.user.rememberMe = true;
@@ -21,11 +21,11 @@ application.ng.base.controller('LoginController', ['$rootScope', '$scope', '$htt
     if ($scope.form.$valid) {
       $messages.cleanAllMessages();
       if ($scope.user.rememberMe) {
-        $store.set('remember', JSON.stringify($scope.user));
+        $store.set('remember', $scope.user);
       } else {
         $store.remove('remember');
       }
-      $http.post(vulpe.ng.rootContext + '/login', $scope.user).success(function(data) {
+      $http.post(vulpejs.ng.rootContext + '/login', $scope.user).success(function(data) {
         $messages.addSuccessMessage('Successfully logged in!');
         $authenticator.loginSuccessfully(data.user);
         $window.location = data.redirectTo;
@@ -43,7 +43,7 @@ application.ng.base.controller('LoginController', ['$rootScope', '$scope', '$htt
 
   $scope.forgotPassword = function() {
     if ($scope.user.username && $scope.user.username.length > 0) {
-      $window.location = vulpe.ng.rootContext + '/forgot-password/' + $scope.user.username;
+      $window.location = vulpejs.ng.rootContext + '/forgot-password/' + $scope.user.username;
     } else {
       $messages.addErrorMessage('Please enter your e-mail password reset.');
       $('#loginUsername').focus();

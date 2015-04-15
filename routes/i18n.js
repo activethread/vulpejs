@@ -30,7 +30,7 @@ var i18n = require('i18n');
 var path = require('path');
 
 var configuration = {
-  directory: appRoot + '/locales/',
+  directory: global.app.rootDir + '/locales/',
   extension: '.json',
   objectNotation: '.'
 };
@@ -48,8 +48,8 @@ var configure = function(app, configObject) {
   }
 
   // Register routes
-  app.get(rootContext + '/i18n/:locale', i18nRoutes.i18n);
-  app.get(rootContext + '/i18n/:locale/:phrase', i18nRoutes.translate);
+  app.get(global.app.rootContext + '/i18n/:locale', i18nRoutes.i18n);
+  app.get(global.app.rootContext + '/i18n/:locale/:phrase', i18nRoutes.translate);
 };
 
 /**

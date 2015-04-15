@@ -1,5 +1,5 @@
 "use strict";
-var moment = require('moment');
+var debug = require('../debug');
 var CronJob = require('cron').CronJob;
 
 exports.startJobs = function(options) {
@@ -12,7 +12,10 @@ exports.startJobs = function(options) {
         job.start = false;
       }
       job.log = function(message) {
-        console.log('Job[' + job.name + '][' + moment().format("DD-MM-YYYY HH:mm:ss") + '] ' + message);
+        debug.log('Job[' + job.name + ']', message);
+      };
+      job.error = function(message) {
+        debug.error('Job[' + job.name + ']', message);
       };
       new CronJob({
         cronTime: job.cron,

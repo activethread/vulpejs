@@ -1,16 +1,23 @@
-div.panel.panel-default.items-panel(ng-class="{'box-shadow':!$root.showing}")
-  div.panel-heading=__(page.items.title)
-   include ../includes/items/actions
-  div.panel-body.slide-down(ng-hide="$root.showing")
-      table.table.table-striped.table-bordered.table-hover
-        thead
-         - var filter = page.items.filter
-         include ../includes/items/search
-         - var header = page.items.header
-         include ../includes/items/header
-        tbody
-         include ../includes/items/empty
-         - var body = page.items.body
-         include ../includes/items/body
-
-      include ../includes/items/paginate
+.panel.panel-default.items-panel(ng-class="{'box-shadow':!$root.showing}")
+  .panel-heading
+    .row
+      .col-lg-6=__(page.items.title)
+      .col-lg-6
+        if page.items.viewActions
+          |!{page.items.htmlViewActions}
+        else
+          include ../includes/items/view-actions
+  .panel-body.slide-down(ng-hide="$root.showing")
+    .row
+      .col-lg-12
+        table.table.table-striped.table-bordered.table-hover
+          thead
+            - var filter = page.items.filter
+            include ../includes/items/search
+            - var header = page.items.header
+            include ../includes/items/header
+          tbody
+            include ../includes/items/empty
+            - var body = page.items.body
+            include ../includes/items/body
+        include ../includes/items/paginate

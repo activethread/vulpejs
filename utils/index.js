@@ -1,3 +1,7 @@
+// CRYPTO
+var crypto = require('crypto');
+var fs = require('fs');
+
 var defaultDiacriticsRemovalap = [{
   'base': 'A',
   'letters': '\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F'
@@ -300,4 +304,122 @@ exports.getContentTypeByFile = function(fileName) {
   }
 
   return contentType;
-}
+};
+
+exports.isEmpty = function(value) {
+  var empty = true;
+  if (typeof value === 'string' || (typeof value === 'object' && Object.prototype.toString.call(value) === '[object Array]')) {
+    empty = value.length === 0;
+  }
+  return empty;
+};
+
+exports.isNotEmpty = function(value) {
+  return !exports.isEmpty(value);
+};
+
+exports.crypt = function(value) {
+  return crypto.createHash('sha256').update(value).digest('base64');
+};
+exports.shasum = function(value) {
+  return crypto.createHash('sha256').update(value).digest('hex');
+};
+exports.md5 = function(value) {
+  return crypto.createHash('md5').update(value).digest('hex');
+};
+
+exports.toHHMMSS = function(value) {
+  var sec_num = parseInt(value, 10);
+  var hours = Math.floor(sec_num / 3600);
+  var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+  var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+  if (hours < 10) {
+    hours = "0" + hours;
+  }
+  if (minutes < 10) {
+    minutes = "0" + minutes;
+  }
+  if (seconds < 10) {
+    seconds = "0" + seconds;
+  }
+  var time = hours + ':' + minutes + ':' + seconds;
+  return time;
+};
+
+/**
+ * Compare two objects to order.
+ * @param   {Object} a Object
+ * @param   {Object} b Object
+ * @returns {Number} Order to sort.
+ */
+exports.compare = function(a, b) {
+  if (a < b) {
+    return -1;
+  }
+  if (a > b) {
+    return 1;
+  }
+  return 0;
+};
+
+/**
+ * Compare two objects to order reverse.
+ * @param   {Object} a Object
+ * @param   {Object} b Object
+ * @returns {Number} Order to sort.
+ */
+exports.compareReverse = function(a, b) {
+  if (a > b) {
+    return -1;
+  }
+  if (a < b) {
+    return 1;
+  }
+  return 0;
+};
+
+/**
+ * Try execute function with parameter.
+ * @param   {Function} execute Function to execute
+ * @param   {Object}   data    Data to return
+ * @returns {Boolean}  True if is function to execute and False if not.
+ */
+exports.tryExecute = function(execute, data) {
+  if (typeof(execute) === 'function') {
+    if (!data) {
+      execute();
+    } else {
+      execute(data);
+    }
+    return true;
+  }
+  return false;
+};
+
+exports.getFilesizeInBytes = function(filename) {
+  var stats = fs.statSync(filename);
+  var fileSizeInBytes = stats["size"];
+  return fileSizeInBytes;
+};
+
+exports.linux = /^linux/.test(process.platform);
+
+exports.copy = function(from, to) {
+  var keys = Object.keys(from);
+  for (var i = 0, len = keys.length; i < len; ++i) {
+    var key = keys[i];
+    if (key !== '_id' && to[key]) {
+      to[key] = from[key];
+    }
+  }
+  return to;
+};
+
+exports.isObject = function(value) {
+  return typeof value === 'object';
+};
+
+exports.isArray = function(value) {
+  return Array.isArray(value);
+};

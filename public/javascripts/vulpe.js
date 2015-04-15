@@ -259,16 +259,52 @@ var defaultDiacriticsRemovalap = [{
 }];
 
 var diacriticsMap = {};
-for (var i = 0; i < defaultDiacriticsRemovalap.length; i++) {
+for (var i = 0, len = defaultDiacriticsRemovalap.length; i < len; ++i) {
   var letters = defaultDiacriticsRemovalap[i].letters.split('');
-  for (var j = 0; j < letters.length; j++) {
+  for (var j = 0, len2 = letters.length; j < len2; ++j) {
     diacriticsMap[letters[j]] = defaultDiacriticsRemovalap[i].base;
   }
 }
-
-var vulpe = {
+var vulpejs = {
   ng: {
-    rootContext: ''
+    rootContext: '',
+    fustyFlowFactory: function(opts) {
+      var flow = new Flow(opts);
+      if (flow.support) {
+        return flow;
+      }
+      return new FustyFlow(opts);
+    },
+    app: angular.module('app', ['app.controllers']),
+    config: function(options) {
+      if (options.upload && options.upload.type === 'FLOW') {
+        vulpejs.ng.app.config([
+          'flowFactoryProvider',
+          function(flowFactoryProvider) {
+            flowFactoryProvider.defaults = {
+              target: options.upload.target || '/flow/upload',
+              permanentErrors: options.upload.permanentErrors || [500,
+                501
+              ],
+              maxChunkRetries: options.upload.maxChunkRetries || 1,
+              chunkRetryInterval: options.upload.chunkRetryInterval || 5000,
+              simultaneousUploads: options.upload.simultaneousUploads || 1
+            };
+            flowFactoryProvider.factory = vulpejs.ng.fustyFlowFactory;
+          }
+        ]);
+      }
+    },
+    controller: function(options) {
+      return vulpejs.ng.app.controller(
+        options.name + 'Controller', ['$rootScope', '$scope', '$http', '$timeout', '$messages', '$controller', 'AppManager', '$authenticator', '$filter', '$store',
+          function($rootScope, $scope, $http, $timeout, $messages, $controller, AppManager, $authenticator, $filter, i18n, $store) {
+            if (options.manager) {
+              new AppManager(options.manager).init($scope);
+            }
+          }
+        ]);
+    }
   },
   view: {
     datetimepicker: function() {
@@ -291,7 +327,7 @@ var vulpe = {
       $('div[text-angular-toolbar]').find('.btn').addClass('btn-sm');
     },
     inputs: function() {
-      $('input[append],select[append],textarea[append],div[append],text-angular[append]').each(function(index, input) {
+      $('input[append],select[append],textarea[append],div[append],text-angular[append],img[append]').each(function(index, input) {
         var append = $(input).attr('append');
         if (append) {
           var parts = append.split('~');
@@ -299,7 +335,16 @@ var vulpe = {
             if (attr) {
               if (attr.indexOf(':') !== -1) {
                 var attrParts = attr.split(':');
-                $(input).attr(attrParts[0], attrParts[1]);
+                var attrName = attrParts[0];
+                var attrValue = attrParts[1];
+                if (attrName === 'ui-mask') {
+                  if (attrValue === 'fulltime') {
+                    attrValue = '99:99:99';
+                  } else if (attrValue === 'hour-minute') {
+                    attrValue = '99:99';
+                  }
+                }
+                $(input).attr(attrName, attrValue);
               } else {
                 $(input).attr(attr, '');
               }
@@ -310,8 +355,8 @@ var vulpe = {
       });
     },
     init: function() {
-      base.view.datetimepicker();
-      base.view.editor();
+      vulpejs.view.datetimepicker();
+      vulpejs.view.editor();
       var language = $.cookie('appLanguage'),
         flag = 'br';
       if (language === 'en') {
@@ -329,6 +374,24 @@ var vulpe = {
         return diacriticsMap[a] || a;
       });
     },
+    toHHMMSS: function(value) {
+      var sec_num = parseInt(value, 10);
+      var hours = Math.floor(sec_num / 3600);
+      var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+      var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+      if (hours < 10) {
+        hours = "0" + hours;
+      }
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+      if (seconds < 10) {
+        seconds = "0" + seconds;
+      }
+      var time = hours + ':' + minutes + ':' + seconds;
+      return time;
+    },
     formatDate: function(date) {
       if (date.indexOf('/') != -1) {
         return date.substring(3, 5) + '/' + date.substring(0, 2) + '/' + date.substring(6, 10);
@@ -340,11 +403,20 @@ var vulpe = {
         execute();
       }
     },
-    defaultArrayCompare: function(a, b) {
+    compare: function(a, b) {
       if (a < b) {
         return -1;
       }
       if (a > b) {
+        return 1;
+      }
+      return 0;
+    },
+    compareReverse: function(a, b) {
+      if (a > b) {
+        return -1;
+      }
+      if (a < b) {
         return 1;
       }
       return 0;
@@ -356,7 +428,7 @@ var vulpe = {
 
   $(function() {
     moment.locale(window.navigator.userLanguage || window.navigator.language);
-    vulpe.view.init();
+    vulpejs.view.init();
     if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
       var msViewportStyle = document.createElement('style');
       msViewportStyle.appendChild(document.createTextNode('@-ms-viewport{width:auto!important}'));

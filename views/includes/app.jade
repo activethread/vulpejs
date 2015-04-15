@@ -9,5 +9,14 @@ if page.uploader
   - modules += ", 'blueimp.fileupload'";
 if page.tree
   - modules += ", 'ui.tree'";
-script(type="text/javascript").
-  application.ng.base = angular.module('app', ['app.controllers'#{modules}]);
+if page.flowUploader
+  - modules += ", 'flow'";
+if page.recaptcha
+  - modules += ", 'vcRecaptcha'";
+if page.multiSelect
+  - modules += ", 'isteven-multi-select', 'angularjs-dropdown-multiselect'"
+if page.rangeSlider
+  - modules += ", 'ui-rangeSlider'"
+if modules !== ""  
+  script(type="text/javascript").
+    vulpejs.ng.app = angular.module('app', ['app.controllers'#{modules}]);

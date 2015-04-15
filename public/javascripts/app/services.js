@@ -132,20 +132,25 @@ app.factory('$authenticator', ['$rootScope', '$store', function($rootScope, $sto
   $rootScope.userDetails = {};
   return {
     userDetails: function() {
-      $rootScope.userDetails = JSON.parse($store.get('userDetails'));
+      $rootScope.userDetails = $store.get('userDetails');
       return $rootScope.userDetails;
     },
     loginSuccessfully: function(user) {
       $rootScope.userDetails = user;
-      $store.set('userDetails', JSON.stringify($rootScope.userDetails));
+      $store.set('userDetails', $rootScope.userDetails);
     },
     updateUserDetails: function() {
-      $store.set('userDetails', JSON.stringify($rootScope.userDetails));
+      $store.set('userDetails', rootScope.userDetails);
     },
     logoutSuccessfully: function() {
       this.userIsAuthenticated = false;
       $store.remove('userDetails');
       $store.remove('userIsAuthenticated');
+      if (application && application.login && application.login.arrays) {
+        application.login.arrays.forEach(function(name) {
+          $store.remove(name);
+        });
+      }
     }
   };
 }]);
@@ -203,9 +208,9 @@ app.factory('$messages', ['$rootScope', function($rootScope) {
  * @param   {Object}         $store         $store
  * @returns {String|Boolean}
  */
-app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages', '$dialogs', '$timeout', 'i18n', '$store', function($rootScope, $http, $authenticator, $messages, $dialogs, $timeout, i18n, $store) {
+app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages', '$dialogs', '$timeout', 'i18n', '$store', '$cookieStore', '$sce', function($rootScope, $http, $authenticator, $messages, $dialogs, $timeout, i18n, $store, $cookieStore, $sce) {
 
-  $rootScope.debug = false;
+  $rootScope.debug = $cookieStore.get('debug') || $rootScope.debug;
   $rootScope.onlyNumbers = /^\d+$/;
   $rootScope.showing = false;
   $rootScope.form = {};
@@ -213,6 +218,7 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
   $rootScope.listUrl = '';
   $rootScope.predicate = '';
   $rootScope.reverse = true;
+  $rootScope.populate = false;
   $rootScope.item = {};
   $rootScope.items = [];
   $rootScope.history = [];
@@ -220,6 +226,17 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
   $rootScope.historyVersion = null;
   $rootScope.saveType = '';
   $rootScope.selectedTab = 0;
+  $rootScope.messages = {
+    validate: {
+      save: {
+        exists: 'This record already exists.'
+      },
+      remove: {
+        exists: 'This record is being used by another registry and can not be deleted.'
+      }
+    }
+  };
+
   // ACTIONS
   var nothing = function() {};
   var empty = function() {
@@ -242,6 +259,8 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
   $rootScope.saveAfter = nothing;
   $rootScope.cancelBefore = nothing;
   $rootScope.cancelAfter = nothing;
+  $rootScope.statusBefore = nothing;
+  $rootScope.statusAfter = nothing;
   $rootScope.removeBefore = function(id, callback) {
     callback();
   };
@@ -249,21 +268,40 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
 
   $rootScope.loadArrays = [];
   $rootScope.loadProperties = [];
-  var loadProperties = function() {
+  $rootScope.doLoadProperties = function() {
     if ($rootScope.loadProperties.length > 0) {
       $rootScope.loadProperties.forEach(function(property) {
         $rootScope.loadProperty(property);
       })
     }
   };
+  $rootScope.init = nothing;
 
   $rootScope.errorHandler = {};
 
   $rootScope.filter = {
     status: ''
   };
+  if (window.location.search) {
+    var search = window.location.search.substring(1);
+    var status = function(value) {
+      var parts = value.split('=');
+      if (parts[0] === 'status') {
+        $rootScope.filter.status = parts[1];
+      }
+    }
+    if (search.indexOf('&') !== -1) {
+      search.split('&').forEach(function(value) {
+        if (value.indexOf('status=') !== -1) {
+          status(value);
+        }
+      });
+    } else {
+      status(search);
+    }
+  }
 
-  var debug = function(opts) {
+  $rootScope.doDebug = function(opts) {
     if ($rootScope.debug) {
       console.debug(opts);
     }
@@ -274,10 +312,27 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
     $rootScope.name = options.name;
     $rootScope.listUrl = options.listUrl || '/' + options.name + 's';
     $rootScope.predicate = options.predicate || '';
+    if (options.populate) {
+      $rootScope.populate = options.populate;
+    }
     if (options.focus) {
       $rootScope.focus = function() {
-        $('#' + options.name + '-' + options.focus).focus();
+        if (angular.isFunction(options.focus)) {
+          options.focus({
+            $rootScope: $rootScope
+          });
+        } else {
+          var prefix = '#' + options.name.replace(/\-/g, '') + '-';
+          if (angular.isObject(options.focus)) {
+            $(prefix + ($rootScope.item._id ? options.focus.edit : options.focus.new)).focus();
+          } else {
+            $(prefix + options.focus).focus();
+          }
+        }
       };
+    }
+    if (options.messages) {
+      $rootScope.messages = options.messages;
     }
     $rootScope.hotkeys = options.hotkeys || nothing;
     if (options.list) {
@@ -295,10 +350,14 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
       $rootScope.validate = options.actions.validate || nothing;
       $rootScope.createBefore = options.actions.createBefore || nothing;
       $rootScope.createAfter = options.actions.createAfter || nothing;
+      $rootScope.cloneBefore = options.actions.cloneBefore || nothing;
+      $rootScope.cloneAfter = options.actions.cloneAfter || nothing;
       $rootScope.findBefore = options.actions.findBefore || nothing;
       $rootScope.findAfter = options.actions.findAfter || nothing;
       $rootScope.saveBefore = options.actions.saveBefore || nothing;
       $rootScope.saveAfter = options.actions.saveAfter || nothing;
+      $rootScope.statusBefore = options.actions.statusBefore || nothing;
+      $rootScope.statusAfter = options.actions.statusAfter || nothing;
       if (options.actions.removeBefore) {
         $rootScope.removeBefore = options.actions.removeBefore;
       }
@@ -313,12 +372,19 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
     if (options.error) {
       $rootScope.errorHandler = options.error.handle || nothing;
     }
+    $rootScope.init = options.init || nothing;
   };
 
   var options = {
     $rootScope: $rootScope,
     $store: $store,
-    $authenticator: $authenticator
+    $authenticator: $authenticator,
+    $http: $http,
+    $messages: $messages,
+    $dialogs: $dialogs,
+    $timeout: $timeout,
+    i18n: i18n,
+    filter: $rootScope.filter
   };
 
   // PAGINATION CONFIG
@@ -327,35 +393,27 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
   $rootScope.historyCurrentPage = 0;
   $rootScope.historyPageSize = 1;
 
-  $rootScope.prevPage = function(history) {
+  $rootScope.previousPage = function(history) {
     $messages.cleanAllMessages();
-    if (history) {
-      if ($rootScope.historyCurrentPage > 0) {
-        $rootScope.historyCurrentPage--;
-        $rootScope.historyList($rootScope.historyCurrentPage);
-        $rootScope.historyVersion = null;
-      }
-    } else {
-      if ($rootScope.currentPage > 0) {
-        $rootScope.currentPage--;
-        $rootScope.list($rootScope.currentPage);
-      }
+    if (history && $rootScope.historyCurrentPage > 0) {
+      $rootScope.historyCurrentPage--;
+      $rootScope.historyList($rootScope.historyCurrentPage);
+      $rootScope.historyVersion = null;
+    } else if ($rootScope.currentPage > 0) {
+      $rootScope.currentPage--;
+      $rootScope.list($rootScope.currentPage);
     }
   };
 
   $rootScope.nextPage = function(history) {
     $messages.cleanAllMessages();
-    if (history) {
-      if ($rootScope.historyCurrentPage < $rootScope.historyPageSize - 1) {
-        $rootScope.historyCurrentPage++;
-        $rootScope.historyList($rootScope.historyCurrentPage + 1);
-        $rootScope.historyVersion = null;
-      }
-    } else {
-      if ($rootScope.currentPage < $rootScope.pageSize - 1) {
-        $rootScope.currentPage++;
-        $rootScope.list($rootScope.currentPage + 1);
-      }
+    if (history && $rootScope.historyCurrentPage < $rootScope.historyPageSize - 1) {
+      $rootScope.historyCurrentPage++;
+      $rootScope.historyList($rootScope.historyCurrentPage + 1);
+      $rootScope.historyVersion = null;
+    } else if ($rootScope.currentPage < $rootScope.pageSize - 1) {
+      $rootScope.currentPage++;
+      $rootScope.list($rootScope.currentPage + 1);
     }
   };
 
@@ -384,58 +442,126 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
     return ret;
   };
 
-  var errorHandler = function(operation, data, status, header, config) {
+  $rootScope.trustSrc = function(src) {
+    return $sce.trustAsResourceUrl(src);
+  };
+
+  var httpErrorHandler = function(data, status, header, config) {
     if (angular.isFunction($rootScope.errorHandler)) {
       $rootScope.errorHandler({
-        operation: operation,
+        operation: $rootScope.operation,
         data: data,
         status: status,
         header: header,
         config: config,
-        messages: $messages
+        $messages: $messages
       });
+    } else if (data.validate) {
+      if (data.validate.exists) {
+        if ($rootScope.operation === 'SAVE') {
+          $messages.addInfoMessage($rootScope.messages.validate.save.exists);
+        } else if ($rootScope.operation === 'REMOVE') {
+          $messages.addInfoMessage($rootScope.messages.validate.remove.exists);
+        }
+      }
     } else {
       $messages.addErrorMessage('An error occurred in the execution.');
     }
-  }
-
-  //
-  $rootScope.create = function() {
-    $rootScope.createBefore(options);
-    debug({
-      type: 'CREATE-BEFORE',
-      item: $rootScope.item
-    });
-    $rootScope.item = $rootScope.newItem(options);
-    $rootScope.showing = true;
-    clearHistory();
-    $timeout(function() {
-      $rootScope.focus();
-    }, 100);
-    $rootScope.createAfter(options);
-    debug({
-      type: 'CREATE-AFTER',
-      item: $rootScope.item
-    });
   };
 
+  $rootScope.expressionEval = function(text) {
+    var newText = text;
+    if (/\{(.*)\}/.test(text)) {
+      var expression = text.match(/\{(.*)\}/);
+      var parts = expression[1].split(':');
+      newText = newText.replace(expression[0], '');
+      var value = '';
+      if (parts.length > 1) {
+        if (parts[1].indexOf('.') !== -1) {
+          var object = parts[1].split('.');
+          if (parts[0] === 'store') {
+            value = $store.get(object[0]) ? $store.get(object[0])[object[1]] : '';
+          } else {
+            value = $rootScope[object[0]] ? $rootScope[object[0]][object[1]] : '';
+          }
+        } else {
+          if (parts[0] === 'store') {
+            value = $store.get(parts[1]) ? $store.get(parts[1]) : '';
+          } else {
+            value = $rootScope[parts[1]] ? $rootScope[parts[1]] : '';
+          }
+        }
+      } else {
+        if (parts[0].indexOf('.') !== -1) {
+          var object = parts[0].split('.');
+          value = $rootScope[object[0]][object[1]]
+        } else {
+          value = $rootScope[parts[0]];
+        }
+      }
+      if (value.length === 0) {
+        newText = '';
+      } else {
+        newText += value;
+      }
+    }
+    return newText;
+  };
+
+  $rootScope.propertiesEval = function(item) {
+    if (angular.isObject(item)) {
+      for (var property in item) {
+        if (angular.isArray(item[property])) {
+          item[property].forEach(function(value) {
+            value = $rootScope.propertiesEval(value);
+          });
+        } else if (angular.isObject(item[property])) {
+          item[property] = $rootScope.propertiesEval(item[property]);
+        } else {
+          item[property] = $rootScope.expressionEval(item[property]);
+        }
+      }
+    }
+    return item;
+  };
   var clearHistory = function() {
     $rootScope.history = [];
     $rootScope.historyItems = [];
     $rootScope.historyVersion = null;
   };
+  var clearItem = function(show) {
+    $rootScope.item = $rootScope.newItem(options);
+    $rootScope.item = $rootScope.propertiesEval($rootScope.item);
+    $rootScope.showing = show;
+    clearHistory();
+  };
+  //
+  $rootScope.create = function() {
+    $rootScope.createBefore(options);
+    $rootScope.doDebug({
+      type: 'CREATE-BEFORE',
+      item: $rootScope.item
+    });
+    clearItem(true);
+    $timeout(function() {
+      $rootScope.focus();
+    }, 100);
+    $rootScope.createAfter(options);
+    $rootScope.doDebug({
+      type: 'CREATE-AFTER',
+      item: $rootScope.item
+    });
+  };
 
   $rootScope.cancel = function() {
     $rootScope.cancelBefore(options);
-    debug({
+    $rootScope.doDebug({
       type: 'CANCEl-BEFORE',
       item: $rootScope.item
     });
-    $rootScope.item = $rootScope.newItem(options);
-    $rootScope.showing = false;
-    clearHistory();
+    clearItem(false);
     $rootScope.cancelAfter(options);
-    debug({
+    $rootScope.doDebug({
       type: 'CANCEl-AFTER',
       item: $rootScope.item
     });
@@ -459,19 +585,17 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
       $rootScope.currentPage = 0;
     }
     $rootScope.listBefore(options);
-    debug({
+    $rootScope.doDebug({
       type: 'LIST-BEFORE',
       items: $rootScope.items
     });
-    var filter = $rootScope.listFilter({
-      filter: $rootScope.filter
-    });
+    var filter = $rootScope.listFilter(options);
     filter += '/page/' + page;
-    $http.get(vulpe.ng.rootContext + $rootScope.listUrl + filter).success(function(data) {
+    $http.get(vulpejs.ng.rootContext + $rootScope.listUrl + filter).success(function(data) {
       $rootScope.items = data.items;
       $rootScope.pageSize = data.pageCount;
       $rootScope.listAfter(options);
-      debug({
+      $rootScope.doDebug({
         type: 'LIST-AFTER',
         items: $rootScope.items
       });
@@ -483,7 +607,7 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
     if (!page) {
       page = 1;
     }
-    $http.get(vulpe.ng.rootContext + $rootScope.name + '/history/' + $rootScope.item._id + '/page/' + page).success(function(data) {
+    $http.get(vulpejs.ng.rootContext + $rootScope.name + '/history/' + $rootScope.item._id + '/page/' + page).success(function(data) {
       $rootScope.history = data.items;
       if ($rootScope.history.length !== 0) {
         $rootScope.historyPageSize = data.pageCount;
@@ -496,11 +620,11 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
 
   $rootScope.find = function(id) {
     $rootScope.findBefore(options);
-    debug({
+    $rootScope.doDebug({
       type: 'FIND-BEFORE',
       item: $rootScope.item
     });
-    $http.get(base.ng.rootContext + '/' + $rootScope.name + '/' + id).success(function(data) {
+    $http.get(vulpejs.ng.rootContext + '/' + $rootScope.name + ($rootScope.populate ? '/populate' : '') + '/' + id).success(function(data) {
       $rootScope.item = data.item;
       $rootScope.showing = !$rootScope.showing;
       $rootScope.history = data.history.items;
@@ -511,18 +635,40 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
         });
       }
       $rootScope.findAfter(options);
-      debug({
+      $rootScope.doDebug({
         type: 'FIND-AFTER',
         item: $rootScope.item
       });
-      loadProperties();
+      $rootScope.doLoadProperties();
       $timeout(function() {
         $rootScope.focus();
       }, 100);
     });
   };
 
+  $rootScope.clone = function(item) {
+    $rootScope.cloneBefore(options);
+    $rootScope.doDebug({
+      type: 'CLONE-BEFORE',
+      item: $rootScope.item
+    });
+    $rootScope.item = angular.copy(item);
+    delete $rootScope.item._id;
+    $rootScope.showing = true;
+    clearHistory();
+    $rootScope.cloneAfter(options);
+    $rootScope.doDebug({
+      type: 'CLONE-AFTER',
+      item: $rootScope.item
+    });
+    $rootScope.doLoadProperties();
+    $timeout(function() {
+      $rootScope.focus();
+    }, 100);
+  };
+
   $rootScope.remove = function(id) {
+    $rootScope.operation = 'REMOVE';
     var remove = function() {
       $messages.cleanAllMessages();
       $rootScope.removeBefore(id, function() {
@@ -530,34 +676,28 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
           method: 'DELETE',
           url: '/' + $rootScope.name + '/' + id
         }).success(function() {
+          clearItem(false);
           $rootScope.list();
-          $messages.addSuccessMessage('Operation successfully executed!');
+          $messages.addSuccessMessage('Record successfully deleted!');
           $rootScope.removeAfter(options);
-        }).error(function(data, status, header, config) {
-          errorHandler('REMOVE', data, status, header, config);
-        });
+        }).error(httpErrorHandler);
       });
     };
     $dialogs.confirm(i18n.__('Confirmation'), i18n.__('Do you really want to delete?')).result.then(function(btn) {
       remove();
-    }, function(btn) {
-
-    });
+    }, function(btn) {});
   };
 
   $rootScope.removeFromArray = function(name, property, index) {
-    var array = $rootScope.$eval('item.' + name);
     var remove = function() {
       $messages.cleanAllMessages();
-      array.splice(index, 1);
+      $rootScope.item[name].splice(index, 1);
     };
-    var propertyValue = $rootScope.$eval('item.' + name + '[' + index + '].' + property);
+    var propertyValue = $rootScope.item[name][index][property];
     if (propertyValue) {
       $dialogs.confirm(i18n.__('Confirmation'), i18n.__('Do you really want to delete?')).result.then(function(btn) {
         remove();
-      }, function(btn) {
-
-      });
+      }, function(btn) {});
     } else {
       remove();
     }
@@ -565,8 +705,7 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
 
   $rootScope.addToArray = function(name, object) {
     $messages.cleanAllMessages();
-    var array = $rootScope.$eval('item.' + name);
-    array.push(object);
+    $rootScope.item[name].push(object);
   };
 
   var addJSONValue = function(item, key, value) {
@@ -580,15 +719,14 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
       if (type) {
         $rootScope.saveType = type;
       } else {
+        $rootScope.operation = 'SAVE';
         $rootScope.saveBefore(options);
-        debug({
+        $rootScope.doDebug({
           type: 'SAVE-BEFORE',
           item: $rootScope.item
         });
         $messages.cleanAllMessages();
-        var user = $authenticator.userDetails();
-        $rootScope.item.user = user.id;
-        $http.post(vulpe.ng.rootContext + '/' + $rootScope.name, $rootScope.item).success(function(data) {
+        $http.post(vulpejs.ng.rootContext + '/' + $rootScope.name, $rootScope.item).success(function(data) {
           $rootScope.item = data.item;
           if ($rootScope.saveType.length > 0) {
             if ($rootScope.saveType === 'NEW') {
@@ -599,38 +737,40 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
             }
             $rootScope.saveType = '';
           }
-          $messages.addSuccessMessage('Operation successfully executed!');
+          $messages.addSuccessMessage('Record successfully saved!');
           $timeout(function() {
             $rootScope.list();
             $rootScope.focus();
           }, 100);
           $rootScope.saveAfter(options);
-          debug({
+          $rootScope.doDebug({
             type: 'SAVE-AFTER',
             item: $rootScope.item
           });
-          loadProperties();
-        }).error(function(data, status, header, config) {
-          errorHandler('SAVE', data, status, header, config);
-        });
+          $rootScope.doLoadProperties();
+        }).error(httpErrorHandler);
       }
     }
   };
 
   $rootScope.status = function(id, status) {
+    $rootScope.operation = 'STATUS';
     $messages.cleanAllMessages();
-    $http.post(vulpe.ng.rootContext + '/' + $rootScope.name + '/status', {
+    $rootScope.statusBefore(options);
+    $http.post(vulpejs.ng.rootContext + '/' + $rootScope.name + '/status', {
       id: id,
       status: status
     }).success(function() {
+      if ($rootScope.item._id) {
+        $rootScope.item.status = status;
+      }
       $messages.addSuccessMessage('Status successfully changed!');
+      $rootScope.statusAfter(options);
       $timeout(function() {
         $rootScope.list($rootScope.currentPage + 1);
         $rootScope.focus();
       }, 100);
-    }).error(function(data, status, header, config) {
-      errorHandler('STATUS', data, status, header, config);
-    });
+    }).error(httpErrorHandler);
   };
 
   $rootScope.datepicker = function($event) {
@@ -696,7 +836,7 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
     var user = $authenticator.userDetails();
     for (var i = 0; i < roles.length; i++) {
       var role = roles[i];
-      if (user.managerType === role) {
+      if (user.roles.indexOf(role) !== -1) {
         return true;
       }
     }
@@ -711,33 +851,50 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
     $rootScope.item[rootProperty] = $item[itemProperty];
   };
 
+  $rootScope.selectOnChange = function(name, items, value, label) {
+    if (typeof $rootScope.item[name] !== 'undefined') {
+      $rootScope[items].forEach(function(option) {
+        if (option[value] === $rootScope.item[name]) {
+          $rootScope[name] = option;
+        }
+      });
+    }
+  };
+
   $rootScope.loadArray = function(options) {
     var from = options.from,
       to = options.to,
       label = options.label;
     $rootScope[to] = [];
-    $http.get(from).success(function(data) {
-      $rootScope[to] = data.items;
-      if (label) {
-        angular.forEach($rootScope[to], function(item) {
-          item.label = '';
-          var properties = [];
-          var separator = ' - ';
-          if (angular.isArray(label)) {
-            properties = label;
-          } else if (angular.isObject(label)) {
-            properties = label.properties;
-            separator = label.separator;
-          }
-          properties.forEach(function(property) {
-            if (item.label.length > 0) {
-              item.label += separator;
+    from = $rootScope.expressionEval(from);
+    if (from.length > 0) {
+      $http.get(from).success(function(data) {
+        $rootScope[to] = data.items;
+        if (label) {
+          angular.forEach($rootScope[to], function(item) {
+            item.label = '';
+            if (angular.isString(label)) {
+              item.label += item[label];
+            } else {
+              var properties = [];
+              var separator = ' - ';
+              if (angular.isArray(label)) {
+                properties = label;
+              } else if (angular.isObject(label)) {
+                properties = label.properties;
+                separator = label.separator;
+              }
+              properties.forEach(function(property) {
+                if (item.label.length > 0) {
+                  item.label += separator;
+                }
+                item.label += item[property];
+              });
             }
-            item.label += item[property];
           });
-        });
-      }
-    });
+        }
+      });
+    }
   };
 
   $rootScope.loadProperty = function(options) {
@@ -745,10 +902,10 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
       to = options.to,
       when = options.when,
       fromParts = from.split('.'),
-      fromProperty = fromParts.splice(1, fromParts.length);
+      fromProperty = fromParts.pop();
     from = null;
     var toParts = to.split('.'),
-      toProperty = toParts.splice(1, toParts.length);
+      toProperty = toParts.pop();
     to = null;
     fromParts.forEach(function(part) {
       if (from === null) {
@@ -776,9 +933,31 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
     }
   };
 
-  service.prototype.init = function() {
+  $rootScope.flowFilesSubmit = function($flow) {
+    $flow.upload();
+  };
+
+  service.prototype.init = function($scope) {
     $authenticator.userDetails();
-    $rootScope.item = $rootScope.newItem(options);
+    $rootScope.init(options);
+    if (application.init) {
+      vulpejs.util.tryExecute(application.init);
+    }
+    if ($scope) {
+      $(document).ready(function() {
+        if ($scope.mainForm) {
+          $rootScope.form = $scope.mainForm;
+        };
+        $scope.multiSelectTranslation = {
+          selectAll: i18n.__('Select all'),
+          selectNone: i18n.__('Select none'),
+          reset: i18n.__('Reset'),
+          search: i18n.__('Search'),
+          nothingSelected: i18n.__('Nothing is selected')
+        }
+      });
+    }
+    clearItem(false);
     $rootScope.validate();
     $rootScope.list();
     if ($rootScope.loadArrays.length > 0) {
@@ -790,6 +969,7 @@ app.factory('AppManager', ['$rootScope', '$http', '$authenticator', '$messages',
     $rootScope.tabsHotkeys();
     $rootScope.focus();
   };
+  service.prototype.store = $store;
 
   return service;
 }]);

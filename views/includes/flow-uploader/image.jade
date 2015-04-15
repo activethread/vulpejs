@@ -1,0 +1,23 @@
+unless page.flowUploader
+  - page.flowUploader = {init:'{singleFile:true}', emptyImageSize:'99x99', fileSuccess: '', filesSubmit: 'flowFilesSubmit($flow)'};
+unless page.flowUploader.init
+  - page.flowUploader.init = ''
+unless page.flowUploader.emptyImageSize
+  - page.flowUploader.emptyImageSize = '99x99'
+unless page.flowUploader.fileSuccess
+  - page.flowUploader.fileSuccess = ''
+unless page.flowUploader.filesSubmit
+  - page.flowUploader.filesSubmit = ''
+div.well(flow-init="#{page.flowUploader.init}" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]" flow-files-submitted="#{page.flowUploader.filesSubmit}" flow-file-success="#{page.flowUploader.fileSuccess}")
+  if emptyImage
+    img.thumbnail.slide-down(ng-src=emptyImage ng-hide="$flow.files.length > 0")
+  else
+    -var emptyImage = 'http://www.placehold.it/'  + page.flowUploader.emptyImageSize + '/EFEFEF/AAAAAA&text=' + __('Empty')
+    img.thumbnail.slide-down(src=emptyImage ng-hide="$flow.files.length > 0")
+  img.thumbnail.slide-down(ng-show="$flow.files.length" flow-img="$flow.files[0]")
+  div
+    span.btn.btn-primary.btn-sm.slide-down(ng-hide="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}")=__('Select image')
+    .btn-group
+      span.btn.btn-primary.btn-sm.slide-down(ng-show="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}")=__('Change')
+      span.btn.btn-danger.btn-sm.slide-down(ng-show="$flow.files.length" ng-click="$flow.cancel()")=__('Cancel')
+  p=__('Only image files allowed.')

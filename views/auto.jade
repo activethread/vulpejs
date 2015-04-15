@@ -1,19 +1,24 @@
 extends layouts/manager
 
 block content
- div(ng-controller="#{page.controller}Controller")
-  if page.inputs
-   unless page.submit
-    - page.submit='submit()'
-   form(name="form", role="form", ng-submit=page.submit, submitted="submitted", novalidate shake-that)
-    div.panel.panel-default.box-shadow
-     div.panel-heading=__(page.title)
-     div.panel-body.slide-down
-      include includes/actions/simple
-      - var inputs = page.inputs
-      include includes/main/inputs
-  if page.main
-   include auto/main
-  if page.items
-   include auto/items
- include includes/script
+  div(ng-controller="#{page.controller}Controller")
+    if page.inputs
+      unless page.submit
+        - page.submit='submit()'
+      form(name="form" role="form" ng-submit=page.submit submitted="submitted" novalidate shake-that)
+        div.panel.panel-default.box-shadow
+          div.panel-heading=__(page.title)
+          div.panel-body.slide-down
+            if page.actions
+              |!{page.htmlActions}
+            else
+              include includes/main/simple-actions
+            each input in page.inputs
+              include includes/main/input
+    if page.main
+      include auto/main
+    if page.items
+      include auto/items
+    script(type="text/javascript").
+      vulpejs.view.inputs();
+  include includes/script

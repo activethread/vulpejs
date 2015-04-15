@@ -1,0 +1,5 @@
+div.btn-group.pull-right
+  a.btn.btn-default.btn-sm(ng-click="$root.showing = !$root.showing; create()" title=__('New'))
+    i.fa.fa-plus.fa-fw
+  a.btn.btn-default.btn-sm(ng-click="$root.showing = !$root.showing" title=__('Show/Hide'))
+    i.fa.fa-eye.fa-fw(id="items-{{name}}-toggle" ng-class="{'fa-eye-slash':!$root.showing}")

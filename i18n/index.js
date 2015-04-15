@@ -7,7 +7,7 @@ module.exports = function(options, app) {
       defaultLocale: 'pt',
       cookie: 'appLanguage',
       indent: '  ',
-      directory: global.appRoot + '/locales'
+      directory: global.app.rootDir + '/locales'
     };
   }
   i18n.configure(options.i18n);

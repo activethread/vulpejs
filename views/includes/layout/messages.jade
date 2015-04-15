@@ -1,15 +1,15 @@
 div(id="messages", ng-controller="MessagesController")
-    alert(ng-cloak ng-repeat="message in messages" type="{{message.type}}" close="close($index)" class="slide-down" ng-hide="!messages")
-        strong(ng-show="{{message.type == 'success'}}")
-            span(class="glyphicon glyphicon-ok-sign") &nbsp;
-            span=__('Success!')
-        strong(ng-show="{{message.type == 'danger'}}")
-            span(class="glyphicon glyphicon-minus-sign") &nbsp;
-            span=__('Error!')
-        strong(ng-show="{{message.type == 'info'}}")
-            span(class="glyphicon glyphicon-info-sign") &nbsp;
-            span=__('Information!')
-        strong(ng-show="{{message.type == 'warning'}}")
-            span(class="glyphicon glyphicon-exclamation-sign") &nbsp;
-            span=__('Warning!')
-        span &nbsp; {{message.msg}}
+  alert(ng-cloak ng-repeat="message in messages" type="{{message.type}}" close="close($index)" class="slide-down" ng-hide="!messages")
+    strong(ng-show="{{message.type == 'success'}}")
+      span(class="glyphicon glyphicon-ok-sign") &nbsp;
+      span=__('Success!')
+    strong(ng-show="{{message.type == 'danger'}}")
+      span(class="glyphicon glyphicon-minus-sign") &nbsp;
+      span=__('Error!')
+    strong(ng-show="{{message.type == 'info'}}")
+      span(class="glyphicon glyphicon-info-sign") &nbsp;
+      span=__('Information!')
+    strong(ng-show="{{message.type == 'warning'}}")
+      span(class="glyphicon glyphicon-exclamation-sign") &nbsp;
+      span=__('Warning!')
+    span &nbsp; {{message.msg}}

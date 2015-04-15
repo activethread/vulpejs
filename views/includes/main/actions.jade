@@ -1,3 +1,30 @@
-div(class="btn-group pull-right")
- a(class="btn btn-default btn-xs" ng-click="$root.showing = !$root.showing")
-  i(id="main-{{name}}-toggle", class="fa fa-eye fa-fw", ng-class="{'fa-eye-slash':showing}")
+#main-default-actions.row(data-spy="affix" data-offset-top="90")
+  .col-lg-12
+    div.btn-group.pull-right
+      a.btn.btn-default(href="" ng-click="cancel(); submitted = false" title=__('Back'))
+        i.fa.fa-chevron-left.fa-fw
+        =__('Back')
+      a#new-action-button.btn.btn-default(href="" ng-click="create(); submitted = false" title=__('New'))
+        i.fa.fa-plus.fa-fw
+        =__('New')
+      a#delete-action-button.btn.btn-default(href="" ng-click="remove(item._id); submitted = false" ng-clock ng-show="item._id" title=__('Delete'))
+        i.fa.fa-trash-o.fa-fw
+        =__('Delete')
+      a#clone-action-button.btn.btn-default(href="" ng-click="clone(item); submitted = false" ng-clock ng-show="item._id" title=__('Clone'))
+        i.fa.fa-magic.fa-fw
+        =__('Clone')
+      button.btn.btn-default(type="submit" title=__('Save'))
+        i.fa.fa-save.fa-fw
+        =__('Save')
+      a.btn.btn-default.dropdown-toggle(data-toggle="dropdown")
+        span.caret
+      ul.dropdown-menu
+        li
+          button.btn.btn-link(type="submit" ng-click="save('NEW')" title=__('Save & New'))
+            i.fa.fa-plus.fa-fw
+            =__('Save & New')
+        li
+          button.btn.btn-link(type="submit" ng-click="save('CLOSE')" title=__('Save & Back'))
+            i.fa.fa-chevron-left.fa-fw
+            =__('Save & Back')
+hr

@@ -1,7 +1,7 @@
 unless header
- - var header = {items:[]}
+  - var header = {items:[]}
 tr
- each item in header.items
-  if item.width
-   - var style = 'width: ' + item.width + ';'
-   th(style=style)=__(item.label)
+  each item in header.items
+    if item.width
+      - var style = 'width: ' + item.width + ';'
+      th(style=style)=__(item.label)

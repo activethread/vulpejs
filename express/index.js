@@ -17,12 +17,12 @@ var MongoStore = require('connect-mongo')(session);
 module.exports = function(options) {
   var app = express();
   // view engine setup
-  app.set('views', [global.appRoot + '/views', global.appRoot + '/vulpejs/views']);
+  app.set('views', [global.app.rootDir + '/views', global.app.rootDir + '/vulpejs/views']);
   app.set('view engine', 'jade');
 
-  app.use(favicon(global.appRoot + '/public/images/favicon.ico'));
+  app.use(favicon(global.app.rootDir + '/public/images/favicon.ico'));
   app.use(compression());
-  if (app.get('env') === 'production') {
+  if (global.app.env === 'production') {
     app.use(logger('combined', {
       skip: function(req, res) {
         return res.statusCode < 400;
@@ -45,23 +45,35 @@ module.exports = function(options) {
   if (!options.session) {
     options.session = {
       mongo: {
-        db: 'express',
         host: 'localhost',
         port: 27017,
+        db: 'express',
         collection: 'session',
-        autoReconnect: true
+        username: 'admin',
+        password: 'q1w2e3r4'
       }
     };
   }
+  var mongoUrl = 'mongodb://${auth}${host}/${db}?authSource=admin&w=1';
+  if (options.session.mongo.user && options.session.mongo.pass) {
+    mongoUrl = mongoUrl.replace('${auth}', options.session.mongo.user + ':' + options.session.mongo.pass + '@');
+  } else {
+    mongoUrl = mongoUrl.replace('${auth}', '');
+  }
+  mongoUrl = mongoUrl.replace('${host}', options.session.mongo.host);
+  mongoUrl = mongoUrl.replace('${port}', options.session.mongo.port);
+  mongoUrl = mongoUrl.replace('${db}', options.session.mongo.db);
   app.use(session({
     secret: '1234567890QWERTY',
     resave: true,
     saveUninitialized: true,
-    store: new MongoStore(options.session.mongo)
+    store: new MongoStore({
+      url: mongoUrl
+    })
   }));
   app.use(methodOverride());
-  app.use(express.static(path.join(global.appRoot, 'vulpejs/public')));
-  app.use(express.static(path.join(global.appRoot, 'public')));
+  app.use(express.static(path.join(global.app.rootDir, 'vulpejs/public')));
+  app.use(express.static(path.join(global.app.rootDir, 'public')));
 
   return app;
 };

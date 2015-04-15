@@ -1,22 +1,30 @@
 unless page.main.submit
- - page.main.submit='save()'
-form(name="mainForm", role="form", ng-submit=page.main.submit, submitted="submitted", novalidate shake-that)
- div.panel.panel-default(ng-class="{'box-shadow':$root.showing}")
-  div.panel-heading=__(page.main.title)
-   include ../includes/main/actions
-  div.panel-body.slide-down(ng-cloak ng-show="$root.showing")
-   include ../includes/actions/default
-   if page.main.tabs
-    tabset
-     each tab in page.main.tabs
-      - var select = "";
-      unless tab.focus
-      - select = "tabFocus('" + tab.focus + "')";
-      tab(heading=__(tab.title) select=select)
-       each input in tab.inputs
-        include ../includes/main/input
-   else
-    each input in page.main.inputs
-     include ../includes/main/input
-script(type="text/javascript").
-   vulpe.view.inputs();
+  - page.main.submit='save()'
+unless page.main.form
+  - page.main.form={enctype:'application/x-www-form-urlencoded'};
+form(name="mainForm" role="form" enctype=page.main.form.enctype ng-submit=page.main.submit submitted="submitted" novalidate shake-that)
+  .panel.panel-default(ng-class="{'box-shadow':$root.showing}")
+    .panel-heading
+      .row
+        .col-lg-6=__(page.main.title)
+        .col-lg-6
+          include ../includes/main/view-actions
+    .panel-body.slide-down(ng-cloak ng-show="$root.showing")
+      .row
+        .col-lg-12
+          if page.main.actions
+            |!{page.main.htmlActions}
+          else
+            include ../includes/main/actions
+          if page.main.tabs
+            tabset
+              each tab in page.main.tabs
+                - var select = "";
+                unless tab.focus
+                  - select = "tabFocus('" + tab.focus + "')";
+                tab(heading=__(tab.title) select=select)
+                  each input in tab.inputs
+                    include ../includes/main/input
+          else
+            each input in page.main.inputs
+              include ../includes/main/input
