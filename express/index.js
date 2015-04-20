@@ -10,7 +10,6 @@ var favicon = require('serve-favicon');
 var methodOverride = require('method-override');
 var logger = require('morgan');
 var session = require('express-session');
-var http = require('http');
 // MONGO STORE
 var MongoStore = require('connect-mongo')(session);
 

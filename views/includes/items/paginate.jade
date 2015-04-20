@@ -1,7 +1,2 @@
-ul.pagination(ng-cloak ng-show="items.length > 0 && pageSize > 1")
-  li(ng-class="{disabled: currentPage === 0}")
-    a(href ng-click="previousPage()") «
-  li(ng-repeat="n in range(pageSize)" ng-class="{active: n == currentPage}" ng-click="setPage()")
-    a(href ng-bind="n + 1")
-  li(ng-class="{disabled: currentPage === (pageSize -1) || items.length === 0}")
-    a(href ng-click="nextPage()") »
+.text-center
+  dir-pagination-controls(boundary-links="true" on-page-change="vulpejs.pageChangeHandler(newPageNumber)" template-url="/templates/pagination/dirPagination.tpl.html" pagination-id="items")

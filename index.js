@@ -41,6 +41,10 @@ module.exports = function(options) {
         uri: '/**',
         roles: ['SUPER', 'ADMIN']
       }]
+    },
+    pagination: {
+      items: 15,
+      history: 5
     }
   }
   if (options.debug) {
@@ -63,6 +67,9 @@ module.exports = function(options) {
   }
   if (options.env) {
     global.app.env = options.env;
+  }
+  if (options.pagination) {
+    global.app.pagination = options.pagination;
   }
 
   // ASYNC

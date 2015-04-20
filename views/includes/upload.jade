@@ -1,7 +1,7 @@
 form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multipart/form-data" data-file-upload="options" ng-class="{'fileupload-processing': processing() || loadingFiles}")
-  div.row.fileupload-buttonbar
-    div.col-lg-12
-      div.btn-group
+  .row.fileupload-buttonbar
+    .col-lg-12
+      .btn-group
         span.btn.btn-success.fileinput-button(ng-class="{disabled: disabled}")
           i.fa.fa-plus.fa-fw
           span=__('Add files')
@@ -9,17 +9,17 @@ form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multip
         button.btn.btn-primary.start(type="button" ng-click="submit()")
           i.fa.fa-upload.fa-fw
           span=__('Start upload')
-        button.btn.btn-warning.cancel(type="button" ng-click="cancel()")
+        button.btn.btn-warning.cancel(type="button" ng-click="vulpejs.cancel()")
           i.fa.fa-ban.fa-fw
           span=__('Cancel upload')
-        button.btn.btn-danger.delete(type="button" ng-click="removeAll()")
+        button.btn.btn-danger.delete(type="button" ng-click="vulpejs.removeAll()")
           i.fa.fa-trash-o.fa-fw
           span=__('Delete')
-  div.row.fileupload-progressbar
-    div.col-lg-12.fade(ng-class="{in: active()}")
-      div.progress.progress-striped.active(data-file-upload-progress="progress()")
-        div.progress-bar.progress-bar-success.text-center(data-ng-style="{width: num + '%'}") {{num + '%'}}
-      div.progress-extended &nbsp;
+  .row.fileupload-progressbar
+    .col-lg-12.fade(ng-class="{in: active()}")
+      .progress.progress-striped.active(data-file-upload-progress="progress()")
+        .progress-bar.progress-bar-success.text-center(data-ng-style="{width: num + '%'}") {{num + '%'}}
+      .progress-extended &nbsp;
   table.table.table-striped.table-bordered.table-hover.files.ng-cloak.slide-down(role="presentation" ng-show="queue.length > 0")
     thead.fileupload-tableheader
       tr
@@ -34,10 +34,10 @@ form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multip
         td.text-center
           input(type="checkbox" ng-model="file.selected")
         td(ng-switch data-on="!!file.thumbnailUrl")
-          div.preview(ng-switch-when="true")
+          .preview(ng-switch-when="true")
             a(ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery)
               img.img-thumbnail(ng-src="{{file.thumbnailUrl}}" alt="")
-          div.preview(ng-switch-default file-upload-preview="file")
+          .preview(ng-switch-default file-upload-preview="file")
         td(ng-click="click = !click; detail = file.name")
           p(class="name" ng-switch data-on="!!file.url")
             span(ng-switch-when="true" ng-switch data-on="!!file.thumbnailUrl")
@@ -47,10 +47,10 @@ form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multip
           strong(ng-show="file.error" class="error text-danger") {{file.error}}
         td
           p(class="size") {{file.size | formatFileSize}}
-          div.progress.progress-striped.active.fade(ng-class="{pending: 'in'}[file.$state()]" data-file-upload-progress="file.$progress()")
-            div.progress-bar.progress-bar-success.text-center(ng-style="{width: num + '%'}") {{num + '%'}}
+          .progress.progress-striped.active.fade(ng-class="{pending: 'in'}[file.$state()]" data-file-upload-progress="file.$progress()")
+            .progress-bar.progress-bar-success.text-center(ng-style="{width: num + '%'}") {{num + '%'}}
         td
-          div.btn-group(ng-cloak ng-show="!file.$destroy")
+          .btn-group(ng-cloak ng-show="!file.$destroy")
             button.btn.btn-primary.btn-sm.start(type="button" ng-click="file.$submit()" ng-hide="!file.$submit || options.autoUpload" ng-disabled="file.$state() == 'pending' || file.$state() == 'rejected'")
               i.fa.fa-upload.fa-fw
               =__('Start')
@@ -61,9 +61,9 @@ form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multip
             button.btn.btn-danger.btn-sm.destroy(type="button" ng-controller="FileDestroyController" ng-click="file.$destroy()")
               i.fa.fa-trash-o.fa-fw
               =__('Delete')
-div#blueimp-gallery.blueimp-gallery.blueimp-gallery-controls(data-filter=":even")
-  div.slides
-  h3.title
+#blueimp-gallery.blueimp-gallery.blueimp-gallery-controls(data-filter=":even")
+  .slides
+  .title
   a.prev ‹
   a.next ›
   a.close ×

@@ -1,15 +1,15 @@
 unless page.main.submit
-  - page.main.submit='save()'
+  - page.main.submit='vulpejs.save()'
 unless page.main.form
   - page.main.form={enctype:'application/x-www-form-urlencoded'};
-form(name="mainForm" role="form" enctype=page.main.form.enctype ng-submit=page.main.submit submitted="submitted" novalidate shake-that)
-  .panel.panel-default(ng-class="{'box-shadow':$root.showing}")
+form(name="mainForm" role="form" enctype=page.main.form.enctype ng-submit=page.main.submit submitted="vulpejs.submitted" novalidate shake-that)
+  .panel.panel-default(ng-class="{'box-shadow':vulpejs.showing}")
     .panel-heading
       .row
         .col-lg-6=__(page.main.title)
         .col-lg-6
           include ../includes/main/view-actions
-    .panel-body.slide-down(ng-cloak ng-show="$root.showing")
+    .panel-body.slide-down(ng-cloak ng-show="vulpejs.showing")
       .row
         .col-lg-12
           if page.main.actions

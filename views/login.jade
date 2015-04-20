@@ -2,7 +2,7 @@ extends layouts/login
 
 block content
   .login-container(ng-controller="LoginController")
-    form.form-signin(name="form" role="form" ng-submit='login()' method="post" autocomplete="off" novalidate shake-that submitted="submitted")
+    form.form-signin(name="form" role="form" ng-submit="login()" method="post" autocomplete="off" novalidate shake-that submitted="submitted")
       div.panel.panel-default.box-shadow
         div.panel-heading
           h3.panel-title=__('Access Control')

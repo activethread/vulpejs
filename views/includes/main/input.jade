@@ -1,5 +1,5 @@
 - var formName = 'mainForm';
-- var itemName = 'item';
+- var itemName = 'vulpejs.item';
 if page.main
   if page.main.formName
     - formName = page.main.formName;
@@ -85,7 +85,7 @@ if input.rows
  - append += (append.length === 0 ? '' : '~') + 'rows:' + input.rows;
 
 if input.showIf
-  - divAppend += (divAppend.length === 0 ? '' : '~') + 'ng-show:' + input.showIf;
+  - divAppend += (divAppend.length === 0 ? '' : '~') + 'ng-if:' + input.showIf;
   - divClass += ' slide-down';
 
 if input.hideIf
@@ -148,10 +148,10 @@ if !input.maskPattern
 if input.minicolors 
   label.control-label(for=input.id)=label
 
-- var divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && submitted}";
+- var divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && vulpejs.submitted}";
 
 if input.readonly
-  - divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && submitted, 'col-lg-3': " + input.readonly + "}";
+  - divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && vulpejs.submitted, 'col-lg-3': " + input.readonly + "}";
 
 if input.type === 'show' || input.type === 'timer'
   - divNgClass = '';
@@ -268,10 +268,22 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
     else
       input(type=input.type class=input.className name=input.name id=input.id append=append ng-cloak ng-hide="#{input.readonly}")
   if input.validateMessage 
-    span(class="label label-danger" ng-cloak ng-show="#{formName}.#{input.name}.$error.validator")=__(input.validateMessage)
+    span(class="label label-danger" ng-cloak ng-if="#{formName}.#{input.name}.$error.validator")=__(input.validateMessage)
   if input.readonly && input.type !== 'star-rating'
     div(append=showAppend)
       if input.ngOptions
         span {{#{ngModel}.#{input.ngOptions.label}}}
       else
         span {{#{ngModel}}}
+  if input.button
+    unless input.button.type
+      - input.button.type = 'button';
+    unless input.button.className
+      - input.button.className = 'btn-default';
+    unless input.button.onClick
+      - input.button.onClick = '';
+    unless input.button.showIf
+      - input.button.showIf = '';
+    unless input.button.label
+      - input.button.label = input.label;
+    button.btn(type=input.button.type class=input.button.className ng-click=input.button.onClick ng-if=input.button.showIf)=__(input.button.label)

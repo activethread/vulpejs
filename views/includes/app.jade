@@ -1,4 +1,4 @@
-- var modules="";
+- var modules = "";
 if page.editor
   - modules += ", 'textAngular'";
 if page.minicolors
@@ -17,6 +17,6 @@ if page.multiSelect
   - modules += ", 'isteven-multi-select', 'angularjs-dropdown-multiselect'"
 if page.rangeSlider
   - modules += ", 'ui-rangeSlider'"
-if modules !== ""  
+if modules !== ""
   script(type="text/javascript").
-    vulpejs.ng.app = angular.module('app', ['app.controllers'#{modules}]);
+    vulpe.ng.app = angular.module('app', ['app.controllers'#{modules}]);

@@ -5,7 +5,7 @@ block content
     if page.inputs
       unless page.submit
         - page.submit='submit()'
-      form(name="form" role="form" ng-submit=page.submit submitted="submitted" novalidate shake-that)
+      form(name="form" role="form" ng-submit=page.submit submitted="vulpejs.submitted" novalidate shake-that)
         div.panel.panel-default.box-shadow
           div.panel-heading=__(page.title)
           div.panel-body.slide-down
@@ -20,5 +20,5 @@ block content
     if page.items
       include auto/items
     script(type="text/javascript").
-      vulpejs.view.inputs();
+      vulpe.view.inputs();
   include includes/script

@@ -26,7 +26,7 @@ if (global.app.security && global.app.security.login && global.app.security.logi
  * @param {Object}  error  Error
  */
 var responseError = function(res, error) {
-  debug.error(error);
+  debug.error('RESPONSE', error);
   res.status(500).json({
     error: error
   });
@@ -146,7 +146,7 @@ exports.doSave = function(options) {
         _id: item._id
       }, function(error, oldItem) {
         if (error) {
-          debug.error(error);
+          debug.error('ITEM-FIND', error);
           utils.tryExecute(options.callback.error);
         } else {
           var content = JSON.stringify(oldItem);
@@ -171,7 +171,7 @@ exports.doSave = function(options) {
             oldItem.save(function(error, obj) {
               callback(obj, error);
               if (error) {
-                debug.error(error);
+                debug.error('ITEM-UPDATE', error);
                 utils.tryExecute(options.callback.error);
               } else {
                 utils.tryExecute(options.callback.success, obj);
@@ -181,7 +181,7 @@ exports.doSave = function(options) {
           if (options.history) {
             history.save(function(error, obj) {
               if (error) {
-                debug.error(error);
+                debug.error('HISTORY-SAVE', error);
                 utils.tryExecute(options.callback.error);
               } else {
                 save();
@@ -196,7 +196,7 @@ exports.doSave = function(options) {
       item.save(function(error, obj) {
         callback(obj, error);
         if (error) {
-          debug.error(error);
+          debug.error('ITEM-SAVE', error);
           utils.tryExecute(options.callback.error);
         } else {
           utils.tryExecute(options.callback.success, obj);
@@ -218,7 +218,7 @@ exports.doSave = function(options) {
     });
     Model.count(query).exec(function(error, total) {
       if (error) {
-        debug.error(error);
+        debug.error('VALIDATE-SAVE-ITEM', error);
         utils.tryExecute(options.callback.error);
       } else {
         if (total > 0) {
@@ -263,10 +263,12 @@ exports.save = function(req, res, options) {
       success: function(obj) {
         if (!utils.tryExecute(options.callback, {
             item: obj,
+            postedItem: options.item,
             res: res
           })) {
           res.json({
-            item: obj
+            item: obj,
+            postedItem: options.item
           });
         }
       },
@@ -330,7 +332,7 @@ exports.doRemove = function(options) {
     // }
     mongoose.model(options.validate.exists.dependency).count(validateQuery).exec(function(error, total) {
       if (error) {
-        debug.error(error);
+        debug.error('VALIDATE-REMOVE-ITEM', error);
         utils.tryExecute(options.callback.error);
       } else {
         if (total > 0) {
@@ -456,14 +458,15 @@ exports.page = function(req, res) {
       user: userId
     });
   };
-  Model.paginate(query, page, 15, function(error, pageCount, items, itemCount) {
+  Model.paginate(query, page, global.app.pagination.items, function(error, pageCount, items, itemCount) {
     callback(items, error);
     if (error) {
-      debug.error(error);
+      debug.error('PAGE-ITEMS', error);
     } else {
       res.json({
         items: items,
-        pageCount: pageCount
+        pageCount: pageCount,
+        itemCount: itemCount
       });
     }
   }, {
@@ -481,7 +484,7 @@ exports.distinct = function(req, res) {
   var query = req.params.query || {};
   Model.find(query).distinct(req.params.distinct, function(error, items) {
     if (error) {
-      debug.error(error);
+      debug.error('DISTINCT', error);
     } else {
       res.json({
         items: items
@@ -500,7 +503,7 @@ exports.distinctArray = function(req, res) {
   var query = req.params.query || {};
   Model.find(query).distinct(req.params.distinct, function(error, items) {
     if (error) {
-      debug.error(error);
+      debug.error('DISTINCT-ARRAY', error);
     } else {
       items.sort(exports.compare);
       res.json(items);
@@ -516,13 +519,14 @@ exports.distinctArray = function(req, res) {
  */
 var history = function(query, page, callback) {
   var History = mongoose.model('History');
-  History.paginate(query, page, 5, function(error, pageCount, items, itemCount) {
+  History.paginate(query, page, global.app.pagination.history, function(error, pageCount, items, itemCount) {
     if (error) {
-      debug.error(error);
+      debug.error('HISTORY', error);
     } else {
       callback(error, {
         items: items,
-        pageCount: pageCount
+        pageCount: pageCount,
+        itemCount: itemCount
       });
     }
   }, {
@@ -585,7 +589,7 @@ exports.aggregate = function(req, res, options) {
   Model.aggregate(req.params.aggregate,
     function(err, results) {
       if (err) {
-        debug.error(err);
+        debug.error('AGGREGATE', err);
       } else {
         if (options && options.callback) {
           utils.tryExecute(options.callback, results);
@@ -681,7 +685,7 @@ exports.doFind = function(options) {
   if (options.one) {
     Model.findOne(options.query).populate(options.populate).exec(function(error, item) {
       if (error) {
-        debug.error(error);
+        debug.error('FIND-ONE', error);
       } else if (options && options.callback) {
         utils.tryExecute(options.callback, item);
       }
@@ -693,7 +697,7 @@ exports.doFind = function(options) {
     }
     Model.find(options.query).populate(options.populate).sort(options.orderBy).exec(function(error, items) {
       if (error) {
-        debug.error(error);
+        debug.error('FIND-MANY', error);
       } else if (options && options.callback) {
         utils.tryExecute(options.callback, items);
       }
@@ -961,7 +965,7 @@ exports.makeRoutes = function(options) {
       var loadView = function(view, callback) {
         res.render(view, function(err, html) {
           if (err) {
-            debug.error(err);
+            debug.error('RENDER-VIEW', err);
           } else {
             callback(html);
           }

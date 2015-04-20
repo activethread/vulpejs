@@ -1,4 +1,4 @@
-vulpejs.ng.app.controller('PasswordController', ['$rootScope', '$scope', '$http', '$timeout', '$messages', '$controller', 'AppManager', '$authenticator', '$filter', 'i18n', function($rootScope, $scope, $http, $timeout, $messages, $controller, AppManager, $authenticator, $filter, i18n) {
+vulpe.ng.app.controller('PasswordController', ['$rootScope', '$scope', '$http', '$timeout', '$messages', '$controller', 'VulpeJS', '$authenticator', '$filter', 'i18n', function($rootScope, $scope, $http, $timeout, $messages, $controller, VulpeJS, $authenticator, $filter, i18n) {
 
   var user = $authenticator.userDetails();
 

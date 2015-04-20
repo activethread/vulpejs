@@ -1,4 +1,4 @@
-vulpejs.ng.app.controller('LoginController', ['$rootScope', '$scope', '$http', '$timeout', '$messages', '$authenticator', '$window', '$cookies', '$store', function($rootScope, $scope, $http, $timeout, $messages, $authenticator, $window, $cookies, $store) {
+vulpe.ng.app.controller('LoginController', ['$rootScope', '$scope', '$http', '$timeout', '$messages', '$authenticator', '$window', '$cookies', '$store', function($rootScope, $scope, $http, $timeout, $messages, $authenticator, $window, $cookies, $store) {
 
   $('#custom').html('');
 
@@ -25,7 +25,7 @@ vulpejs.ng.app.controller('LoginController', ['$rootScope', '$scope', '$http', '
       } else {
         $store.remove('remember');
       }
-      $http.post(vulpejs.ng.rootContext + '/login', $scope.user).success(function(data) {
+      $http.post(vulpe.ng.rootContext + '/login', $scope.user).success(function(data) {
         $messages.addSuccessMessage('Successfully logged in!');
         $authenticator.loginSuccessfully(data.user);
         $window.location = data.redirectTo;
@@ -43,7 +43,7 @@ vulpejs.ng.app.controller('LoginController', ['$rootScope', '$scope', '$http', '
 
   $scope.forgotPassword = function() {
     if ($scope.user.username && $scope.user.username.length > 0) {
-      $window.location = vulpejs.ng.rootContext + '/forgot-password/' + $scope.user.username;
+      $window.location = vulpe.ng.rootContext + '/forgot-password/' + $scope.user.username;
     } else {
       $messages.addErrorMessage('Please enter your e-mail password reset.');
       $('#loginUsername').focus();
