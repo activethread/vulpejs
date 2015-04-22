@@ -7,10 +7,10 @@
       a#new-action-button.btn.btn-default(href="" ng-click="vulpejs.create(); vulpejs.submitted = false" title=__('New'))
         i.fa.fa-plus.fa-fw
         =__('New')
-      a#delete-action-button.btn.btn-default(href="" ng-click="vulpejs.remove(item._id); vulpejs.submitted = false" ng-clock ng-if="vulpejs.item._id" title=__('Delete'))
+      a#delete-action-button.btn.btn-default(href="" ng-click="vulpejs.remove(vulpejs.item._id); vulpejs.submitted = false" ng-clock ng-if="vulpejs.item._id" title=__('Delete'))
         i.fa.fa-trash-o.fa-fw
         =__('Delete')
-      a#clone-action-button.btn.btn-default(href="" ng-click="vulpejs.clone(item); vulpejs.submitted = false" ng-clock ng-if="vulpejs.item._id" title=__('Clone'))
+      a#clone-action-button.btn.btn-default(href="" ng-click="vulpejs.clone(vulpejs.item); vulpejs.submitted = false" ng-clock ng-if="vulpejs.item._id" title=__('Clone'))
         i.fa.fa-magic.fa-fw
         =__('Clone')
       button.btn.btn-default(type="submit" title=__('Save'))

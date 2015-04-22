@@ -30,8 +30,8 @@ var vulpe = {
     },
     controller: function(options) {
       return vulpe.ng.app.controller(
-        options.name + 'Controller', ['$rootScope', '$scope', '$http', '$timeout', '$messages', '$controller', 'VulpeJS', '$authenticator', '$filter', '$store',
-          function($rootScope, $scope, $http, $timeout, $messages, $controller, VulpeJS, $authenticator, $filter, i18n, $store) {
+        options.name + 'Controller', ['$rootScope', '$scope', 'VulpeJS', '$authenticator',
+          function($rootScope, $scope, VulpeJS) {
             new VulpeJS(options.service).init($scope);
           }
         ]);
@@ -135,9 +135,13 @@ var vulpe = {
       }
       return date.substring(2, 4) + '/' + date.substring(0, 2) + '/' + date.substring(4, 8);
     },
-    tryExecute: function(execute) {
+    tryExecute: function(execute, data) {
       if (typeof(execute) === 'function') {
-        execute();
+        if (data) {
+          execute(data);
+        } else {
+          execute();
+        }
       }
     },
     compare: function(a, b) {

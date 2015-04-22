@@ -210,7 +210,7 @@ app.factory('$messages', ['$rootScope', function($rootScope) {
  * @param   {Object}         $store         $store
  * @returns {String|Boolean}
  */
-app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$dialogs', '$timeout', 'i18n', '$store', '$cookieStore', '$sce', function($rootScope, $http, $authenticator, $messages, $dialogs, $timeout, i18n, $store, $cookieStore, $sce) {
+app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$dialogs', '$timeout', 'i18n', '$store', '$cookieStore', '$sce', '$window', '$filter', function($rootScope, $http, $authenticator, $messages, $dialogs, $timeout, i18n, $store, $cookieStore, $sce, $window, $filter) {
   var nothing = function() {};
   var empty = function() {
     return '';
@@ -219,26 +219,91 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
   var vulpejs = {
     $store: $store,
     $authenticator: $authenticator,
-    $http: $http,
-    $messages: $messages,
-    $dialogs: $dialogs,
     $timeout: $timeout,
-    $broadcast: $rootScope.$broadcast,
-    i18n: i18n,
-    addErrorMessage: function(msg) {
-      $messages.addErrorMessage(msg);
+    $filter: $filter,
+    $window: $window,
+    broadcast: function(name) {
+      $rootScope.$broadcast(name)
     },
-    addInfoMessage: function(msg) {
-      $messages.addInfoMessage(msg);
+    i18n: function(text) {
+      return i18n.__(text);
     },
-    addWarningMessage: function(msg) {
-      $messages.addWarningMessage(msg);
+    message: {
+      success: function(msg) {
+        $messages.addSuccessMessage(msg);
+      },
+      error: function(msg) {
+        $messages.addErrorMessage(msg);
+      },
+      info: function(msg) {
+        $messages.addInfoMessage(msg);
+      },
+      warning: function(msg) {
+        $messages.addWarningMessage(msg);
+      },
+      clean: function() {
+        $messages.cleanAllMessages();
+      }
     },
-    addSuccessMessage: function(msg) {
-      $messages.addSuccessMessage(msg);
+    dialog: {
+      confirm: function(options) {
+        $dialogs.confirm(vulpejs.i18n('Confirmation'), vulpejs.i18n(options.message)).result.then(function(btn) {
+          vulpe.util.tryExecute(options.callback);
+        }, function(btn) {});
+      }
     },
-    cleanAllMessages: function() {
-      $messages.cleanAllMessages();
+    http: {
+      get: function(options) {
+        $http({
+          url: options.url,
+          params: options.params || {}
+        }).success(function(data) {
+          if (options.callback.success) {
+            vulpe.util.tryExecute(options.callback.success, data);
+          } else {
+            vulpe.util.tryExecute(options.callback, data);
+          };
+        }).error(function(data, status, header, config) {
+          vulpe.util.tryExecute(options.callback.error, {
+            data: data,
+            status: status,
+            header: header,
+            config: config
+          });
+        });
+      },
+      delete: function(options) {
+        $http({
+          url: options.url,
+          method: 'DELETE',
+          params: options.params || {}
+        }).success(function(data) {
+          if (options.callback.success) {
+            vulpe.util.tryExecute(options.callback.success, data);
+          } else {
+            vulpe.util.tryExecute(options.callback, data);
+          };
+        }).error(function(data, status, header, config) {
+          vulpe.util.tryExecute(options.callback.error, {
+            data: data,
+            status: status,
+            header: header,
+            config: config
+          });
+        });
+      },
+      post: function(options) {
+        $http.post(options.url, options.data).success(function(data) {
+          vulpe.util.tryExecute(options.callback.success, data);
+        }).error(function(data, status, header, config) {
+          vulpe.util.tryExecute(options.callback.error, {
+            data: data,
+            status: status,
+            header: header,
+            config: config
+          });
+        });
+      }
     },
     rootContext: vulpe.ng.rootContext,
     onlyNumbers: /^\d+$/,
@@ -311,11 +376,11 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
     pageSize: 15,
     totalItems: 0,
     pageChangeHandler: function(newPageNumber) {
-      $messages.cleanAllMessages();
+      vulpejs.message.clean();
       vulpejs.list(newPageNumber);
     },
     historyPageChangeHandler: function(newPageNumber) {
-      $messages.cleanAllMessages();
+      vulpejs.message.clean();
       vulpejs.historyList(newPageNumber);
       vulpejs.historyVersion = null;
     },
@@ -503,7 +568,7 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
     remove: function(id) {
       vulpejs.operation = 'REMOVE';
       var remove = function() {
-        $messages.cleanAllMessages();
+        vulpejs.message.clean();
         vulpejs.removeBefore(id, function() {
           $http({
             method: 'DELETE',
@@ -511,7 +576,7 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
           }).success(function() {
             clearItem(false);
             vulpejs.list();
-            $messages.addSuccessMessage('Record successfully deleted!');
+            vulpejs.message.success('Record successfully deleted!');
             vulpejs.removeAfter(vulpejs);
           }).error(httpErrorHandler);
         });
@@ -522,7 +587,7 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
     },
     removeFromArray: function(name, property, index) {
       var remove = function() {
-        $messages.cleanAllMessages();
+        vulpejs.message.clean();
         vulpejs.item[name].splice(index, 1);
       };
       var propertyValue = vulpejs.item[name][index][property];
@@ -535,8 +600,28 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
       }
     },
     addToArray: function(name, object) {
-      $messages.cleanAllMessages();
+      vulpejs.message.clean();
       vulpejs.item[name].push(object);
+    },
+    clone: function(item) {
+      vulpejs.cloneBefore(vulpejs);
+      vulpejs.doDebug({
+        type: 'CLONE-BEFORE',
+        item: vulpejs.item
+      });
+      vulpejs.item = angular.copy(item);
+      delete vulpejs.item._id;
+      vulpejs.showing = true;
+      clearHistory();
+      vulpejs.cloneAfter(vulpejs);
+      vulpejs.doDebug({
+        type: 'CLONE-AFTER',
+        item: vulpejs.item
+      });
+      vulpejs.doLoadProperties();
+      $timeout(function() {
+        vulpejs.focus();
+      }, 100);
     },
     save: function(type) {
       if ($rootScope.form.$valid) {
@@ -554,7 +639,7 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
               type: 'SAVE-BEFORE',
               item: vulpejs.item
             });
-            $messages.cleanAllMessages();
+            vulpejs.message.clean();
             $http.post(vulpejs.rootContext + '/' + vulpejs.name, vulpejs.item).success(function(data) {
               vulpejs.item = data.item;
               if (vulpejs.saveType.length > 0) {
@@ -566,7 +651,7 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
                 }
                 vulpejs.saveType = '';
               }
-              $messages.addSuccessMessage('Record successfully saved!');
+              vulpejs.message.success('Record successfully saved!');
               $timeout(function() {
                 vulpejs.list();
                 vulpejs.focus();
@@ -584,7 +669,7 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
     },
     status: function(id, status) {
       vulpejs.operation = 'STATUS';
-      $messages.cleanAllMessages();
+      vulpejs.message.clean();
       vulpejs.statusBefore(vulpejs);
       $http.post(vulpejs.rootContext + '/' + vulpejs.name + '/status', {
         id: id,
@@ -593,7 +678,7 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
         if (vulpejs.item._id) {
           vulpejs.item.status = status;
         }
-        $messages.addSuccessMessage('Status successfully changed!');
+        vulpejs.message.success('Status successfully changed!');
         vulpejs.statusAfter(vulpejs);
         $timeout(function() {
           vulpejs.list($rootScope.currentPage + 1);
@@ -773,69 +858,73 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
   }
 
   var service = function(options) {
-    vulpejs.debug = options.debug || false;
-    vulpejs.name = options.name;
-    vulpejs.listUrl = options.listUrl || '/' + options.name + 's';
-    vulpejs.predicate = options.predicate || '';
-    if (options.populate) {
-      vulpejs.populate = options.populate;
-    }
-    if (options.focus) {
-      vulpejs.focus = function() {
-        if (angular.isFunction(options.focus)) {
-          options.focus(vulpejs);
-        } else {
-          var prefix = '#' + options.name.replace(/\-/g, '') + '-';
-          if (angular.isObject(options.focus)) {
-            $(prefix + (vulpejs.item._id ? options.focus.edit : options.focus.new)).focus();
+    if (options) {
+      vulpejs.debug = options.debug || false;
+      vulpejs.name = options.name;
+      vulpejs.listUrl = options.listUrl || '/' + options.name + 's';
+      vulpejs.predicate = options.predicate || '';
+      if (options.populate) {
+        vulpejs.populate = options.populate;
+      }
+      if (options.focus) {
+        vulpejs.focus = function() {
+          if (angular.isFunction(options.focus)) {
+            options.focus(vulpejs);
           } else {
-            $(prefix + options.focus).focus();
+            var prefix = '#' + options.name.replace(/\-/g, '') + '-';
+            if (angular.isObject(options.focus)) {
+              $(prefix + (vulpejs.item._id ? options.focus.edit : options.focus.new)).focus();
+            } else {
+              $(prefix + options.focus).focus();
+            }
           }
+        };
+      }
+      if (options.messages) {
+        vulpejs.messages = options.messages;
+      }
+      vulpejs.hotkeys = options.hotkeys || nothing;
+      if (options.list) {
+        if (options.list.filter) {
+          vulpejs.listFilter = options.list.filter;
         }
-      };
-    }
-    if (options.messages) {
-      vulpejs.messages = options.messages;
-    }
-    vulpejs.hotkeys = options.hotkeys || nothing;
-    if (options.list) {
-      if (options.list.filter) {
-        vulpejs.listFilter = options.list.filter;
+        vulpejs.listBefore = options.list.before || nothing;
+        vulpejs.listAfter = options.list.after || nothing;
       }
-      vulpejs.listBefore = options.list.before || nothing;
-      vulpejs.listAfter = options.list.after || nothing;
-    }
-    if (options.actions) {
-      vulpejs.newItem = options.actions.newItem || nothing;
-      if (options.actions.focus) {
-        vulpejs.focus = options.actions.focus;
+      if (options.actions) {
+        vulpejs.newItem = options.actions.newItem || nothing;
+        if (options.actions.focus) {
+          vulpejs.focus = options.actions.focus;
+        }
+        vulpejs.validate = options.actions.validate || nothing;
+        vulpejs.createBefore = options.actions.createBefore || nothing;
+        vulpejs.createAfter = options.actions.createAfter || nothing;
+        vulpejs.cloneBefore = options.actions.cloneBefore || nothing;
+        vulpejs.cloneAfter = options.actions.cloneAfter || nothing;
+        vulpejs.findBefore = options.actions.findBefore || nothing;
+        vulpejs.findAfter = options.actions.findAfter || nothing;
+        vulpejs.saveBefore = options.actions.saveBefore || nothing;
+        vulpejs.saveAfter = options.actions.saveAfter || nothing;
+        vulpejs.statusBefore = options.actions.statusBefore || nothing;
+        vulpejs.statusAfter = options.actions.statusAfter || nothing;
+        if (options.actions.removeBefore) {
+          $rootScop.vulpejse.removeBefore = options.actions.removeBefore;
+        }
+        vulpejs.removeAfter = options.actions.removeAfter || nothing;
+        vulpejs.cancelBefore = options.actions.cancelBefore || nothing;
+        vulpejs.cancelAfter = options.actions.cancelAfter || nothing;
       }
-      vulpejs.validate = options.actions.validate || nothing;
-      vulpejs.createBefore = options.actions.createBefore || nothing;
-      vulpejs.createAfter = options.actions.createAfter || nothing;
-      vulpejs.cloneBefore = options.actions.cloneBefore || nothing;
-      vulpejs.cloneAfter = options.actions.cloneAfter || nothing;
-      vulpejs.findBefore = options.actions.findBefore || nothing;
-      vulpejs.findAfter = options.actions.findAfter || nothing;
-      vulpejs.saveBefore = options.actions.saveBefore || nothing;
-      vulpejs.saveAfter = options.actions.saveAfter || nothing;
-      vulpejs.statusBefore = options.actions.statusBefore || nothing;
-      vulpejs.statusAfter = options.actions.statusAfter || nothing;
-      if (options.actions.removeBefore) {
-        $rootScop.vulpejse.removeBefore = options.actions.removeBefore;
+      if (options.load) {
+        vulpejs.loadArrays = options.load.arrays || [];
+        vulpejs.loadProperties = options.load.properties || [];
       }
-      vulpejs.removeAfter = options.actions.removeAfter || nothing;
-      vulpejs.cancelBefore = options.actions.cancelBefore || nothing;
-      vulpejs.cancelAfter = options.actions.cancelAfter || nothing;
+      if (options.error) {
+        vulpejs.errorHandler = options.error.handle || nothing;
+      }
+      vulpejs.init = options.init || nothing;
+    } else {
+      vulpejs.debug = false;
     }
-    if (options.load) {
-      vulpejs.loadArrays = options.load.arrays || [];
-      vulpejs.loadProperties = options.load.properties || [];
-    }
-    if (options.error) {
-      vulpejs.errorHandler = options.error.handle || nothing;
-    }
-    vulpejs.init = options.init || nothing;
   };
 
   var httpErrorHandler = function(data, status, header, config) {
@@ -846,18 +935,18 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
         status: status,
         header: header,
         config: config,
-        $messages: $messages
+        vulpejs: vulpejs
       });
     } else if (data.validate) {
       if (data.validate.exists) {
         if (vulpejs.operation === 'SAVE') {
-          $messages.addInfoMessage(vulpejs.messages.validate.save.exists);
+          vulpejs.message.info(vulpejs.messages.validate.save.exists);
         } else if (vulpejs.operation === 'REMOVE') {
-          $messages.addInfoMessage(vulpejs.messages.validate.remove.exists);
+          vulpejs.message.info(vulpejs.messages.validate.remove.exists);
         }
       }
     } else {
-      $messages.addErrorMessage('An error occurred in the execution.');
+      vulpejs.message.error('An error occurred in the execution.');
     }
   };
 
@@ -898,17 +987,20 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
         }
       });
     }
-    clearItem(false);
-    vulpejs.validate();
-    vulpejs.list();
-    if (vulpejs.loadArrays.length > 0) {
-      angular.forEach(vulpejs.loadArrays, function(array) {
-        vulpejs.loadArray(array);
-      });
+    if (vulpejs.name) {
+      clearItem(false);
+      vulpejs.validate();
+      vulpejs.list();
+      if (vulpejs.loadArrays.length > 0) {
+        angular.forEach(vulpejs.loadArrays, function(array) {
+          vulpejs.loadArray(array);
+        });
+      }
+      vulpejs.hotkeys();
+      vulpejs.tabsHotkeys();
+      vulpejs.focus();
     }
-    vulpejs.hotkeys();
-    vulpejs.tabsHotkeys();
-    vulpejs.focus();
+    return $rootScope.vulpejs;
   };
   service.prototype.store = $store;
 
