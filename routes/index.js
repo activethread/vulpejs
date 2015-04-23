@@ -12,6 +12,18 @@ var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
 var transport = nodemailer.createTransport(smtpTransport(global.app.smtp));
 
+var appRenderOptions = {
+  release: global.app.release,
+  version: global.app.version
+};
+
+var defaultAppRenderOptions = {
+  app: {
+    release: global.app.release,
+    version: global.app.version
+  }
+};
+
 global.app.rootContext = global.app.rootContext || '';
 var loginSkip = ['/login', '/logout', '/sign-up', '/sign-up-confirm', '/reset-password', '/forgot-password', '/fonts', '/javascripts', '/stylesheets', '/images', '/i18n', '/language'];
 if (global.app.security && global.app.security.login && global.app.security.login.skip) {
@@ -104,7 +116,7 @@ exports.checkAuth = function(req, res, next) {
       next();
     } else {
       res.status(403);
-      res.render('error', {
+      exports.render(res, 'error', {
         error: {
           status: 403,
           message: 'Unauthorized'
@@ -112,6 +124,22 @@ exports.checkAuth = function(req, res, next) {
       });
     }
   }
+};
+
+exports.render = function(res, name, options) {
+  if (!options) {
+    options = exports.defaultAppRenderOptions;
+  } else if (!options.app) {
+    options.app = appRenderOptions;
+  }
+  if (!options.page) {
+    options.page = {
+      minifier: global.app.page.minifier
+    };
+  } else if (!options.page.minifier) {
+    options.page.minifier = global.app.page.minifier;
+  }
+  res.render(name, options);
 };
 
 /**
@@ -829,7 +857,7 @@ exports.login = function(req, res) {
   if (req.user) {
     res.redirect('/');
   } else {
-    res.render('login', {
+    exports.render(res, 'login', {
       page: {
         controller: 'Login',
         title: 'Access Control'
@@ -972,7 +1000,7 @@ exports.makeRoutes = function(options) {
         });
       };
       var render = function() {
-        res.render('auto', {
+        exports.render(res, 'auto', {
           page: options.page
         });
       };
@@ -1004,11 +1032,11 @@ exports.makeRoutes = function(options) {
         render();
       }
     } else if (options.page) {
-      res.render(options.name, {
+      exports.render(res, options.name, {
         page: options.page
       });
     } else {
-      res.render(options.name);
+      exports.render(res, options.name);
     }
   });
   // FIND
@@ -1110,7 +1138,7 @@ exports.start = function(app, options) {
     // error handlers
     app.use(function(err, req, res, next) {
       res.status(err.status || 500);
-      res.render('error', {
+      exports.render(res, 'error', {
         message: err.message,
         error: global.app.env === 'production' ? {} : err
       });

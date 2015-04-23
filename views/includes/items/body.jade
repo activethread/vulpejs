@@ -69,6 +69,10 @@ tr.click.slide-down(dir-paginate="selectItem in vulpejs.items | filter:search | 
           span=action.className
           li(class=action.className ng-if=action.show)
             if action.link
-              a(ng-click=action.link.click)
+              unless action.link.click
+                - action.link.click = ''
+              unless action.link.href
+                - action.link.href = ''
+              a(href=action.link.href ng-click=action.link.click)
                 i(class="fa #{action.link.icon} fa-fw")
                 =__(action.link.label)

@@ -1,3 +1,6 @@
+- var minifier = '';
+if page.minifier
+  - minifier = '.min'
 head
   meta(charset='utf8')
   meta(http-equiv='X-UA-Compatible' content='IE=edge')
@@ -27,9 +30,9 @@ head
   script(src='/javascripts/angular/ui-bootstrap-tpls.min.js' type='text/javascript')
   script(src='/javascripts/angular/ui-utils.min.js' type='text/javascript')
   script(src='/javascripts/angular/dialogs.min.js' type='text/javascript')
-  script(src='/javascripts/app/directives.min.js' type='text/javascript')
-  script(src='/javascripts/app/filters.min.js' type='text/javascript')
-  script(src='/javascripts/app/services.min.js' type='text/javascript')
-  script(src='/javascripts/app/controllers.min.js' type='text/javascript')
-  script(src='/javascripts/vulpe.min.js' type='text/javascript')
-  script(src='/javascripts/app.min.js' type='text/javascript')
+  script(src='/javascripts/app/directives#{minifier}.js' type='text/javascript')
+  script(src='/javascripts/app/filters#{minifier}.js' type='text/javascript')
+  script(src='/javascripts/app/services#{minifier}.js' type='text/javascript')
+  script(src='/javascripts/app/controllers#{minifier}.js' type='text/javascript')
+  script(src='/javascripts/vulpe#{minifier}.js' type='text/javascript')
+  script(src='/javascripts/app#{minifier}.js' type='text/javascript')

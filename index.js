@@ -4,8 +4,11 @@ module.exports = function(options) {
   }
   var path = require('path');
   global.app = {
+    url: 'http://localhost:3000',
     rootDir: path.resolve(__dirname + '/../'),
     rootContext: '',
+    release: '',
+    version: '',
     env: 'development',
     debug: false,
     callback: {
@@ -45,7 +48,19 @@ module.exports = function(options) {
     pagination: {
       items: 15,
       history: 5
+    },
+    page: {
+      minifier: true
     }
+  }
+  if (options.url) {
+    global.app.url = options.url;
+  }
+  if (options.release) {
+    global.app.release = options.release;
+  }
+  if (options.version) {
+    global.app.version = options.version;
   }
   if (options.debug) {
     global.app.debug = options.debug;
@@ -70,6 +85,9 @@ module.exports = function(options) {
   }
   if (options.pagination) {
     global.app.pagination = options.pagination;
+  }
+  if (options.page) {
+    global.app.page = options.page;
   }
 
   // ASYNC
