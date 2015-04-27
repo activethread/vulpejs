@@ -1,13 +1,12 @@
 "use strict";
-var models = require(global.app.rootDir + '/vulpejs/models');
 
 /**
  * Create Security Model
  * @param   {Object} mongoose Mongoose
  * @returns {Object} Model
  */
-module.exports = function(mongoose) {
-  return models.getModel({
+module.exports = function() {
+  return vulpejs.models.getModel({
     name: 'Secutiry',
     schema: {
       url: {
@@ -21,7 +20,7 @@ module.exports = function(mongoose) {
         }
       }],
       user: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: vulpejs.mongoose.Schema.Types.ObjectId,
         ref: 'User'
       }
     }

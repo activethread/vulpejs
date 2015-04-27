@@ -1,55 +1,25 @@
 "use strict";
-var utils = require('../utils');
-var debug = require('../debug');
-var http = require('http');
-var fs = require('fs');
-var dust = require('dustjs-linkedin');
-var express = require('express');
-var async = require('async');
-var mongoose = require('mongoose');
-var passport = require('passport');
-var nodemailer = require('nodemailer');
-var smtpTransport = require('nodemailer-smtp-transport');
-var transport = nodemailer.createTransport(smtpTransport(global.app.smtp));
 
-var appRenderOptions = {
-  release: global.app.release,
-  version: global.app.version
-};
-
-var defaultAppRenderOptions = {
-  app: {
-    release: global.app.release,
-    version: global.app.version
-  }
-};
-
-global.app.rootContext = global.app.rootContext || '';
 var loginSkip = ['/login', '/logout', '/sign-up', '/sign-up-confirm', '/reset-password', '/forgot-password', '/fonts', '/javascripts', '/stylesheets', '/images', '/i18n', '/language'];
-if (global.app.security && global.app.security.login && global.app.security.login.skip) {
-  global.app.security.login.skip.forEach(function(value) {
-    loginSkip.push(value);
-  });
-}
 
 /**
  * Response Error.
  * @param {Object}  res    Response
  * @param {Object}  error  Error
  */
-var responseError = function(res, error) {
-  debug.error('RESPONSE', error);
+exports.responseError = function(res, error) {
+  vulpejs.debug.error('RESPONSE', error);
   res.status(500).json({
     error: error
   });
 };
 
-var responseSuccess = function(res) {
+exports.responseSuccess = function(res) {
   res.status(201).end();
 };
 
-var responseValidate = function(res, validate) {
-  debug.log(validate);
+exports.responseValidate = function(res, validate) {
+  vulpejs.debug.log(validate);
   res.status(500).json({
     validate: validate
   });
@@ -64,7 +34,7 @@ var responseValidate = function(res, validate) {
 exports.checkAuth = function(req, res, next) {
   var skip = false;
   for (var i = 0, len = loginSkip.length; i < len; ++i) {
-    var skipUri = global.app.rootContext + loginSkip[i];
+    var skipUri = vulpejs.app.root.context + loginSkip[i];
     if (skipUri === req.originalUrl || req.originalUrl.indexOf(skipUri) === 0) {
       skip = true;
       break;
@@ -73,13 +43,13 @@ exports.checkAuth = function(req, res, next) {
   if (!req.isAuthenticated()) {
     if (!skip) {
       req.session['redirect-to'] = req.originalUrl;
-      res.redirect(global.app.rootContext + '/login');
+      res.redirect(vulpejs.app.root.context + '/login');
       return;
     }
     next();
   } else {
     var roles = req.session['user-roles'];
-    if (skip || !roles || roles.length === 0 || !global.app.security.routes || global.app.security.routes.length === 0) {
+    if (skip || !roles || roles.length === 0 || !vulpejs.app.security.routes || vulpejs.app.security.routes.length === 0) {
       next();
       return;
     }
@@ -102,9 +72,9 @@ exports.checkAuth = function(req, res, next) {
     var requestedRoute = '';
     var roleExists = false;
     var routeExists = false;
-    var routes = global.app.security.routes.length;
+    var routes = vulpejs.app.security.routes.length;
     for (var i = 0; i < routes; ++i) {
-      var route = global.app.security.routes[i];
+      var route = vulpejs.app.security.routes[i];
       if (route.uri === '/**') {
         routeWildcard = route;
       } else if ((route.uri === '/' && req.originalUrl === route.uri) || (route.uri !== '/' && req.originalUrl.indexOf(route.uri) === 0)) {
@@ -128,16 +98,24 @@ exports.checkAuth = function(req, res, next) {
 
 exports.render = function(res, name, options) {
   if (!options) {
-    options = exports.defaultAppRenderOptions;
+    options = {
+      app: {
+        release: vulpejs.app.release,
+        version: vulpejs.app.version
+      }
+    };
   } else if (!options.app) {
-    options.app = appRenderOptions;
+    options.app = {
+      release: vulpejs.app.release,
+      version: vulpejs.app.version
+    };
   }
   if (!options.page) {
     options.page = {
-      minifier: global.app.page.minifier
+      minifier: vulpejs.app.page.minifier
     };
   } else if (!options.page.minifier) {
-    options.page.minifier = global.app.page.minifier;
+    options.page.minifier = vulpejs.app.page.minifier;
   }
   res.render(name, options);
 };
@@ -147,8 +125,8 @@ exports.render = function(res, name, options) {
  * @param {Object} options {model, item, data, callback {success, error}}
  */
 exports.doSave = function(options) {
-  var History = mongoose.model('History');
-  var Model = mongoose.model(options.model);
+  var History = vulpejs.mongoose.model('History');
+  var Model = vulpejs.mongoose.model(options.model);
   var item = new Model(options.item);
   if (options.userId) {
     item.user = options.userId;
@@ -161,7 +139,7 @@ exports.doSave = function(options) {
       options.callback = {};
     }
     var callback = function(item, error) {
-      utils.tryExecute(error ? global.app.callback.save.error : global.app.callback.save.success, {
+      vulpejs.utils.tryExecute(error ? vulpejs.app.callback.save.error : vulpejs.app.callback.save.success, {
         type: options.item._id ? 'UPDATE' : 'INSERT',
         model: options.model,
         message: error || '',
@@ -174,8 +152,8 @@ exports.doSave = function(options) {
         _id: item._id
       }, function(error, oldItem) {
         if (error) {
-          debug.error('ITEM-FIND', error);
-          utils.tryExecute(options.callback.error);
+          vulpejs.debug.error('ITEM-FIND', error);
+          vulpejs.utils.tryExecute(options.callback.error);
         } else {
           var content = JSON.stringify(oldItem);
           var history = new History({
@@ -194,23 +172,23 @@ exports.doSave = function(options) {
                 options.data(oldItem, item);
               }
             } else {
-              utils.copy(item, oldItem);
+              vulpejs.utils.copy(item, oldItem);
             }
             oldItem.save(function(error, obj) {
               callback(obj, error);
               if (error) {
-                debug.error('ITEM-UPDATE', error);
-                utils.tryExecute(options.callback.error);
+                vulpejs.debug.error('ITEM-UPDATE', error);
+                vulpejs.utils.tryExecute(options.callback.error);
               } else {
-                utils.tryExecute(options.callback.success, obj);
+                vulpejs.utils.tryExecute(options.callback.success, obj);
               }
             });
           };
           if (options.history) {
             history.save(function(error, obj) {
               if (error) {
-                debug.error('HISTORY-SAVE', error);
-                utils.tryExecute(options.callback.error);
+                vulpejs.debug.error('HISTORY-SAVE', error);
+                vulpejs.utils.tryExecute(options.callback.error);
               } else {
                 save();
               }
@@ -224,10 +202,10 @@ exports.doSave = function(options) {
       item.save(function(error, obj) {
         callback(obj, error);
         if (error) {
-          debug.error('ITEM-SAVE', error);
-          utils.tryExecute(options.callback.error);
+          vulpejs.debug.error('ITEM-SAVE', error);
+          vulpejs.utils.tryExecute(options.callback.error);
         } else {
-          utils.tryExecute(options.callback.success, obj);
+          vulpejs.utils.tryExecute(options.callback.success, obj);
         }
       });
     }
@@ -246,11 +224,11 @@ exports.doSave = function(options) {
     });
     Model.count(query).exec(function(error, total) {
       if (error) {
-        debug.error('VALIDATE-SAVE-ITEM', error);
-        utils.tryExecute(options.callback.error);
+        vulpejs.debug.error('VALIDATE-SAVE-ITEM', error);
+        vulpejs.utils.tryExecute(options.callback.error);
       } else {
         if (total > 0) {
-          utils.tryExecute(options.callback.validate, {
+          vulpejs.utils.tryExecute(options.callback.validate, {
             exists: true,
             total: total
           });
@@ -289,7 +267,7 @@ exports.save = function(req, res, options) {
     userId: userId,
     callback: {
       success: function(obj) {
-        if (!utils.tryExecute(options.callback, {
+        if (!vulpejs.utils.tryExecute(options.callback, {
             item: obj,
             postedItem: options.item,
             res: res
@@ -301,10 +279,10 @@ exports.save = function(req, res, options) {
         }
       },
       error: function(error) {
-        responseError(res, error);
+        exports.responseError(res, error);
       },
       validate: function(validate) {
-        responseValidate(res, validate);
+        exports.responseValidate(res, validate);
       }
     }
   });
@@ -315,10 +293,10 @@ exports.save = function(req, res, options) {
  * @param {Object} options {model, id, callback}
  */
 exports.doRemove = function(options) {
-  var Model = mongoose.model(options.model);
+  var Model = vulpejs.mongoose.model(options.model);
   var query = options.query;
   var callback = function(item, error) {
-    utils.tryExecute(error ? global.app.callback.remove.error : global.app.callback.remove.success, {
+    vulpejs.utils.tryExecute(error ? vulpejs.app.callback.remove.error : vulpejs.app.callback.remove.success, {
       type: 'DELETE',
       model: options.model,
       message: error || '',
@@ -330,10 +308,10 @@ exports.doRemove = function(options) {
     Model.remove(query, function(error, item) {
       callback(item, error);
       if (error) {
-        debug.error(error);
-        utils.tryExecute(options.callback.error);
+        vulpejs.debug.error(error);
+        vulpejs.utils.tryExecute(options.callback.error);
       } else {
-        utils.tryExecute(options.callback.success, item);
+        vulpejs.utils.tryExecute(options.callback.success, item);
       }
     });
   }
@@ -342,13 +320,13 @@ exports.doRemove = function(options) {
       server: options.item._id
     };
     // for (var i = 0, len = options.validate.exists.dependencies.length; i < leng; ++i) {
-    //   mongoose.model(options.validate.exists[i]).count(query).exec(function(error, total) {
+    //   vulpejs.mongoose.model(options.validate.exists[i]).count(query).exec(function(error, total) {
     //     if (error) {
-    //       debug.error(error);
-    //       utils.tryExecute(options.callback.error);
+    //       vulpejs.debug.error(error);
+    //       vulpejs.utils.tryExecute(options.callback.error);
     //     } else {
     //       if (total > 0) {
-    //         utils.tryExecute(options.callback.validate, {
+    //         vulpejs.utils.tryExecute(options.callback.validate, {
     //           exists: true,
     //           total: total
     //         });
@@ -358,13 +336,13 @@ exports.doRemove = function(options) {
     //     }
     //   });
     // }
-    mongoose.model(options.validate.exists.dependency).count(validateQuery).exec(function(error, total) {
+    vulpejs.mongoose.model(options.validate.exists.dependency).count(validateQuery).exec(function(error, total) {
       if (error) {
-        debug.error('VALIDATE-REMOVE-ITEM', error);
-        utils.tryExecute(options.callback.error);
+        vulpejs.debug.error('VALIDATE-REMOVE-ITEM', error);
+        vulpejs.utils.tryExecute(options.callback.error);
       } else {
         if (total > 0) {
-          utils.tryExecute(options.callback.validate, {
+          vulpejs.utils.tryExecute(options.callback.validate, {
             exists: true,
             total: total
           });
@@ -410,7 +388,7 @@ exports.remove = function(req, res, options) {
     userId: userId,
     callback: {
       success: function(obj) {
-        if (!utils.tryExecute(options.callback, {
+        if (!vulpejs.utils.tryExecute(options.callback, {
             item: obj,
             res: res
           })) {
@@ -420,10 +398,10 @@ exports.remove = function(req, res, options) {
         }
       },
       error: function(error) {
-        responseError(res, error);
+        exports.responseError(res, error);
       },
       validate: function(validate) {
-        responseValidate(res, validate);
+        exports.responseValidate(res, validate);
       }
     }
   });
@@ -440,10 +418,10 @@ exports.list = function(req, res) {
     populate = '';
   }
   var query = req.params.query || {};
-  var Model = mongoose.model(req.params.model);
+  var Model = vulpejs.mongoose.model(req.params.model);
   var userId = req.session['user-id'];
   var callback = function(items, error) {
-    utils.tryExecute(error ? global.app.callback.list.error : global.app.callback.list.success, {
+    vulpejs.utils.tryExecute(error ? vulpejs.app.callback.list.error : vulpejs.app.callback.list.success, {
       type: 'SELECT',
       model: req.params.model,
       message: error || '',
@@ -454,7 +432,7 @@ exports.list = function(req, res) {
   Model.find(query).populate(populate).exec(function(error, items) {
     callback(items, error);
     if (error) {
-      responseError(res, error);
+      exports.responseError(res, error);
     } else {
       res.json({
         items: items
@@ -476,9 +454,9 @@ exports.page = function(req, res) {
   var query = req.params.query || {};
   var page = req.params.page || 1;
   var userId = req.session['user-id'];
-  var Model = mongoose.model(req.params.model);
+  var Model = vulpejs.mongoose.model(req.params.model);
   var callback = function(items, error) {
-    utils.tryExecute(error ? global.app.callback.list.error : global.app.callback.list.success, {
+    vulpejs.utils.tryExecute(error ? vulpejs.app.callback.list.error : vulpejs.app.callback.list.success, {
       type: 'SELECT',
       model: req.params.model,
       message: error || 'page:' + page,
@@ -486,10 +464,10 @@ exports.page = function(req, res) {
       user: userId
     });
   };
-  Model.paginate(query, page, global.app.pagination.items, function(error, pageCount, items, itemCount) {
+  Model.paginate(query, page, vulpejs.app.pagination.items, function(error, pageCount, items, itemCount) {
     callback(items, error);
     if (error) {
-      debug.error('PAGE-ITEMS', error);
+      vulpejs.debug.error('PAGE-ITEMS', error);
     } else {
       res.json({
         items: items,
@@ -508,11 +486,11 @@ exports.page = function(req, res) {
  * @param {Object} res Response
  */
 exports.distinct = function(req, res) {
-  var Model = mongoose.model(req.params.model);
+  var Model = vulpejs.mongoose.model(req.params.model);
   var query = req.params.query || {};
   Model.find(query).distinct(req.params.distinct, function(error, items) {
     if (error) {
-      debug.error('DISTINCT', error);
+      vulpejs.debug.error('DISTINCT', error);
     } else {
       res.json({
         items: items
@@ -527,11 +505,11 @@ exports.distinct = function(req, res) {
  * @param {Object} res Response
  */
 exports.distinctArray = function(req, res) {
-  var Model = mongoose.model(req.params.model);
+  var Model = vulpejs.mongoose.model(req.params.model);
   var query = req.params.query || {};
   Model.find(query).distinct(req.params.distinct, function(error, items) {
     if (error) {
-      debug.error('DISTINCT-ARRAY', error);
+      vulpejs.debug.error('DISTINCT-ARRAY', error);
     } else {
       items.sort(exports.compare);
       res.json(items);
@@ -546,10 +524,10 @@ exports.distinctArray = function(req, res) {
  * @param {Function} callback Callback function
  */
 var history = function(query, page, callback) {
-  var History = mongoose.model('History');
-  History.paginate(query, page, global.app.pagination.history, function(error, pageCount, items, itemCount) {
+  var History = vulpejs.mongoose.model('History');
+  History.paginate(query, page, vulpejs.app.pagination.history, function(error, pageCount, items, itemCount) {
     if (error) {
-      debug.error('HISTORY', error);
+      vulpejs.debug.error('HISTORY', error);
     } else {
       callback(error, {
         items: items,
@@ -572,23 +550,23 @@ var history = function(query, page, callback) {
  */
 exports.find = function(req, res, options) {
   var page = req.params.page || 1;
-  var Model = mongoose.model(req.params.model);
+  var Model = vulpejs.mongoose.model(req.params.model);
   var populate = req.params.populate || '';
   Model.findOne({
     _id: req.params.id
   }).populate(populate).exec(function(error, item) {
     if (error) {
-      responseError(res, error);
+      exports.responseError(res, error);
     } else if (item) {
       history({
         type: req.params.model,
         cid: item.id
       }, page, function(error, history) {
         if (error) {
-          responseError(res, error);
+          exports.responseError(res, error);
         } else {
           if (options && options.callback) {
-            utils.tryExecute(options.callback, {
+            vulpejs.utils.tryExecute(options.callback, {
               item: item,
               res: res
             });
@@ -613,14 +591,14 @@ exports.find = function(req, res, options) {
  * @param {Object} options {model, group, callback}
  */
 exports.aggregate = function(req, res, options) {
-  var Model = mongoose.model(req.params.model);
+  var Model = vulpejs.mongoose.model(req.params.model);
   Model.aggregate(req.params.aggregate,
     function(err, results) {
       if (err) {
-        debug.error('AGGREGATE', err);
+        vulpejs.debug.error('AGGREGATE', err);
       } else {
         if (options && options.callback) {
-          utils.tryExecute(options.callback, results);
+          vulpejs.utils.tryExecute(options.callback, results);
         } else {
           res.json({
             items: results
@@ -643,7 +621,7 @@ exports.findAndCallback = function(req, res, options) {
   if (req.params.id) {
     options.id = req.params.id;
   }
-  var Model = mongoose.model(options.model);
+  var Model = vulpejs.mongoose.model(options.model);
   if (!options.query) {
     options.query = {
       _id: options.id
@@ -663,14 +641,14 @@ exports.findAndCallback = function(req, res, options) {
       if (error) {
         res.status(500);
         if (options.callbackError) {
-          utils.tryExecute(options.callbackError, error);
+          vulpejs.utils.tryExecute(options.callbackError, error);
         } else {
           res.json({
             error: error
           });
         }
       } else if (options && options.callback) {
-        utils.tryExecute(options.callback, item);
+        vulpejs.utils.tryExecute(options.callback, item);
       }
     });
   } else if (options.many) {
@@ -678,14 +656,14 @@ exports.findAndCallback = function(req, res, options) {
       if (error) {
         res.status(500);
         if (options.callbackError) {
-          utils.tryExecute(options.callbackError, error);
+          vulpejs.utils.tryExecute(options.callbackError, error);
         } else {
           res.json({
             error: error
           });
         }
       } else if (options && options.callback) {
-        utils.tryExecute(options.callback, items);
+        vulpejs.utils.tryExecute(options.callback, items);
       }
     });
   }
@@ -696,7 +674,7 @@ exports.findAndCallback = function(req, res, options) {
  * @param {Object} options {model, object id, query, populate, callback}
  */
 exports.doFind = function(options) {
-  var Model = mongoose.model(options.model);
+  var Model = vulpejs.mongoose.model(options.model);
   if (!options.populate) {
     options.populate = '';
   }
@@ -713,9 +691,9 @@ exports.doFind = function(options) {
   if (options.one) {
     Model.findOne(options.query).populate(options.populate).exec(function(error, item) {
       if (error) {
-        debug.error('FIND-ONE', error);
+        vulpejs.debug.error('FIND-ONE', error);
       } else if (options && options.callback) {
-        utils.tryExecute(options.callback, item);
+        vulpejs.utils.tryExecute(options.callback, item);
       }
     });
   } else
@@ -725,9 +703,9 @@ exports.doFind = function(options) {
     }
     Model.find(options.query).populate(options.populate).sort(options.orderBy).exec(function(error, items) {
       if (error) {
-        debug.error('FIND-MANY', error);
+        vulpejs.debug.error('FIND-MANY', error);
       } else if (options && options.callback) {
-        utils.tryExecute(options.callback, items);
+        vulpejs.utils.tryExecute(options.callback, items);
       }
     });
   }
@@ -749,17 +727,17 @@ exports.findByIdAndUpdate = function(req, res, options) {
   if (req.params.data) {
     options.data = req.params.data;
   }
-  var Model = mongoose.model(options.model);
+  var Model = vulpejs.mongoose.model(options.model);
   Model.findByIdAndUpdate(options.id, {
     $set: options.data
   }, function(error, item) {
     if (error) {
-      responseError(res, error);
+      exports.responseError(res, error);
       return;
     } else if (options && options.callback) {
-      utils.tryExecute(options.callback, item);
+      vulpejs.utils.tryExecute(options.callback, item);
     } else {
-      responseSuccess(res);
+      exports.responseSuccess(res);
     }
   });
 };
@@ -770,12 +748,12 @@ exports.findByIdAndUpdate = function(req, res, options) {
  * @param {Object} res Response
  */
 exports.history = function(req, res) {
-  var History = mongoose.model('History');
+  var History = vulpejs.mongoose.model('History');
   History.find({
     type: req.params.model
   }).exec(function(error, items) {
     if (error) {
-      responseError(res, error);
+      exports.responseError(res, error);
     } else {
       res.json({
         items: items
@@ -791,7 +769,7 @@ exports.history = function(req, res) {
  * @param {Object} options {model, callback}
  */
 exports.status = function(req, res, options) {
-  var Model = mongoose.model(req.params.model);
+  var Model = vulpejs.mongoose.model(req.params.model);
   var item = req.body;
   Model.findByIdAndUpdate(item.id, {
     $set: {
@@ -799,51 +777,11 @@ exports.status = function(req, res, options) {
     }
   }, function(error, item) {
     if (error) {
-      responseError(res, error);
+      exports.responseError(res, error);
     } else if (options && options.callback) {
-      utils.tryExecute(options.callback, item);
+      vulpejs.utils.tryExecute(options.callback, item);
     } else {
-      responseSuccess(res);
-    }
-  });
-};
-
-/**
- * Load Dust template and execute callback.
- * @param {Object} options {name, data, res, callback}
- */
-exports.template = function(options) {
-  dust.compile(fs.readFileSync(global.app.rootDir + '/templates/' + options.name, 'utf8'), options.name);
-  dust.render(options.name, options.data, function(error, out) {
-    if (error) {
-      debug.error('Error on parse template ' + options.name + ': ' + error);
-      if (options.res) {
-        responseError(options.res, error);
-      }
-    } else {
-      utils.tryExecute(options.callback, out);
-    }
-  });
-};
-
-/**
- * Send mail.
- * @param {Object} options {from, to, subject, html, res, callback}
- */
-exports.sendmail = function(options) {
-  transport.sendMail({
-    from: options.from,
-    to: options.to,
-    subject: options.subject,
-    html: options.html
-  }, function(error, info) {
-    if (error) {
-      debug.error('Error on send mail \'' + options.subject + '\' to ' + options.to + ': ' + error, info);
-      if (options.res) {
-        responseError(options.res, error);
-      }
-    } else {
-      utils.tryExecute(options.callback);
+      exports.responseSuccess(res);
     }
   });
 };
@@ -874,9 +812,9 @@ exports.login = function(req, res) {
  * @returns {Object}   User details.
  */
 exports.doLogin = function(req, res, next) {
-  passport.authenticate('local', function(error, user, info) {
+  vulpejs.passport.authenticate('local', function(error, user, info) {
     if (error) {
-      utils.tryExecute(global.app.callback.login.error, {
+      vulpejs.utils.tryExecute(vulpejs.app.callback.login.error, {
         user: user,
         error: error
       });
@@ -884,7 +822,7 @@ exports.doLogin = function(req, res, next) {
     }
 
     if (!user) {
-      utils.tryExecute(global.app.callback.login.unauthorized, {
+      vulpejs.utils.tryExecute(vulpejs.app.callback.login.unauthorized, {
         user: user
       });
       return res.redirect(403, '/login');
@@ -892,7 +830,7 @@ exports.doLogin = function(req, res, next) {
 
     req.logIn(user, function(error) {
       if (error) {
-        utils.tryExecute(global.app.callback.login.error, {
+        vulpejs.utils.tryExecute(vulpejs.app.callback.login.error, {
           user: user,
           error: error
         });
@@ -909,7 +847,7 @@ exports.doLogin = function(req, res, next) {
       req.session['user-roles'] = user.roles;
       var url = req.session['redirect-to'] || '/';
       delete req.session['redirect-to'];
-      utils.tryExecute(global.app.callback.login.success, {
+      vulpejs.utils.tryExecute(vulpejs.app.callback.login.success, {
         user: user
       });
       return res.json({
@@ -930,11 +868,11 @@ exports.logout = function(req, res) {
   if (req.isAuthenticated()) {
     req.logout();
   }
-  utils.tryExecute(global.app.callback.logout, {
+  vulpejs.utils.tryExecute(vulpejs.app.callback.logout, {
     user: req.session['user-id']
   });
   delete req.session['user-id'];
-  res.redirect(global.app.rootContext + '/');
+  res.redirect(vulpejs.app.root.context + '/');
 };
 
 /**
@@ -948,31 +886,12 @@ exports.language = function(req, res) {
 };
 
 /**
- * Get HTML content from HTTP.
- * @param {Object}   options {}
- * @param {Function} callback Callback function
- */
-exports.httpGet = function(options, callback) {
-  http.get(options, function(res) {
-    var html = "";
-    res.on("data", function(chunk) {
-      html += chunk.toString();
-    });
-    res.on('end', function() {
-      utils.tryExecute(callback, html);
-    });
-  }).on('error', function(e) {
-    debug.error("HTTP GET error: " + e.message);
-  });
-};
-
-/**
  * Make default routes.
  * @param   {Object} options {name, listName, model, remove:{executeBefore}, save:{data}, populate}
  * @returns {Object} Express router.
  */
 exports.makeRoutes = function(options) {
-  var router = express.Router();
+  var router = vulpejs.express.router;
   // INIT OPTIONS
   if (!options.listName) {
     options.listName = options.name + 's';
@@ -993,7 +912,7 @@ exports.makeRoutes = function(options) {
       var loadView = function(view, callback) {
         res.render(view, function(err, html) {
           if (err) {
-            debug.error('RENDER-VIEW', err);
+            vulpejs.debug.error('RENDER-VIEW', err);
           } else {
             callback(html);
           }
@@ -1116,39 +1035,143 @@ exports.makeRoutes = function(options) {
 
   return router;
 };
-exports.start = function(app, options) {
-  var router = express.Router();
+exports.start = function(options) {
+  var router = vulpejs.express.router;
+  var path = require('path');
+
+  if (vulpejs.app.security && vulpejs.app.security.login && vulpejs.app.security.login.skip) {
+    vulpejs.app.security.login.skip.forEach(function(value) {
+      loginSkip.push(value);
+    });
+  }
+
+  var configuration = {
+    directory: vulpejs.app.root.dir + '/locales/',
+    extension: '.json',
+    objectNotation: '.'
+  };
+
+  /**
+   * Configure the express routes through which translations are served.
+   * @param app
+   * @param {Object} [configObject]
+   */
+  var configure = function(configObject) {
+    if (typeof configObject !== 'undefined') {
+      configuration.directory = configObject.directory || configuration.directory;
+      configuration.extension = configObject.extension || configuration.extension;
+      configuration.objectNotation = configObject.objectNotation || configuration.objectNotation;
+    }
+
+    // Register routes
+    var uri = vulpejs.app.root.context + '/i18n/:locale';
+    vulpejs.express.app.get(uri, i18nRoutes.i18n);
+    vulpejs.express.app.get(uri + '/:phrase', i18nRoutes.translate);
+  };
+
+  /**
+   * Middleware to allow retrieval of users locale in the template engine.
+   * @param {Object} request
+   * @param {Object} response
+   * @param {Function} [next]
+   */
+  var getLocale = function(request, response, next) {
+    response.locals.i18n = {
+      getLocale: function() {
+        return vulpejs.i18n.getLocale.apply(request, arguments);
+      }
+    };
+
+    // For backwards compatibility, also define 'acceptedLanguage'.
+    response.locals.acceptedLanguage = response.locals.i18n.getLocale;
+
+    if (typeof next !== 'undefined') {
+      next();
+    }
+  };
+
+  var i18nRoutes = {
+    /**
+     * Sends a translation file to the client.
+     * @param request
+     * @param response
+     */
+    i18n: function(request, response) {
+      var locale = request.params.locale;
+      var sendFile = response.sendFile || response.sendfile;
+      sendFile.apply(response, [path.join(configuration.directory, locale + configuration.extension)]);
+    },
+
+    /**
+     * Translate a given string and provide the result.
+     * @param request
+     * @param response
+     */
+    translate: function(request, response) {
+      var locale = request.params.locale;
+      var phrase = request.params.phrase;
+
+      var result;
+      if (request.query.plural) {
+        var singular = phrase;
+        var plural = request.query.plural;
+        // Make sure the information is added to the catalog if it doesn't exist yet.
+        var translated = vulpejs.i18n.__n({
+          singular: singular,
+          plural: plural,
+          count: request.query.count,
+          locale: locale
+        });
+        // Retrieve the translation object from the catalog and return it.
+        var catalog = vulpejs.i18n.getCatalog(locale);
+        result = singular.split(configuration.objectNotation).reduce(function(object, index) {
+          return object[index];
+        }, catalog);
+
+      } else {
+        result = vulpejs.i18n.__({
+          phrase: phrase,
+          locale: locale
+        });
+      }
+      response.send(result);
+    }
+  };
+
+  vulpejs.express.app.use(getLocale);
+  configure();
+
   router.get('/global/debug/:enable', function(req, res) {
-    global.app.debug = eval(req.params.enable);
-    res.cookie('debug', global.app.debug);
+    vulpejs.app.debug = eval(req.params.enable);
+    res.cookie('debug', vulpejs.app.debug);
     res.json({
-      debug: global.app.debug
+      debug: vulpejs.app.debug
     });
   });
-  var routes = [router, require(global.app.rootDir + '/vulpejs/routes/flow-uploader')];
-  var routesDir = global.app.rootDir + '/routes/';
+  var routes = [router, require(vulpejs.root.dir + '/routes/flow-uploader')];
+  var routesDir = vulpejs.app.root.dir + '/routes/';
   var init = function() {
     // catch 404 and forward to error handler
-    app.use(function(req, res, next) {
+    vulpejs.express.app.use(function(req, res, next) {
       var err = new Error('Not Found');
       err.status = 404;
       next(err);
     });
 
     // error handlers
-    app.use(function(err, req, res, next) {
+    vulpejs.express.app.use(function(err, req, res, next) {
       res.status(err.status || 500);
       exports.render(res, 'error', {
         message: err.message,
-        error: global.app.env === 'production' ? {} : err
+        error: vulpejs.app.env === 'production' ? {} : err
       });
     });
   };
   var listModules = function(callback) {
-    fs.readdir(routesDir, function(err, list) {
+    vulpejs.io.read.dir(routesDir, function(list) {
       var modules = [];
       list.forEach(function(name) {
-        var stats = fs.statSync(routesDir + name);
+        var stats = vulpejs.io.info.file(routesDir + name);
         if (stats.isFile() && name[0] !== '.') {
           modules.push(name.split('.')[0]);
         }
@@ -1160,12 +1183,12 @@ exports.start = function(app, options) {
     if (Array.isArray(options.routes)) {
       options.routes.forEach(function(value) {
         if (value.route && value.path) {
-          app.use(value.route, require(value.path));
+          vulpejs.express.app.use(value.route, require(value.path));
         } else {
           routes.push(require(routesDir + value));
         }
       });
-      app.use('/', routes);
+      vulpejs.express.app.use('/', routes);
       init();
     } else if (options.routes.load && options.routes.load.first) {
       listModules(function(modules) {
@@ -1177,7 +1200,7 @@ exports.start = function(app, options) {
         modules.forEach(function(name) {
           routes.push(require(routesDir + name));
         });
-        app.use('/', routes);
+        vulpejs.express.app.use('/', routes);
         init();
       });
     }
@@ -1186,7 +1209,7 @@ exports.start = function(app, options) {
       modules.forEach(function(name) {
         routes.push(require(routesDir + name));
       });
-      app.use('/', routes);
+      vulpejs.express.app.use('/', routes);
       init();
     });
   }

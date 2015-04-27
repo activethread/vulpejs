@@ -14,28 +14,28 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
 module.exports = function(options) {
-  var app = express();
+  var exp = express();
   // view engine setup
-  app.set('views', [global.app.rootDir + '/views', global.app.rootDir + '/vulpejs/views']);
-  app.set('view engine', 'jade');
+  exp.set('views', [root.dir + '/views', root.dir + '/vulpejs/views']);
+  exp.set('view engine', 'jade');
 
-  app.use(favicon(global.app.rootDir + '/public/images/favicon.ico'));
-  app.use(compression());
-  if (global.app.env === 'production') {
-    app.use(logger('combined', {
+  exp.use(favicon(root.dir + '/public/images/favicon.ico'));
+  exp.use(compression());
+  if (exp.env === 'production') {
+    exp.use(logger('combined', {
       skip: function(req, res) {
         return res.statusCode < 400;
       }
     }));
   } else {
-    app.use(logger('dev'));
+    exp.use(logger('dev'));
   }
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({
+  exp.use(bodyParser.json());
+  exp.use(bodyParser.urlencoded({
     extended: false
   }));
-  app.use(cookieParser());
-  app.use(cookieSession({
+  exp.use(cookieParser());
+  exp.use(cookieSession({
     secret: '1234567890QWERTY',
     cookie: {
       maxAge: 60 * 60 * 1000
@@ -62,7 +62,7 @@ module.exports = function(options) {
   mongoUrl = mongoUrl.replace('${host}', options.session.mongo.host);
   mongoUrl = mongoUrl.replace('${port}', options.session.mongo.port);
   mongoUrl = mongoUrl.replace('${db}', options.session.mongo.db);
-  app.use(session({
+  exp.use(session({
     secret: '1234567890QWERTY',
     resave: true,
     saveUninitialized: true,
@@ -70,9 +70,12 @@ module.exports = function(options) {
       url: mongoUrl
     })
   }));
-  app.use(methodOverride());
-  app.use(express.static(path.join(global.app.rootDir, 'vulpejs/public')));
-  app.use(express.static(path.join(global.app.rootDir, 'public')));
+  exp.use(methodOverride());
+  exp.use(express.static(path.join(root.dir, 'vulpejs/public')));
+  exp.use(express.static(path.join(root.dir, 'public')));
 
-  return app;
+  return {
+    app: exp,
+    router: express.Router()
+  };
 };

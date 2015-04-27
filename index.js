@@ -1,108 +1,139 @@
+"use strict";
+
 module.exports = function(options) {
   if (!options) {
     options = {};
   }
   var path = require('path');
-  global.app = {
-    url: 'http://localhost:3000',
-    rootDir: path.resolve(__dirname + '/../'),
-    rootContext: '',
-    release: '',
-    version: '',
-    env: 'development',
-    debug: false,
-    callback: {
-      login: {
-        error: function(data) {},
-        success: function(data) {},
-        unauthorized: function(data) {}
+  global.root = {
+    dir: path.resolve(__dirname + '/../'),
+    context: ''
+  };
+
+  global.vulpejs = {
+    root: {
+      dir: root.dir + '/vulpejs'
+    },
+    debug: require('./debug'),
+    models: require('./models'),
+    routes: require('./routes'),
+    utils: require('./utils'),
+    http: require('./http'),
+    io: require('./io'),
+    mail: require('./mail'),
+    templates: require('./templates'),
+    schedules: require('./schedules'),
+    express: require('./express')(options),
+    ui: require('./ui'),
+    async: require('async'),
+    crypto: require('crypto'),
+    i18n: require('i18n'),
+    mongoose: require('mongoose'),
+    moment: require('moment'),
+    xml2js: require('xml2js'),
+    cron: require('cron'),
+    app: {
+      url: {
+        env: {
+          development: 'http://localhost:3000',
+          test: 'http://localhost:3000',
+          production: 'http://localhost:3000'
+        }
       },
-      logout: function(data) {},
-      save: {
-        success: function(data) {},
-        error: function(data) {}
+      root: root,
+      release: '',
+      version: '',
+      env: 'development',
+      debug: false,
+      callback: {
+        login: {
+          error: function(data) {},
+          success: function(data) {},
+          unauthorized: function(data) {}
+        },
+        logout: function(data) {},
+        save: {
+          success: function(data) {},
+          error: function(data) {}
+        },
+        remove: {
+          success: function(data) {},
+          error: function(data) {}
+        },
+        list: {
+          success: function(data) {},
+          error: function(data) {}
+        }
       },
-      remove: {
-        success: function(data) {},
-        error: function(data) {}
+      smtp: {
+        host: 'localhost',
+        port: 25,
+        auth: {
+          user: 'root@localhost',
+          pass: 'q1w2e3r4'
+        }
       },
-      list: {
-        success: function(data) {},
-        error: function(data) {}
+      security: {
+        routes: [{
+          uri: '/**',
+          roles: ['SUPER', 'ADMIN']
+        }]
+      },
+      pagination: {
+        items: 15,
+        history: 5
+      },
+      page: {
+        minifier: true
       }
-    },
-    smtp: {
-      host: 'localhost',
-      port: 25,
-      auth: {
-        user: 'root@localhost',
-        pass: 'q1w2e3r4'
-      }
-    },
-    security: {
-      routes: [{
-        uri: '/**',
-        roles: ['SUPER', 'ADMIN']
-      }]
-    },
-    pagination: {
-      items: 15,
-      history: 5
-    },
-    page: {
-      minifier: true
     }
-  }
+  };
   if (options.url) {
-    global.app.url = options.url;
+    vulpejs.app.url = options.url;
   }
   if (options.release) {
-    global.app.release = options.release;
+    vulpejs.app.release = options.release;
   }
   if (options.version) {
-    global.app.version = options.version;
+    vulpejs.app.version = options.version;
   }
   if (options.debug) {
-    global.app.debug = options.debug;
+    vulpejs.app.debug = options.debug;
   }
   if (options.callback) {
-    global.app.callback = options.callback;
+    vulpejs.app.callback = options.callback;
   }
-  if (options.rootContext) {
-    global.app.rootContext = options.rootContext;
+  if (options.root && options.root.context) {
+    vulpejs.app.root.context = options.root.context;
   }
   if (options.login) {
-    global.app.login = options.login;
+    vulpejs.app.login = options.login;
   }
   if (options.security) {
-    global.app.security = options.security;
+    vulpejs.app.security = options.security;
   }
   if (options.smtp) {
-    global.app.smtp = options.smtp;
+    vulpejs.app.smtp = options.smtp;
   }
   if (options.env) {
-    global.app.env = options.env;
+    vulpejs.app.env = options.env;
   }
   if (options.pagination) {
-    global.app.pagination = options.pagination;
+    vulpejs.app.pagination = options.pagination;
   }
   if (options.page) {
-    global.app.page = options.page;
+    vulpejs.app.page = options.page;
   }
 
-  // ASYNC
-  var async = require('async');
   // APP MODELS
-  require('./models').start(options);
-  // EXPRESS
-  var app = require('./express')(options);
+  vulpejs.models.start(options);
   // PASSPORT
-  var passport = require('./passport')(app);
+  vulpejs.passport = require('./passport');
   // I18N
-  require('./i18n')(options, app);
-  require('./routes/i18n')(app);
+  require('./i18n')(options);
   // APP ROUTES
-  require('./routes').start(app, options);
+  vulpejs.routes.start(options);
+  vulpejs.mail.start();
 
-  return app;
+  return vulpejs;
 };

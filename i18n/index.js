@@ -1,16 +1,15 @@
 // I18N
-var i18n = require('i18n');
-module.exports = function(options, app) {
+module.exports = function(options) {
   if (!options.i18n) {
     options.i18n = {
       locales: ['pt', 'en', 'es'],
       defaultLocale: 'pt',
       cookie: 'appLanguage',
       indent: '  ',
-      directory: global.app.rootDir + '/locales'
+      directory: root.dir + '/locales'
     };
   }
-  i18n.configure(options.i18n);
-  app.use(i18n.init);
-  return i18n;
+  vulpejs.i18n.configure(options.i18n);
+  vulpejs.express.app.use(vulpejs.i18n.init);
+  return vulpejs.i18n;
 };

@@ -1,5 +1,4 @@
 "use strict";
-var debug = require('../debug');
 var CronJob = require('cron').CronJob;
 
 exports.startJobs = function(options) {
@@ -12,10 +11,10 @@ exports.startJobs = function(options) {
         job.start = false;
       }
       job.log = function(message) {
-        debug.log('Job[' + job.name + ']', message);
+        vulpejs.debug.log('Job[' + job.name + ']', message);
       };
       job.error = function(message) {
-        debug.error('Job[' + job.name + ']', message);
+        vulpejs.debug.error('Job[' + job.name + ']', message);
       };
       new CronJob({
         cronTime: job.cron,
@@ -27,4 +26,8 @@ exports.startJobs = function(options) {
       }).start();
     });
   }
-}
+};
+
+exports.start = function() {
+  require(root.dir + '/schedules');
+};

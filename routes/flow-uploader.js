@@ -1,9 +1,8 @@
 "use strict";
-var fs = require('fs');
-var express = require('express');
-var router = express.Router();
+
+var router = vulpejs.express.router;
 var multipart = require('connect-multiparty');
-var flow = require(global.app.rootDir + '/vulpejs/uploader/flow.js')(global.app.rootDir + '/public/uploaded/files/');
+var flow = require(vulpejs.root.dir + '/uploader/flow.js')(vulpejs.app.root.dir + '/public/uploaded/files/');
 
 var ACCESS_CONTROLL_ALLOW_ORIGIN = false;
 

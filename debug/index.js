@@ -3,10 +3,10 @@ var moment = require('moment');
 var mkdirp = require('mkdirp');
 var utils = require('../utils');
 
-var logsDir = global.app.rootDir + '/logs/';
+var logsDir = root.dir + '/logs/';
 var debugFile = logsDir + 'debug.log';
 var isDebug = function() {
-  return global.app && global.app.debug;
+  return vulpejs.app && vulpejs.app.debug;
 }
 
 var create = function() {

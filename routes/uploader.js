@@ -1,9 +1,9 @@
 "use strict";
 var fs = require('fs');
-var uploader = require(global.app.rootDir + '/vulpejs/uploader')({
-  tmpDir: global.app.rootDir + '/public/uploaded/tmp',
-  publicDir: global.app.rootDir + '/public/uploaded',
-  uploadDir: global.app.rootDir + '/public/uploaded/files',
+var uploader = require(root.dir + '/vulpejs/uploader')({
+  tmpDir: root.dir + '/public/uploaded/tmp',
+  publicDir: root.dir + '/public/uploaded',
+  uploadDir: root.dir + '/public/uploaded/files',
   uploadUrl: '/uploaded/files/',
   downloadUrl: '/download/files/',
   maxPostSize: 11000000000, // 11 GB

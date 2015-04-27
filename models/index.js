@@ -1,7 +1,5 @@
 "use strict";
-var fs = require('fs');
-var i18n = require('i18n');
-var mongoose = require('mongoose');
+
 var mongoosePaginate = require('mongoose-paginate');
 var autoIncrement = require('mongoose-auto-increment')
 
@@ -26,7 +24,7 @@ exports.getModel = function(options) {
     next();
   });
 
-  return mongoose.model(options.name, Schema);
+  return vulpejs.mongoose.model(options.name, Schema);
 };
 
 /**
@@ -35,7 +33,7 @@ exports.getModel = function(options) {
  * @returns {Object} Schema
  */
 exports.makeSchema = function(options) {
-  var Schema = mongoose.Schema;
+  var Schema = vulpejs.mongoose.Schema;
   var Model = new Schema(options.schema);
 
   Model.plugin(mongoosePaginate);
@@ -44,6 +42,7 @@ exports.makeSchema = function(options) {
 };
 
 exports.start = function(options) {
+  var vulpejs = global.vulpejs;
   if (!options.database) {
     options.database = {
       host: 'localhost',
@@ -69,20 +68,20 @@ exports.start = function(options) {
       options.database.pass = 'q1w2e3r4';
     }
   }
-  var db = mongoose.connection;
+  var db = vulpejs.mongoose.connection;
   db.on('error', console.error);
   db.once('open', function() {
     var init = function() {
-      console.log(i18n.__('Database successfully started!'));
-      require(global.app.rootDir + '/schedules');
+      vulpejs.debug.log(vulpejs.i18n.__('Database successfully started!'));
+      vulpejs.schedules.start();
     };
-    require(global.app.rootDir + '/vulpejs/models/security')(mongoose);
-    var modelsDir = global.app.rootDir + '/models/';
+    require(root.dir + '/vulpejs/models/security');
+    var modelsDir = vulpejs.app.root.dir + '/models/';
     var listModules = function(callback) {
-      fs.readdir(modelsDir, function(err, list) {
+      vulpejs.io.read.dir(modelsDir, function(list) {
         var modules = [];
         list.forEach(function(name) {
-          var stats = fs.statSync(modelsDir + name);
+          var stats = vulpejs.io.info.file(modelsDir + name);
           if (stats.isFile() && name[0] !== '.') {
             modules.push(name.split('.')[0]);
           }
@@ -93,17 +92,17 @@ exports.start = function(options) {
     if (options.models) {
       if (Array.isArray(options.models)) {
         options.models.forEach(function(model) {
-          require(modelsDir + model)(mongoose);
+          require(modelsDir + model);
         });
         init();
       } else if (options.models.load && options.models.load.first) {
         listModules(function(modules) {
           options.models.load.first.forEach(function(name) {
             var removed = modules.splice(modules.indexOf(name), 1);
-            require(modelsDir + removed)(mongoose);
+            require(modelsDir + removed)();
           });
           modules.forEach(function(name) {
-            require(modelsDir + name)(mongoose);
+            require(modelsDir + name);
           });
           init();
         });
@@ -111,7 +110,7 @@ exports.start = function(options) {
     } else {
       listModules(function(modules) {
         modules.forEach(function(name) {
-          require(modelsDir + name)(mongoose);
+          require(modelsDir + name);
         });
         init();
       });
@@ -126,6 +125,6 @@ exports.start = function(options) {
   mongoUrl = mongoUrl.replace('${host}', options.database.host);
   mongoUrl = mongoUrl.replace('${port}', options.database.port);
   mongoUrl = mongoUrl.replace('${db}', options.database.name);
-  mongoose.connect(mongoUrl);
-  autoIncrement.initialize(mongoose.connection);
+  vulpejs.mongoose.connect(mongoUrl);
+  autoIncrement.initialize(vulpejs.mongoose.connection);
 };
