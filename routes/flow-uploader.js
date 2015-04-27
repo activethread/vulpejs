@@ -6,7 +6,9 @@ var flow = require(vulpejs.root.dir + '/uploader/flow.js')(vulpejs.app.root.dir 
 
 var ACCESS_CONTROLL_ALLOW_ORIGIN = false;
 
-router.post('/flow/upload', multipart(), function(req, res) {
+router.post('/flow/upload', multipart({
+  uploadDir: vulpejs.app.root.dir + '/public/uploaded/tmp/'
+}), function(req, res) {
   flow.post(req, function(status, filename, original_filename, identifier) {
     if (ACCESS_CONTROLL_ALLOW_ORIGIN) {
       res.header("Access-Control-Allow-Origin", "*");

@@ -109,7 +109,7 @@ module.exports = flow = function(temporaryFolder) {
       var chunkFilename = getChunkFilename(chunkNumber, identifier);
 
       // Save the chunk (TODO: OVERWRITE)
-      fs.rename(files[$.fileParameterName].path, chunkFilename, function() {
+      fs.rename(files[$.fileParameterName].path, chunkFilename, function(err) {
 
         // Do we have all the chunks?
         var currentTestChunk = 1;

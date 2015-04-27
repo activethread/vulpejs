@@ -10,7 +10,7 @@ unless page.flowUploader.filesSubmit
   - page.flowUploader.filesSubmit = ''
 div.well(flow-init="#{page.flowUploader.init}" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]" flow-files-submitted="#{page.flowUploader.filesSubmit}" flow-file-success="#{page.flowUploader.fileSuccess}")
   img.thumbnail.slide-down(ng-src="{{#{ngModel}}}" ng-if="$flow.files.length === 0 && #{ngModel}")
-  -var emptyImage = 'http://www.placehold.it/'  + page.flowUploader.emptyImageSize + '/EFEFEF/AAAAAA&text=' + __('Empty')
+  -var emptyImage = 'https://www.placehold.it/'  + page.flowUploader.emptyImageSize + '/EFEFEF/AAAAAA&text=' + __('Empty')
   img.thumbnail.slide-down(src=emptyImage ng-if="$flow.files.length === 0 && !#{ngModel}")
   img.thumbnail.slide-down(ng-if="$flow.files.length" flow-img="$flow.files[0]")
   div
