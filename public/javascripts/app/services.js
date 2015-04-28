@@ -758,6 +758,8 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
             $rootScope.vulpejs[name] = option;
           }
         });
+      } else {
+        delete $rootScope.vulpejs[name];
       }
     },
     loadArray: function(options) {

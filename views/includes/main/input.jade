@@ -111,7 +111,7 @@ if input.validateWatch
 if input.ngChange
   - append += (append.length === 0 ? '' : '~') + 'ng-change:' + input.ngChange;
 else if input.ngOptions
-  - append += (append.length === 0 ? '' : '~') + "ng-change:selectOnChange('" + input.name + "', '" + input.ngOptions.items + "', '" + input.ngOptions.value + "', '" + input.ngOptions.label + "')";
+  - append += (append.length === 0 ? '' : '~') + "ng-change:vulpejs.selectOnChange('" + input.name + "', '" + input.ngOptions.items + "', '" + input.ngOptions.value + "', '" + input.ngOptions.label + "')";
 
 if input.ngClick
   - append += (append.length === 0 ? '' : '~') + 'ng-click:' + input.ngClick;
@@ -119,7 +119,7 @@ if input.ngClick
 if input.typeahead && input.typeahead.onSelect
   if input.typeahead.onSelect.indexOf('=') !== -1
     - var typeaheadParts = input.typeahead.onSelect.split('=');
-    - var typeaheadOnSelect = "typeaheadOnSelect('" + typeaheadParts[0] + "', $item, '" + typeaheadParts[1] + "')";
+    - var typeaheadOnSelect = "vulpejs.typeaheadOnSelect('" + typeaheadParts[0] + "', $item, '" + typeaheadParts[1] + "')";
     - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select:' + typeaheadOnSelect;
   else
     - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select:' + input.typeahead.onSelect;
@@ -192,7 +192,7 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
         if input.ngOptions
           unless input.ngOptions.filter
             - input.ngOptions.filter = '';
-          option(ng-repeat='option in #{input.ngOptions.items}#{input.ngOptions.filter}' value="{{option.#{input.ngOptions.value}}}") {{option.#{input.ngOptions.label}}}
+          option(ng-repeat='option in vulpejs.#{input.ngOptions.items}#{input.ngOptions.filter}' value="{{option.#{input.ngOptions.value}}}") {{option.#{input.ngOptions.label}}}
   else if input.type === 'group'
     each option in input.options
       - var model = "vulpejs.group['"+input.name+option.value+"']";
