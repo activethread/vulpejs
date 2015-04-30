@@ -22,7 +22,7 @@ if input.alias
   - ngModel = input.alias + '.' + input.model;
 
 unless input.id
-  - input.id = page.controller.toLowerCase() + '-' + input.name;
+  - input.id = page.controller.toLowerCase() + '-' + input.name.replace(/\./g, '-');
 
 unless input.autofocus
   - input.autofocus = false;
