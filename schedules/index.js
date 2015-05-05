@@ -2,6 +2,9 @@
 var CronJob = require('cron').CronJob;
 
 exports.startJobs = function(options) {
+  if (options.env && vulpejs.app.env !== options.env) {
+    return;
+  }
   if (options.jobs) {
     options.jobs.forEach(function(job) {
       if (!job.timeZone) {
