@@ -846,13 +846,18 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
         vulpejs.filter.status = parts[1];
       }
     }
+    vulpejs.queryString = {};
     if (search.indexOf('&') !== -1) {
       search.split('&').forEach(function(value) {
+        var parts = value.split('=');
+        vulpejs.queryString[parts[0]] = parts[1];
         if (value.indexOf('status=') !== -1) {
           status(value);
         }
       });
     } else {
+      var parts = search.split('=');
+      vulpejs.queryString[parts[0]] = parts[1];
       status(search);
     }
   }

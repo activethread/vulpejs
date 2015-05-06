@@ -108,6 +108,8 @@ if input.validate
 if input.validateWatch
   - append += (append.length === 0 ? '' : '~') + 'ui-validate-watch:' + input.validateWatch;
 
+if input.ngBlur
+  - append += (append.length === 0 ? '' : '~') + 'ng-blur:' + input.ngBlur;
 if input.ngChange
   - append += (append.length === 0 ? '' : '~') + 'ng-change:' + input.ngChange;
 else if input.ngOptions

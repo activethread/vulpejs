@@ -850,6 +850,8 @@ exports.doLogin = function(req, res, next) {
       vulpejs.utils.tryExecute(vulpejs.app.callback.login.success, {
         user: user
       });
+      user.hashed_password = '';
+      user.salt = '';
       return res.json({
         user: user,
         redirectTo: url
