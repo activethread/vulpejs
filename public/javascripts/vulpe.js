@@ -86,10 +86,10 @@ var vulpe = {
       });
     },
     init: function() {
-      for (var i = 0, len = vulpe.util.defaultDiacriticsRemovalap.length; i < len; ++i) {
-        var letters = vulpe.util.defaultDiacriticsRemovalap[i].letters.split('');
+      for (var i = 0, len = vulpe.utils.defaultDiacriticsRemovalap.length; i < len; ++i) {
+        var letters = vulpe.utils.defaultDiacriticsRemovalap[i].letters.split('');
         for (var j = 0; j < letters.length; j++) {
-          vulpe.util.diacriticsMap[letters[j]] = vulpe.util.defaultDiacriticsRemovalap[i].base;
+          vulpe.utils.diacriticsMap[letters[j]] = vulpe.utils.defaultDiacriticsRemovalap[i].base;
         }
       }
       vulpe.view.datetimepicker();
@@ -105,7 +105,7 @@ var vulpe = {
       $('#current-language').addClass('flag-icon-' + flag);
     }
   },
-  util: {
+  utils: {
     removeDiacritics: function(str) {
       return str.replace(/[^\u0000-\u007E]/g, function(a) {
         return diacriticsMap[a] || a;

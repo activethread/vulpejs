@@ -246,7 +246,7 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
     dialog: {
       confirm: function(options) {
         $dialogs.confirm(vulpejs.i18n('Confirmation'), vulpejs.i18n(options.message)).result.then(function(btn) {
-          vulpe.util.tryExecute(options.callback);
+          vulpe.utils.tryExecute(options.callback);
         }, function(btn) {});
       }
     },
@@ -257,12 +257,12 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
           params: options.params || {}
         }).success(function(data) {
           if (options.callback.success) {
-            vulpe.util.tryExecute(options.callback.success, data);
+            vulpe.utils.tryExecute(options.callback.success, data);
           } else {
-            vulpe.util.tryExecute(options.callback, data);
+            vulpe.utils.tryExecute(options.callback, data);
           };
         }).error(function(data, status, header, config) {
-          vulpe.util.tryExecute(options.callback.error, {
+          vulpe.utils.tryExecute(options.callback.error, {
             data: data,
             status: status,
             header: header,
@@ -277,12 +277,12 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
           params: options.params || {}
         }).success(function(data) {
           if (options.callback.success) {
-            vulpe.util.tryExecute(options.callback.success, data);
+            vulpe.utils.tryExecute(options.callback.success, data);
           } else {
-            vulpe.util.tryExecute(options.callback, data);
+            vulpe.utils.tryExecute(options.callback, data);
           };
         }).error(function(data, status, header, config) {
-          vulpe.util.tryExecute(options.callback.error, {
+          vulpe.utils.tryExecute(options.callback.error, {
             data: data,
             status: status,
             header: header,
@@ -292,9 +292,9 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
       },
       post: function(options) {
         $http.post(options.url, options.data).success(function(data) {
-          vulpe.util.tryExecute(options.callback.success, data);
+          vulpe.utils.tryExecute(options.callback.success, data);
         }).error(function(data, status, header, config) {
-          vulpe.util.tryExecute(options.callback.error, {
+          vulpe.utils.tryExecute(options.callback.error, {
             data: data,
             status: status,
             header: header,
@@ -313,6 +313,7 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
     reverse: true,
     populate: false,
     item: {},
+    oldItem: {},
     items: [],
     history: [],
     historyItems: [],
@@ -440,33 +441,57 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
       return item;
     },
     create: function() {
-      vulpejs.createBefore(vulpejs);
-      vulpejs.doDebug({
-        type: 'CREATE-BEFORE',
-        item: vulpejs.item
-      });
-      clearItem(true);
-      $timeout(function() {
-        vulpejs.focus();
-      }, 100);
-      vulpejs.createAfter(vulpejs);
-      vulpejs.doDebug({
-        type: 'CREATE-AFTER',
-        item: vulpejs.item
-      });
+      var doCreate = function(){
+        vulpejs.createBefore(vulpejs);
+        vulpejs.doDebug({
+          type: 'CREATE-BEFORE',
+          item: vulpejs.item
+        });
+        clearItem(true);
+        $timeout(function() {
+          vulpejs.focus();
+        }, 100);
+        vulpejs.createAfter(vulpejs);
+        vulpejs.doDebug({
+          type: 'CREATE-AFTER',
+          item: vulpejs.item
+        });
+      };
+      if (vulpejs.item._id) {
+        vulpejs.dialog.confirm({
+          message: 'The changed data will be lost. Do you really want to continue?',
+          callback: function() {
+            doCreate();
+          }
+        });
+      } else {
+        doCreate();
+      }
     },
     cancel: function() {
-      vulpejs.cancelBefore(vulpejs);
-      vulpejs.doDebug({
-        type: 'CANCEl-BEFORE',
-        item: vulpejs.item
-      });
-      clearItem(false);
-      vulpejs.cancelAfter(vulpejs);
-      vulpejs.doDebug({
-        type: 'CANCEl-AFTER',
-        item: vulpejs.item
-      });
+      var doCancel = function() {
+        vulpejs.cancelBefore(vulpejs);
+        vulpejs.doDebug({
+          type: 'CANCEl-BEFORE',
+          item: vulpejs.item
+        });
+        clearItem(false);
+        vulpejs.cancelAfter(vulpejs);
+        vulpejs.doDebug({
+          type: 'CANCEl-AFTER',
+          item: vulpejs.item
+        });
+      };
+      if (vulpejs.hasChanged()) {
+        vulpejs.dialog.confirm({
+          message: 'The changed data will be lost. Do you really want to continue?',
+          callback: function() {
+            doCancel();
+          }
+        });
+      } else {
+        doCancel();
+      }
     },
     historyCopy: function() {
       var valid = angular.isObject(vulpejs.historyVersion);
@@ -477,6 +502,7 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
         if (version) {
           vulpejs.item.version = version;
         }
+        vulpejs.oldItem = vulpejs.copy(vulpejs.item);
       }
     },
     list: function(page) {
@@ -524,6 +550,7 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
       });
       $http.get(vulpejs.rootContext + '/' + vulpejs.name + ($rootScope.populate ? '/populate' : '') + '/' + id).success(function(data) {
         vulpejs.item = data.item;
+        vulpejs.oldItem = vulpejs.copy(vulpejs.item);
         vulpejs.showing = !vulpejs.showing;
         vulpejs.history = data.history.items;
         if (vulpejs.history.length !== 0) {
@@ -549,7 +576,7 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
         type: 'CLONE-BEFORE',
         item: vulpejs.item
       });
-      vulpejs.item = angular.copy(item);
+      vulpejs.item = vulpejs.copy(item);
       delete vulpejs.item._id;
       vulpejs.showing = true;
       clearHistory();
@@ -607,7 +634,8 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
         type: 'CLONE-BEFORE',
         item: vulpejs.item
       });
-      vulpejs.item = angular.copy(item);
+      vulpejs.item = vulpejs.copy(item);
+      vulpejs.oldItem = vulpejs.copy(item);
       delete vulpejs.item._id;
       vulpejs.showing = true;
       clearHistory();
@@ -640,6 +668,7 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
             vulpejs.message.clean();
             $http.post(vulpejs.rootContext + '/' + vulpejs.name, vulpejs.item).success(function(data) {
               vulpejs.item = data.item;
+              vulpejs.oldItem = data.item;
               if (vulpejs.saveType.length > 0) {
                 if (vulpejs.saveType === 'NEW') {
                   vulpejs.create();
@@ -834,6 +863,30 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
     },
     flowFilesSubmit: function($flow) {
       $flow.upload();
+    },
+    onReady: function(execute) {
+      $(document).ready(function() {
+        vulpe.utils.tryExecute(execute);
+      });
+    },
+    hasChanged: function(value, oldValue) {
+      if (!value && !oldValue) {
+        for (var property in vulpejs.item) {
+          if (vulpejs.oldItem.hasOwnProperty(property) && vulpejs.oldItem[property] !== vulpejs.item[property]) {
+            return true;
+          }
+        }
+      } else {
+        for (var property in value) {
+          if (oldValue.hasOwnProperty(property) && oldValue[property] !== value[property]) {
+            return true;
+          }
+        }
+      }
+      return false;
+    },
+    copy: function(value) {
+      return angular.copy(value);
     }
   };
   vulpejs.debug = $cookieStore.get('debug') || vulpejs.debug;
@@ -963,6 +1016,7 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
   var clearItem = function(show) {
     vulpejs.item = vulpejs.newItem(vulpejs);
     vulpejs.item = vulpejs.propertiesEval(vulpejs.item);
+    vulpejs.oldItem = vulpejs.copy(vulpejs.item);
     vulpejs.showing = show;
     clearHistory();
   };
@@ -976,7 +1030,7 @@ app.factory('VulpeJS', ['$rootScope', '$http', '$authenticator', '$messages', '$
     $authenticator.userDetails();
     vulpejs.init(vulpejs);
     if (application.init) {
-      vulpe.util.tryExecute(application.init);
+      vulpe.utils.tryExecute(application.init);
     }
     if ($scope) {
       $(document).ready(function() {
