@@ -108,37 +108,37 @@ if input.validate
 if input.validateWatch
   - append += (append.length === 0 ? '' : '~') + 'ui-validate-watch:' + input.validateWatch;
 
-if input.ngBlur
-  - append += (append.length === 0 ? '' : '~') + 'ng-blur:' + input.ngBlur;
-if input.ngChange
-  - append += (append.length === 0 ? '' : '~') + 'ng-change:' + input.ngChange;
-else if input.ngOptions
-  - append += (append.length === 0 ? '' : '~') + "ng-change:vulpejs.selectOnChange('" + input.name + "', '" + input.ngOptions.items + "', '" + input.ngOptions.value + "', '" + input.ngOptions.label + "')";
+if input.on
+  if input.on.blur
+    - append += (append.length === 0 ? '' : '~') + 'ng-blur:' + input.on.blur;
+  if input.on.change
+    - append += (append.length === 0 ? '' : '~') + 'ng-change:' + input.on.change;
+  if input.on.click
+    - append += (append.length === 0 ? '' : '~') + 'ng-click:' + input.on.click;
+else if input.items
+  - append += (append.length === 0 ? '' : '~') + "ng-change:vulpejs.ui.on.change({type: 'SELECT', name: '" + input.name + "', items: '" + input.items.name + "', value: '" + input.items.value + "', label: '" + input.items.label + "'})";
 
-if input.ngClick
-  - append += (append.length === 0 ? '' : '~') + 'ng-click:' + input.ngClick;
-
-if input.typeahead && input.typeahead.onSelect
-  if input.typeahead.onSelect.indexOf('=') !== -1
-    - var typeaheadParts = input.typeahead.onSelect.split('=');
-    - var typeaheadOnSelect = "vulpejs.typeaheadOnSelect('" + typeaheadParts[0] + "', $item, '" + typeaheadParts[1] + "')";
-    - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select:' + typeaheadOnSelect;
+if input.typeahead && input.typeahead.on && input.typeahead.on.select
+  if input.typeahead.on.select.indexOf('=') !== -1
+    - var parts = input.typeahead.on.select.split('=');
+    - var onSelect = "vulpejs.ui.on.select({type: 'TYPEAHEAD', rootProperty:'" + parts[0] + "', item: $item, itemProperty: '" + parts[1] + "'})";
+    - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select:' + onSelect;
   else
-    - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select:' + input.typeahead.onSelect;
+    - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select:' + input.typeahead.on.select;
   
 if input.toggle
   - append += (append.length === 0 ? '' : '~') + 'toggle-switch';
-  - append += (append.length === 0 ? '' : '~') + 'model:'+ngModel;
+  - append += (append.length === 0 ? '' : '~') + 'model:' + ngModel;
   if input.toggle.on
-    - append += (append.length === 0 ? '' : '~') + 'on-label:'+__(input.toggle.on);
+    - append += (append.length === 0 ? '' : '~') + 'on-label:' + __(input.toggle.on);
   if input.toggle.off
-    - append += (append.length === 0 ? '' : '~') + 'off-label:'+__(input.toggle.off);
+    - append += (append.length === 0 ? '' : '~') + 'off-label:' + __(input.toggle.off);
   if input.toggle.knob
-    - append += (append.length === 0 ? '' : '~') + 'knob-label:'+__(input.toggle.knob);
+    - append += (append.length === 0 ? '' : '~') + 'knob-label:' + __(input.toggle.knob);
   if input.className === 'form-control'
     - input.className = '';
 else
-  - append += (append.length === 0 ? '' : '~') + 'ng-model:'+ngModel;
+  - append += (append.length === 0 ? '' : '~') + 'ng-model:' + ngModel;
   if input.type === 'checkbox' || input.type === 'group'
     - input.className = '';
 
@@ -150,10 +150,10 @@ if !input.maskPattern
 if input.minicolors 
   label.control-label(for=input.id)=label
 
-- var divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && vulpejs.submitted}";
+- var divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && vulpejs.ui.form.submitted}";
 
 if input.readonly
-  - divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && vulpejs.submitted, 'col-lg-3': " + input.readonly + "}";
+  - divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && vulpejs.ui.form.submitted, 'col-lg-3': " + input.readonly + "}";
 
 if input.type === 'show' || input.type === 'timer'
   - divNgClass = '';
@@ -191,10 +191,10 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
         if input.options
           each option in input.options
             option(value=option.value)=__(option.label)
-        if input.ngOptions
-          unless input.ngOptions.filter
-            - input.ngOptions.filter = '';
-          option(ng-repeat='option in vulpejs.#{input.ngOptions.items}#{input.ngOptions.filter}' value="{{option.#{input.ngOptions.value}}}") {{option.#{input.ngOptions.label}}}
+        if input.items
+          unless input.items.filter
+            - input.items.filter = '';
+          option(ng-repeat='option in vulpejs.#{input.items.items}#{input.items.filter}' value="{{option.#{input.items.value}}}") {{option.#{input.items.label}}}
   else if input.type === 'group'
     each option in input.options
       - var model = "vulpejs.group['"+input.name+option.value+"']";
@@ -273,8 +273,8 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
     span(class="label label-danger" ng-cloak ng-if="#{formName}.#{input.name}.$error.validator")=__(input.validateMessage)
   if input.readonly && input.type !== 'star-rating'
     div(append=showAppend)
-      if input.ngOptions
-        span {{#{ngModel}.#{input.ngOptions.label}}}
+      if input.items
+        span {{#{ngModel}.#{input.items.label}}}
       else
         span {{#{ngModel}}}
   if input.button

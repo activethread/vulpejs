@@ -1,12 +1,12 @@
 extends ../layouts/site
 
 block content
-  div(class="container")
-    div(class="panel panel-default main-panel box-shadow")
-      div(class="panel-heading")=__('I forgot my Password')
-      div(class="panel-body")
-      fieldset
-        div(class="form-group")
-          h1=__('Oops! I\'m sorry, but an error occurred while send link to you reset your password.')
-            br
-            small=__('Please try again in a few moments.')
+  .container
+    .panel.panel-default.box-shadow
+      .panel-heading=__('I forgot my Password')
+      .panel-body
+        fieldset
+          .form-group
+            h1=__('Oops! I\'m sorry, but an error occurred while send link to you reset your password.')
+              br
+              small=__('Please try again in a few moments.')

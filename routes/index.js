@@ -97,6 +97,7 @@ exports.checkAuth = function(req, res, next) {
 };
 
 exports.render = function(res, name, options) {
+  res.cookie('pagination', JSON.stringify(vulpejs.app.pagination));
   if (!options) {
     options = {
       app: {
@@ -447,10 +448,8 @@ exports.list = function(req, res) {
  * @param {Object} res Response
  */
 exports.page = function(req, res) {
-  var populate = req.params.populate;
-  if (!populate) {
-    populate = '';
-  }
+  var populate = req.params.populate || '';
+  var orderBy = req.params.orderBy || {};
   var query = req.params.query || {};
   var page = req.params.page || 1;
   var userId = req.session['user-id'];
@@ -476,7 +475,8 @@ exports.page = function(req, res) {
       });
     }
   }, {
-    populate: populate
+    populate: populate,
+    sortBy: orderBy
   });
 };
 
@@ -933,8 +933,8 @@ exports.makeRoutes = function(options) {
       } else if (options.page.main && options.page.main.actions) {
         loadView(options.page.main.actions, function(html) {
           options.page.main.htmlActions = html;
-          if (options.page.items && options.page.items.actions) {
-            loadView(options.page.items.actions, function(html) {
+          if (options.page.select && options.page.select.actions) {
+            loadView(options.page.select.actions, function(html) {
               options.page.items.htmlActions = html;
               if (options.page.items.viewActions) {
                 loadView(options.page.items.viewActions, function(html) {

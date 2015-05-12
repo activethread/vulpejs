@@ -9,10 +9,10 @@ form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multip
         button.btn.btn-primary.start(type="button" ng-click="submit()")
           i.fa.fa-upload.fa-fw
           span=__('Start upload')
-        button.btn.btn-warning.cancel(type="button" ng-click="vulpejs.cancel()")
+        button.btn.btn-warning.cancel(type="button" ng-click="vulpejs.model.cancel()")
           i.fa.fa-ban.fa-fw
           span=__('Cancel upload')
-        button.btn.btn-danger.delete(type="button" ng-click="vulpejs.removeAll()")
+        button.btn.btn-danger.delete(type="button" ng-click="vulpejs.model.removeAll()")
           i.fa.fa-trash-o.fa-fw
           span=__('Delete')
   .row.fileupload-progressbar
@@ -24,7 +24,7 @@ form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multip
     thead.fileupload-tableheader
       tr
         th.text-center(width="5%")
-          input.toggle(type="checkbox" ng-click="checkUncheckAll('queue')")
+          input.toggle(type="checkbox" ng-click="vulpejs.ui.checkUncheckAll('queue')")
         th(width="10.7%")=__('Preview')
         th(width="49.3%")=__('File')
         th(width="10%")=__('Length')

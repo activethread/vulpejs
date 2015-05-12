@@ -5,7 +5,7 @@ block content
     if page.inputs
       unless page.submit
         - page.submit='submit()'
-      form(name="form" role="form" ng-submit=page.submit submitted="vulpejs.submitted" novalidate shake-that)
+      form(name="form" role="form" ng-submit=page.submit submitted="vulpejs.ui.form.submitted" novalidate shake-that)
         div.panel.panel-default.box-shadow
           div.panel-heading=__(page.title)
           div.panel-body.slide-down
@@ -15,10 +15,56 @@ block content
               include includes/main/simple-actions
             each input in page.inputs
               include includes/main/input
+
     if page.main
-      include auto/main
-    if page.items
-      include auto/items
+      unless page.main.submit
+        - page.main.submit='vulpejs.model.save()'
+      unless page.main.form
+        - page.main.form={enctype:'application/x-www-form-urlencoded'};
+      form(name="mainForm" role="form" enctype=page.main.form.enctype ng-submit=page.main.submit submitted="vulpejs.ui.form.submitted" novalidate shake-that)
+        .panel.panel-default(ng-class="{'box-shadow':vulpejs.ui.showing}")
+          .panel-heading
+            .row
+              .col-lg-6=__(page.main.title)
+              .col-lg-6
+                include includes/main/view-actions
+          .panel-body.slide-down(ng-cloak ng-show="vulpejs.ui.showing")
+            .row
+              .col-lg-12
+                if page.main.actions
+                  |!{page.main.htmlActions}
+                else
+                  include includes/main/actions
+                if page.main.tabs
+                  tabset
+                    each tab in page.main.tabs
+                      - var select = "";
+                      unless tab.focus
+                        - select = "vulpejs.ui.tab.focus('" + tab.focus + "')";
+                      tab(heading=__(tab.title) select=select)
+                        each input in tab.inputs
+                          include includes/main/input
+                else
+                  each input in page.main.inputs
+                    include includes/main/input
+
+    if page.select
+      .panel.panel-default(ng-class="{'box-shadow':!vulpejs.ui.showing}")
+        .panel-heading
+          .row
+            .col-lg-6=__(page.select.title)
+            .col-lg-6
+              if page.select.viewActions
+                |!{page.select.htmlViewActions}
+              else
+                include includes/select/view-actions
+        .panel-body.slide-down(ng-hide="vulpejs.ui.showing")
+          .row
+            .col-lg-12
+              table.table.table-striped.table-bordered.table-hover
+                include includes/select/table
+              include includes/select/paginate
+
     script(type="text/javascript").
       vulpe.view.inputs();
   include includes/script
