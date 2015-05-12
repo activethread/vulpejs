@@ -1,23 +1,23 @@
 div(ng-class="{'btn-group':selectItem.email !== vulpejs.userDetails.email}")
-  a.btn.btn-primary.btn-xs(ng-click="vulpejs.model.find(selectItem._id)" title=__('Edit'))
+  a.btn.btn-primary.btn-xs(ng-click="vulpejs.model.find(selectItem._id)" tooltip=__('Click to edit'))
     i.fa.fa-pencil.fa-fw
     =__('Edit')
-  a.btn.btn-primary.btn-xs.dropdown-toggle(data-toggle="dropdown" href="#" ng-if="vulpejs.hasRoles(['SUPER','ADMIN']) && selectItem.email !== vulpejs.userDetails.email")
+  a.btn.btn-primary.btn-xs.dropdown-toggle(data-toggle="dropdown" href="#" ng-if="vulpejs.hasRoles(['SUPER','ADMIN']) && selectItem.email !== vulpejs.userDetails.email" tooltip=__('Click to expand/collapse'))
     span.caret
   ul.dropdown-menu(ng-if="vulpejs.hasRoles(['SUPER','ADMIN']) && selectItem.email !== vulpejs.userDetails.email")
     li
-      a(ng-click="vulpejs.model.remove(selectItem._id)" title=__('Delete'))
+      a(ng-click="vulpejs.model.remove(selectItem._id)" tooltip=__('Click to delete'))
         i.fa.fa-trash-o.fa-fw
         =__('Delete')
     li
-      a(ng-click="vulpejs.model.clone(selectItem)" title=__('Clone'))
+      a(ng-click="vulpejs.model.clone(selectItem)" tooltip=__('Click to clone'))
         i.fa.fa-magic.fa-fw
         =__('Clone')
     li(ng-if="vulpejs.equals(selectItem, 'status', 'ACTIVE')")
-      a(ng-click="vulpejs.model.status(selectItem._id, 'INACTIVE')" title=__('Deactivate'))
+      a(ng-click="vulpejs.model.status(selectItem._id, 'INACTIVE')" tooltip=__('Click to deactivate'))
         i.fa.fa-ban.fa-fw
         =__('Deactivate')
     li(ng-if="vulpejs.equals(selectItem, 'status', 'INACTIVE')")
-      a(ng-click="vulpejs.model.status(selectItem._id, 'ACTIVE')" title=__('Activate'))
+      a(ng-click="vulpejs.model.status(selectItem._id, 'ACTIVE')" tooltip=__('Click to activate'))
         i.fa.fa-check-circle-o.fa-fw
         =__('Activate')

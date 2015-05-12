@@ -21,87 +21,16 @@ thead
         - var style = 'width: ' + item.width + ';'
         th(style=style)=__(item.label)
 tbody
-  tr(ng-cloak ng-if="vulpejs.items.length === 0")
-    td(colspan="99")=__('Empty')
-  tr.click.slide-down(dir-paginate="selectItem in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse" total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
-    td.text-center
-      |{{$index + 1}}
-    each item in page.select.items
-      if item.name
-        td(class=item.className ng-click="click = !click; detail = selectItem._id")
-          if item.details
-            each detail in item.details
-              unless detail.class
-                - detail.class = 'col-lg-3';
-              div(class=detail.class)
-                if detail.label
-                  label=__(detail.label)
-                  |&nbsp;
-                if detail.value
-                  br
-                  span
-                    if detail.filter
-                      |{{selectItem.#{detail.value}|#{detail.filter}}}
-                    else if detail.i18n
-                      |{{selectItem.#{detail.value}|i18n}}
-                    else
-                      |{{selectItem.#{detail.value}}}
-          else
-            unless item.images
-              if item.filter
-                |{{selectItem.#{item.name}|#{item.filter}}}
-              else if item.i18n
-                |{{selectItem.#{item.name}|i18n}}
-              else
-                |{{selectItem.#{item.name}}}
-            if item.images
-              each image in item.images
-                img(src="/images/#{image.name}" ng-cloak ng-if=image.showIf title=__(image.title))
-                if item.showTitle
-                  span(ng-cloak ng-if=image.showIf)
-                    br
-                    =__(image.title)
-            if item.detail
-              table.scale-fade(style="width: 100%" ng-if="click && detail === selectItem._id" ng-cloak)
-                tr
-                  each headerItem in item.detail.items
-                    - var style = '';
-                    if headerItem.width
-                     - style = 'width: ' + headerItem.width + ';';
-                    th(style=style)=__(headerItem.label)
-                tr
-                  each bodyItem in item.detail.items
-                    unless bodyItem.className
-                      - bodyItem.className = '';
-                    unless bodyItem.style
-                      - bodyItem.style = '';
-                    td(class=bodyItem.className style=bodyItem.style)
-                      if bodyItem.filter
-                        |{{selectItem.#{bodyItem.name}|#{bodyItem.filter}}}
-                      else if bodyItem.i18n
-                        |{{selectItem.#{bodyItem.name}|i18n}}
-                      else
-                        |{{selectItem.#{bodyItem.name}}}
-    td
-      if typeof page.select.actions === 'string'
-        |!{page.select.htmlActions}
-      else
-        include actions
-          each action in page.select.actions
-            unless action.className
-              - action.className = '';
-            unless action.show
-              - action.show = '';
-            span=action.className
-            li(class=action.className ng-if=action.show)
-              if action.link
-                unless action.link.click
-                  - action.link.click = ''
-                unless action.link.href
-                  - action.link.href = ''
-                a(href=action.link.href ng-click=action.link.click)
-                  i(class="fa #{action.link.icon} fa-fw")
-                  =__(action.link.label)
+  tr.slide-down(ng-cloak ng-if="vulpejs.items.length === 0")
+    td(colspan=(page.select.filter.search.colspan + 1 + page.select.filter.status.colspan))=__('Empty')
+  if page.select.detail
+    tr.click.slide-down(dir-paginate-start="selectItem in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse" total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
+      include items
+    tr.scale-fade(dir-paginate-end ng-cloak ng-if="click && detail === selectItem._id")
+      include detail
+  else
+    tr.click.slide-down(dir-paginate="selectItem in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse" total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
+      include items
 //- tfoot(ng-cloak ng-if="vulpejs.ui.pagination.totalPages > 1")
 //-   tr
 //-     td(colspan="99")

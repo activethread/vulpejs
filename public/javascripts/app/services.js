@@ -575,6 +575,18 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
               }).error(httpErrorHandler);
             }
           }
+        } else {
+          for (var property in vulpejs.item) {
+            if (vulpejs.item.hasOwnProperty(property)) {
+              var value = vulpejs.item[property];
+              if (typeof value === 'string' && value.length === 0) {
+                $timeout(function() {
+                  vulpejs.ui.focusTo(vulpejs.ui.name.replace(/\-/g, '') + '-' + property.replace(/\./g, '-'));
+                }, 100);
+                break;
+              }
+            }
+          }
         }
       },
       saveAfter: nothing,
@@ -843,7 +855,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
         focus: function(focus) {
           if (focus && focus.length > 0) {
             $timeout(function() {
-              vulpejs.ui.focusTo(vulpejs.ui.name + '-' + focus);
+              vulpejs.ui.focusTo(vulpejs.ui.name.replace(/\-/g, '') + '-' + focus);
             }, 100);
           }
         },

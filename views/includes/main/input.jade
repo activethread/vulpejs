@@ -194,7 +194,7 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
         if input.items
           unless input.items.filter
             - input.items.filter = '';
-          option(ng-repeat='option in vulpejs.#{input.items.items}#{input.items.filter}' value="{{option.#{input.items.value}}}") {{option.#{input.items.label}}}
+          option(ng-repeat='option in vulpejs.#{input.items.name}#{input.items.filter}' value="{{option.#{input.items.value}}}") {{option.#{input.items.label}}}
   else if input.type === 'group'
     each option in input.options
       - var model = "vulpejs.group['"+input.name+option.value+"']";

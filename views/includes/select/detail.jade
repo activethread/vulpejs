@@ -1,0 +1,21 @@
+td(colspan=(page.select.filter.search.colspan + 1 + page.select.filter.status.colspan))
+  table(style="width: 100%")
+    tr
+      each headerItem in page.select.detail
+        - var style = '';
+        if headerItem.width
+         - style = 'width: ' + headerItem.width + ';';
+        th(style=style)=__(headerItem.label)
+    tr
+      each bodyItem in page.select.detail
+        unless bodyItem.className
+          - bodyItem.className = '';
+        unless bodyItem.style
+          - bodyItem.style = '';
+        td(class=bodyItem.className style=bodyItem.style)
+          if bodyItem.filter
+            |{{selectItem.#{bodyItem.name}|#{bodyItem.filter}}}
+          else if bodyItem.i18n
+            |{{selectItem.#{bodyItem.name}|i18n}}
+          else
+            |{{selectItem.#{bodyItem.name}}}

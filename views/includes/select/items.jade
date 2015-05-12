@@ -1,0 +1,59 @@
+- var tooltip = page.select.detail ? __('Click to expand/collapse') : '';
+td.text-center
+  |{{$index + 1}}
+each item in page.select.items
+  if item.name
+    td(class=item.className ng-click="click = !click; detail = selectItem._id")
+      div(tooltip=tooltip)
+        if item.details
+          each detail in item.details
+            unless detail.class
+              - detail.class = 'col-lg-3';
+            div(class=detail.class)
+              if detail.label
+                label=__(detail.label)
+                |&nbsp;
+              if detail.value
+                br
+                span
+                  if detail.filter
+                    |{{selectItem.#{detail.value}|#{detail.filter}}}
+                  else if detail.i18n
+                    |{{selectItem.#{detail.value}|i18n}}
+                  else
+                    |{{selectItem.#{detail.value}}}
+        else
+          unless item.images
+            if item.filter
+              |{{selectItem.#{item.name}|#{item.filter}}}
+            else if item.i18n
+              |{{selectItem.#{item.name}|i18n}}
+            else
+              |{{selectItem.#{item.name}}}
+          if item.images
+            each image in item.images
+              img(src="/images/#{image.name}" ng-cloak ng-if=image.showIf title=__(image.title))
+              if item.showTitle
+                span(ng-cloak ng-if=image.showIf)
+                  br
+                  =__(image.title)
+td
+  if typeof page.select.actions === 'string'
+    |!{page.select.htmlActions}
+  else
+    include actions
+      each action in page.select.actions
+        unless action.className
+          - action.className = '';
+        unless action.show
+          - action.show = '';
+        span=action.className
+        li(class=action.className ng-if=action.show)
+          if action.link
+            unless action.link.click
+              - action.link.click = ''
+            unless action.link.href
+              - action.link.href = ''
+            a(href=action.link.href ng-click=action.link.click)
+              i(class="fa #{action.link.icon} fa-fw")
+              =__(action.link.label)
