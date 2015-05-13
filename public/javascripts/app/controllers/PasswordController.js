@@ -1,39 +1,45 @@
-vulpe.ng.app.controller('PasswordController', ['$rootScope', '$scope', '$http', '$timeout', '$messages', '$controller', 'VulpeJS', '$authenticator', '$filter', 'i18n', function($rootScope, $scope, $http, $timeout, $messages, $controller, VulpeJS, $authenticator, $filter, i18n) {
-
-  var user = $authenticator.userDetails();
+vulpe.ng.app.controller('PasswordController', ['$rootScope', '$scope', 'VulpeJS', function($rootScope, $scope, VulpeJS) {
+  var vulpejs = new VulpeJS().init($scope);
+  var user = vulpejs.userDetails;
 
   var load = function() {
     return {
-      _id: user.id,
-      email: user.email,
+      _id: user._id,
       name: user.name,
+      email: user.email,
       password: '',
       passwordConfirm: ''
     };
   };
 
-  $scope.item = load();
+  vulpejs.item = load();
 
-  $scope.change = function() {
+  vulpejs.change = function() {
     if ($scope.form.$valid) {
-      $messages.cleanAllMessages();
-      $scope.item.user = user.id;
-      $http.post('/password', $scope.item).success(function(data) {
-        $messages.addSuccessMessage('Password successfully changed!');
-        $scope.item = load();
-        $timeout(function() {
-          $('#password-password').focus();
-        }, 100);
-        $scope.submitted = false;
-      }).error(function(data, status, header, config) {
-        $messages.addErrorMessage('An error occurred in the execution.');
+      vulpejs.message.clean();
+      vulpejs.item.user = user.id;
+      vulpejs.http.post({
+        url: '/password',
+        data: vulpejs.item,
+        callback: {
+          success: function(data) {
+            vulpejs.message.success('Password successfully changed!');
+            vulpejs.item.item = load();
+            $timeout(function() {
+              $('#password-password').focus();
+            }, 100);
+            $vulpejs.ui.form.submitted = false;
+          },
+          error: function(data, status, header, config) {
+            vulpejs.message.error('An error occurred in the execution.');
+          }
+        }
       });
     } else {
-      $($scope.item.password.length === 0 ? '#password-password' : '#password-passwordConfirm').focus();
+      $(vulpejs.item.password.length === 0 ? '#password-password' : '#password-passwordConfirm').focus();
     }
   };
-
-  $(document).ready(function() {
+  vulpejs.on.ready(function() {
     $('#password-password').focus();
   });
 

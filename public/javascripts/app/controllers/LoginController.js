@@ -1,4 +1,5 @@
-vulpe.ng.app.controller('LoginController', ['$rootScope', '$scope', '$http', '$timeout', '$messages', '$authenticator', '$window', '$cookies', '$store', function($rootScope, $scope, $http, $timeout, $messages, $authenticator, $window, $cookies, $store) {
+vulpe.ng.app.controller('LoginController', ['$rootScope', '$scope', 'VulpeJS', function($rootScope, $scope, VulpeJS) {
+  var vulpejs = new VulpeJS().init($scope);
 
   $('#custom').html('');
 
@@ -8,49 +9,55 @@ vulpe.ng.app.controller('LoginController', ['$rootScope', '$scope', '$http', '$t
     rememberMe: false
   };
 
-  $authenticator.logoutSuccessfully();
+  vulpejs.$authenticator.logoutSuccessfully();
 
-  if ($store.get('remember')) {
-    $scope.user = $store.get('remember');
-  } else if ($cookies.remember) {
-    $scope.user = JSON.parse($cookies.remember.substring(2));
+  if (vulpejs.$store.get('remember')) {
+    $scope.user = vulpejs.$store.get('remember');
+  } else if (vulpejs.$cookies.remember) {
+    $scope.user = JSON.parse(vulpejs.$cookies.remember.substring(2));
     $scope.user.rememberMe = true;
   }
 
-  $scope.login = function() {
+  vulpejs.login = function() {
     if ($scope.form.$valid) {
-      $messages.cleanAllMessages();
+      vulpejs.message.clean();
       if ($scope.user.rememberMe) {
-        $store.set('remember', $scope.user);
+        vulpejs.$store.set('remember', $scope.user);
       } else {
-        $store.remove('remember');
+        vulpejs.$store.remove('remember');
       }
-      $http.post(vulpe.ng.rootContext + '/login', $scope.user).success(function(data) {
-        $messages.addSuccessMessage('Successfully logged in!');
-        $authenticator.loginSuccessfully(data.user);
-        $window.location = data.redirectTo;
-      }).error(function(data, status, header, config) {
-        if (status === 403) {
-          $messages.addErrorMessage('Informed credential is invalid.');
-        } else {
-          $messages.addErrorMessage('An error occurred in the execution.');
+      vulpejs.http.post({
+        url: vulpe.ng.rootContext + '/login',
+        data: $scope.user,
+        callback: {
+          success: function(data) {
+            vulpejs.message.success('Successfully logged in!');
+            vulpejs.$authenticator.loginSuccessfully(data.user);
+            vulpejs.redirect(data.redirectTo);
+          },
+          error: function(data, status, header, config) {
+            if (status === 403) {
+              vulpejs.message.error('Informed credential is invalid.');
+            } else {
+              vulpejs.message.error('An error occurred in the execution.');
+            }
+          }
         }
       });
     } else {
-      $($scope.user.username.length === 0 ? '#loginUsername' : '#loginPassword').focus();
+      $(!$scope.user.username ? '#login-username' : '#login-password').focus();
     }
   };
 
-  $scope.forgotPassword = function() {
+  vulpejs.forgotPassword = function() {
     if ($scope.user.username && $scope.user.username.length > 0) {
-      $window.location = vulpe.ng.rootContext + '/forgot-password/' + $scope.user.username;
+      vulpejs.redirect(vulpe.ng.rootContext + '/forgot-password/' + $scope.user.username);
     } else {
-      $messages.addErrorMessage('Please enter your e-mail password reset.');
+      vulpejs.message.error('Please enter your e-mail password reset.');
       $('#loginUsername').focus();
     }
   };
-
-  $(document).ready(function() {
+  vulpejs.on.ready(function() {
     $('#login').addClass('active');
   });
 
