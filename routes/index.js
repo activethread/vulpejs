@@ -89,7 +89,7 @@ exports.checkAuth = function(req, res, next) {
       exports.render(res, 'error', {
         error: {
           status: 403,
-          message: 'Unauthorized'
+          message: 'Forbidden'
         }
       });
     }
@@ -876,7 +876,7 @@ exports.doLogin = function(req, res, next) {
       vulpejs.utils.tryExecute(vulpejs.app.callback.login.unauthorized, {
         user: user
       });
-      return res.redirect(403, '/login');
+      return res.redirect(401, '/login');
     }
 
     req.logIn(user, function(error) {
@@ -959,6 +959,27 @@ exports.makeRoutes = function(options) {
     options.remove.executeBefore = function(req, res, callback) {
       callback(req, res);
     };
+  }
+  if (options.token) {
+    router.get('/' + options.name + '/token/:id', function(req, res) {
+      exports.doFind({
+        model: options.model,
+        id: req.params.id,
+        callback: function(item) {
+          var properties = ''
+          if (vulpejs.utils.isArray(options.token)) {
+            options.token.forEach(function(property) {
+              properties += item[property];
+            });
+          } else {
+            properties = item[options.token];
+          }
+          res.json({
+            token: vulpejs.utils.crypt.md5(properties + vulpejs.utils.time.getHHMM())
+          });
+        }
+      });
+    });
   }
   router.get('/' + options.name, function(req, res) {
     if (options.page && options.page.controller && (typeof options.page.auto === 'undefined' || options.page.auto)) {
@@ -1201,7 +1222,10 @@ exports.start = function(options) {
       debug: vulpejs.app.debug
     });
   });
-  var routes = [router, require(vulpejs.root.dir + '/routes/flow-uploader')];
+  var routes = [router];
+  if (!vulpejs.app.backend) {
+    routes.push(require(vulpejs.root.dir + '/routes/flow-uploader'));
+  }
   var routesDir = vulpejs.app.root.dir + '/routes/';
   var init = function() {
     // catch 404 and forward to error handler
@@ -1223,13 +1247,15 @@ exports.start = function(options) {
   var listModules = function(callback) {
     vulpejs.io.read.dir(routesDir, function(list) {
       var modules = [];
-      list.forEach(function(name) {
-        var stats = vulpejs.io.info.file(routesDir + name);
-        if (stats.isFile() && name[0] !== '.') {
-          modules.push(name.split('.')[0]);
-        }
-      });
-      callback(modules);
+      if (list) {
+        list.forEach(function(name) {
+          var stats = vulpejs.io.info.file(routesDir + name);
+          if (stats.isFile() && name[0] !== '.') {
+            modules.push(name.split('.')[0]);
+          }
+        });
+        callback(modules);
+      }
     });
   };
   if (options.routes) {

@@ -80,13 +80,15 @@ exports.start = function(options) {
     var listModules = function(callback) {
       vulpejs.io.read.dir(modelsDir, function(list) {
         var modules = [];
-        list.forEach(function(name) {
-          var stats = vulpejs.io.info.file(modelsDir + name);
-          if (stats.isFile() && name[0] !== '.') {
-            modules.push(name.split('.')[0]);
-          }
-        });
-        callback(modules);
+        if (list) {
+          list.forEach(function(name) {
+            var stats = vulpejs.io.info.file(modelsDir + name);
+            if (stats.isFile() && name[0] !== '.') {
+              modules.push(name.split('.')[0]);
+            }
+          });
+          callback(modules);
+        }
       });
     };
     if (options.models) {

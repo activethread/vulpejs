@@ -41,6 +41,7 @@ module.exports = function(options) {
         }
       },
       root: root,
+      backend: false,
       release: '',
       version: '',
       env: 'development',
@@ -88,6 +89,9 @@ module.exports = function(options) {
       }
     }
   };
+  if (options.backend) {
+    vulpejs.app.backend = options.backend;
+  }
   if (options.url) {
     vulpejs.app.url = options.url;
   }

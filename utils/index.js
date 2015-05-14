@@ -2,6 +2,205 @@
 var crypto = require('crypto');
 var fs = require('fs');
 
+exports.arrayObjectIndexOf = function(array, property, searchTerm) {
+  for (var i = 0, len = array.length; i < len; ++i) {
+    if (array[i][property] === searchTerm) {
+      return i
+    };
+  }
+  return -1;
+};
+
+exports.getContentTypeByFile = function(fileName) {
+  var contentType = 'application/octet-stream';
+  var file = fileName.toLowerCase();
+
+  if (file.indexOf('.html') >= 0) {
+    contentType = 'text/html';
+  } else if (file.indexOf('.css') >= 0) {
+    contentType = 'text/css';
+  } else if (file.indexOf('.json') >= 0) {
+    contentType = 'application/json';
+  } else if (file.indexOf('.js') >= 0) {
+    contentType = 'application/x-javascript';
+  } else if (file.indexOf('.png') >= 0) {
+    contentType = 'image/png';
+  } else if (file.indexOf('.jpg') >= 0) {
+    contentType = 'image/jpg';
+  }
+
+  return contentType;
+};
+
+exports.isEmpty = function(value) {
+  var empty = true;
+  if (typeof value === 'string' || (typeof value === 'object' && Object.prototype.toString.call(value) === '[object Array]')) {
+    empty = value.length === 0;
+  }
+  return empty;
+};
+
+exports.isNotEmpty = function(value) {
+  return !exports.isEmpty(value);
+};
+
+exports.crypt = {
+  base: function(value) {
+    return crypto.createHash('sha256').update(value).digest('base64');
+  },
+  shasum: function(value) {
+    return crypto.createHash('sha256').update(value).digest('hex');
+  },
+  md5: function(value) {
+    return crypto.createHash('md5').update(value).digest('hex');
+  }
+};
+
+exports.time = {
+  toHHMMSS: function(value) {
+    var sec_num = parseInt(value, 10);
+    var hours = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours < 10) {
+      hours = "0" + hours;
+    }
+    if (minutes < 10) {
+      minutes = "0" + minutes;
+    }
+    if (seconds < 10) {
+      seconds = "0" + seconds;
+    }
+    var time = hours + ':' + minutes + ':' + seconds;
+    return time;
+  },
+  getHHMM: function() {
+    var date = new Date();
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    if (seconds >= 45) {
+      ++minutes;
+    }
+    return hours + '' + minutes;
+  }
+};
+
+/**
+ * Compare two objects to order.
+ * @param   {Object} a Object
+ * @param   {Object} b Object
+ * @returns {Number} Order to sort.
+ */
+exports.compare = function(a, b) {
+  if (a < b) {
+    return -1;
+  }
+  if (a > b) {
+    return 1;
+  }
+  return 0;
+};
+
+/**
+ * Compare two objects to order reverse.
+ * @param   {Object} a Object
+ * @param   {Object} b Object
+ * @returns {Number} Order to sort.
+ */
+exports.compareReverse = function(a, b) {
+  if (a > b) {
+    return -1;
+  }
+  if (a < b) {
+    return 1;
+  }
+  return 0;
+};
+
+/**
+ * Try execute function with parameter.
+ * @param   {Function} execute Function to execute
+ * @param   {Object}   data    Data to return
+ * @returns {Boolean}  True if is function to execute and False if not.
+ */
+exports.tryExecute = function(execute, data) {
+  if (typeof(execute) === 'function') {
+    if (!data) {
+      execute();
+    } else {
+      execute(data);
+    }
+    return true;
+  }
+  return false;
+};
+
+exports.getFilesizeInBytes = function(filename) {
+  var stats = fs.statSync(filename);
+  var fileSizeInBytes = stats["size"];
+  return fileSizeInBytes;
+};
+
+exports.linux = /^linux/.test(process.platform);
+
+exports.copy = function(from, to) {
+  var keys = Object.keys(from);
+  for (var i = 0, len = keys.length; i < len; ++i) {
+    var key = keys[i];
+    if (key !== '_id' && to[key]) {
+      to[key] = from[key];
+    }
+  }
+  return to;
+};
+
+exports.isObject = function(value) {
+  return typeof value === 'object';
+};
+
+exports.isArray = function(value) {
+  return Array.isArray(value);
+};
+var buffer = function(value, type, decode) {
+  return decode ? new Buffer(value, type).toString() : new Buffer(value).toString(type);
+};
+exports.to = {
+  ascii: function(value) {
+    return buffer(value, 'ascii');
+  },
+  hex: function(value) {
+    return buffer(value, 'hex');
+  },
+  utf8: function(value) {
+    return buffer(value, 'utf8');
+  },
+  base64: function(value) {
+    return buffer(value, 'base64');
+  },
+  ucs2: function(value) {
+    return buffer(value, 'ucs2');
+  }
+};
+exports.from = {
+  ascii: function(value) {
+    return buffer(value, 'ascii', true);
+  },
+  hex: function(value) {
+    return buffer(value, 'hex', true);
+  },
+  utf8: function(value) {
+    return buffer(value, 'utf8', true);
+  },
+  base64: function(value) {
+    return buffer(value, 'base64', true);
+  },
+  ucs2: function(value) {
+    return buffer(value, 'ucs2', true);
+  }
+};
+
 var defaultDiacriticsRemovalap = [{
   'base': 'A',
   'letters': '\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F'
@@ -263,9 +462,9 @@ var defaultDiacriticsRemovalap = [{
 }];
 
 var diacriticsMap = {};
-for (var i = 0; i < defaultDiacriticsRemovalap.length; i++) {
+for (var i = 0, len = defaultDiacriticsRemovalap.length; i < len; ++i) {
   var letters = defaultDiacriticsRemovalap[i].letters.split("");
-  for (var j = 0; j < letters.length; j++) {
+  for (var j = 0, len2 = letters.length; j < len2; ++j) {
     diacriticsMap[letters[j]] = defaultDiacriticsRemovalap[i].base;
   }
 }
@@ -274,152 +473,4 @@ exports.removeDiacritics = function(str) {
   return str.replace(/[^\u0000-\u007E]/g, function(a) {
     return diacriticsMap[a] || a;
   });
-};
-
-exports.arrayObjectIndexOf = function(array, property, searchTerm) {
-  for (var i = 0; i < array.length; i++) {
-    if (array[i][property] === searchTerm) {
-      return i
-    };
-  }
-  return -1;
-};
-
-exports.getContentTypeByFile = function(fileName) {
-  var contentType = 'application/octet-stream';
-  var file = fileName.toLowerCase();
-
-  if (file.indexOf('.html') >= 0) {
-    contentType = 'text/html';
-  } else if (file.indexOf('.css') >= 0) {
-    contentType = 'text/css';
-  } else if (file.indexOf('.json') >= 0) {
-    contentType = 'application/json';
-  } else if (file.indexOf('.js') >= 0) {
-    contentType = 'application/x-javascript';
-  } else if (file.indexOf('.png') >= 0) {
-    contentType = 'image/png';
-  } else if (file.indexOf('.jpg') >= 0) {
-    contentType = 'image/jpg';
-  }
-
-  return contentType;
-};
-
-exports.isEmpty = function(value) {
-  var empty = true;
-  if (typeof value === 'string' || (typeof value === 'object' && Object.prototype.toString.call(value) === '[object Array]')) {
-    empty = value.length === 0;
-  }
-  return empty;
-};
-
-exports.isNotEmpty = function(value) {
-  return !exports.isEmpty(value);
-};
-
-exports.crypt = function(value) {
-  return crypto.createHash('sha256').update(value).digest('base64');
-};
-exports.shasum = function(value) {
-  return crypto.createHash('sha256').update(value).digest('hex');
-};
-exports.md5 = function(value) {
-  return crypto.createHash('md5').update(value).digest('hex');
-};
-
-exports.toHHMMSS = function(value) {
-  var sec_num = parseInt(value, 10);
-  var hours = Math.floor(sec_num / 3600);
-  var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-  var seconds = sec_num - (hours * 3600) - (minutes * 60);
-
-  if (hours < 10) {
-    hours = "0" + hours;
-  }
-  if (minutes < 10) {
-    minutes = "0" + minutes;
-  }
-  if (seconds < 10) {
-    seconds = "0" + seconds;
-  }
-  var time = hours + ':' + minutes + ':' + seconds;
-  return time;
-};
-
-/**
- * Compare two objects to order.
- * @param   {Object} a Object
- * @param   {Object} b Object
- * @returns {Number} Order to sort.
- */
-exports.compare = function(a, b) {
-  if (a < b) {
-    return -1;
-  }
-  if (a > b) {
-    return 1;
-  }
-  return 0;
-};
-
-/**
- * Compare two objects to order reverse.
- * @param   {Object} a Object
- * @param   {Object} b Object
- * @returns {Number} Order to sort.
- */
-exports.compareReverse = function(a, b) {
-  if (a > b) {
-    return -1;
-  }
-  if (a < b) {
-    return 1;
-  }
-  return 0;
-};
-
-/**
- * Try execute function with parameter.
- * @param   {Function} execute Function to execute
- * @param   {Object}   data    Data to return
- * @returns {Boolean}  True if is function to execute and False if not.
- */
-exports.tryExecute = function(execute, data) {
-  if (typeof(execute) === 'function') {
-    if (!data) {
-      execute();
-    } else {
-      execute(data);
-    }
-    return true;
-  }
-  return false;
-};
-
-exports.getFilesizeInBytes = function(filename) {
-  var stats = fs.statSync(filename);
-  var fileSizeInBytes = stats["size"];
-  return fileSizeInBytes;
-};
-
-exports.linux = /^linux/.test(process.platform);
-
-exports.copy = function(from, to) {
-  var keys = Object.keys(from);
-  for (var i = 0, len = keys.length; i < len; ++i) {
-    var key = keys[i];
-    if (key !== '_id' && to[key]) {
-      to[key] = from[key];
-    }
-  }
-  return to;
-};
-
-exports.isObject = function(value) {
-  return typeof value === 'object';
-};
-
-exports.isArray = function(value) {
-  return Array.isArray(value);
 };

@@ -45,11 +45,11 @@ var rename = function() {
 create();
 
 var template = function() {
-  return '[${type}][' + moment().format("DD-MM-YYYY HH:mm:ss") + ']: ${title}\n${message}\n';
+  return '[${type}][' + moment().format("DD-MM-YYYY HH:mm:ss") + ']: ${title}${break}${message}';
 };
 
 var log = function(type, value1, value2) {
-  var text = template();
+  var text = template().replace('${break}', value2 ? '\n\t' : '');
   if (utils.isObject(value1)) {
     value1 = JSON.stringify(value1);
   }
