@@ -1,3 +1,4 @@
+- var controllerName = page.controller.name ? page.controller.name : page.controller;
 - var formName = 'mainForm';
 - var itemName = 'vulpejs.item';
 if page.main
@@ -22,7 +23,7 @@ if input.alias
   - ngModel = input.alias + '.' + input.model;
 
 unless input.id
-  - input.id = page.controller.toLowerCase() + '-' + input.name.replace(/\./g, '-');
+  - input.id = controllerName.toLowerCase() + '-' + input.name.replace(/\./g, '-');
 
 unless input.autofocus
   - input.autofocus = false;
@@ -285,7 +286,27 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
     unless input.button.onClick
       - input.button.onClick = '';
     unless input.button.showIf
-      - input.button.showIf = '';
+      if input.showIf
+        - input.button.showIf = input.showIf;
+      else
+        - input.button.showIf = ngModel;
     unless input.button.label
       - input.button.label = input.label;
-    button.btn(type=input.button.type class=input.button.className ng-click=input.button.onClick ng-if=input.button.showIf)=__(input.button.label)
+    button.btn(type=input.button.type class=input.button.className ng-click=input.button.onClick ng-cloak ng-if=input.button.showIf)=__(input.button.label)
+  if input.link
+    unless input.link.className
+      - input.link.className = 'btn-link';
+    unless input.link.href
+      - input.link.href = '';
+    unless input.link.target
+      - input.link.target = '';
+    unless input.link.onClick
+      - input.link.onClick = '';
+    unless input.link.showIf
+      if input.showIf
+        - input.link.showIf = input.showIf;
+      else
+      - input.link.showIf = ngModel;
+    unless input.link.label
+      - input.link.label = input.label;
+    a.btn(class=input.link.className href=input.link.href target=input.link.target ng-click=input.link.onClick ng-cloak ng-if=input.link.showIf)=__(input.link.label)

@@ -60,6 +60,9 @@ var vulpe = {
       return vulpe.ng.app.controller(
         options.name + 'Controller', ['$rootScope', '$scope', 'VulpeJS', '$authenticator',
           function($rootScope, $scope, VulpeJS) {
+            if (!options.service.name) {
+              options.service.name = options.name.toLowerCase();
+            }
             new VulpeJS(options.service).init($scope);
           }
         ]);

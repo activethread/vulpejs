@@ -940,14 +940,14 @@ exports.language = function(req, res) {
 
 /**
  * Make default routes.
- * @param   {Object} options {name, listName, model, remove:{executeBefore}, save:{data}, populate}
+ * @param   {Object} options {name, plural, model, remove:{executeBefore}, save:{data}, populate}
  * @returns {Object} Express router.
  */
 exports.makeRoutes = function(options) {
   var router = vulpejs.express.router;
   // INIT OPTIONS
-  if (!options.listName) {
-    options.listName = options.name + 's';
+  if (!options.plural) {
+    options.plural = options.name + 's';
   }
   if (!options.model) {
     options.model = options.name.substr(0, 1).toUpperCase() + options.name.substr(1);
@@ -960,6 +960,7 @@ exports.makeRoutes = function(options) {
       callback(req, res);
     };
   }
+  // TOKEN
   if (options.token) {
     router.get('/' + options.name + '/token/:id', function(req, res) {
       exports.doFind({
@@ -981,15 +982,45 @@ exports.makeRoutes = function(options) {
       });
     });
   }
-  router.get('/' + options.name, function(req, res) {
+  // CONTROLLER
+  if (options.page && options.page.controller && vulpejs.utils.isObject(options.page.controller)) {
+    if (options.page.controller.service && !options.page.controller.service.name) {
+      options.page.controller.service.name = options.name;
+    }
+    router.get('/' + options.name + '/controller/' + options.name + (options.page.minifier ? '.min' : '') + '.js', function(req, res) {
+      res.writeHead(200, {
+        'Content-Type': 'text/javascript'
+      });
+      var code = 'vulpe.ng.controller(' + JSON.stringify(options.page.controller) + ');';
+      if (options.page.minifier) {
+        vulpejs.utils.js.obfuscate(code, {
+          success: function(obfuscated) {
+            res.write(obfuscated);
+            res.end();
+          },
+          error: function(error) {
+            exports.responseError(res, error);
+          }
+        });
+      } else {
+        res.write(code);
+        res.end();
+      }
+    });
+  }
+  // VIEW
+  var doView = function(req, res) {
     if (options.page && options.page.controller && (typeof options.page.auto === 'undefined' || options.page.auto)) {
       var loadView = function(view, callback) {
-        res.render(view, function(err, html) {
-          if (err) {
-            vulpejs.debug.error('RENDER-VIEW', err);
-          } else {
-            callback(html);
+        res.render(view, function(error, html) {
+          if (error) {
+            vulpejs.debug.error('RENDER-VIEW', {
+              view: view,
+              html: html,
+              error: error
+            });
           }
+          callback(html);
         });
       };
       var render = function() {
@@ -1005,12 +1036,12 @@ exports.makeRoutes = function(options) {
       } else if (options.page.main && options.page.main.actions) {
         loadView(options.page.main.actions, function(html) {
           options.page.main.htmlActions = html;
-          if (options.page.select && options.page.select.actions) {
+          if (options.page.select && options.page.select.actions && typeof options.page.select.actions === 'string') {
             loadView(options.page.select.actions, function(html) {
-              options.page.items.htmlActions = html;
-              if (options.page.items.viewActions) {
-                loadView(options.page.items.viewActions, function(html) {
-                  options.page.items.htmlViewActions = html;
+              options.page.select.htmlActions = html;
+              if (options.page.select.viewActions) {
+                loadView(options.page.select.viewActions, function(html) {
+                  options.page.select.htmlViewActions = html;
                   render();
                 });
               } else {
@@ -1031,14 +1062,25 @@ exports.makeRoutes = function(options) {
     } else {
       exports.render(res, options.name);
     }
+  };
+  router.get('/' + options.name, function(req, res) {
+    doView(req, res);
   });
   // FIND
   router.get('/' + options.name + '/:id', function(req, res) {
+    delete options.page.item;
     req.params.model = options.model;
     exports.find(req, res);
   });
+  router.get('/' + options.name + '/view/:populate?/:id', function(req, res) {
+    options.page.item = {id:req.params.id};
+    if (req.params.populate) {
+      options.page.item.populate = true;
+    }
+    doView(req, res);
+  });
   router.get('/' + options.name + '/populate/:id', function(req, res) {
-    req.params.model = options.model;
+    delete options.page.item;
     if (options.populate) {
       req.params.populate = options.populate;
     }
@@ -1046,6 +1088,7 @@ exports.makeRoutes = function(options) {
     if (options.find && options.find.populate) {
       opts = options.find.populate;
     }
+    req.params.model = options.model;
     exports.find(req, res, opts);
   });
   // DELETE
@@ -1080,24 +1123,24 @@ exports.makeRoutes = function(options) {
       };
     }
   };
-  router.get('/' + options.listName, function(req, res) {
+  router.get('/' + options.plural, function(req, res) {
     configListParams(req);
     exports.list(req, res);
   });
-  router.get('/' + options.listName + '/status/:status', function(req, res) {
+  router.get('/' + options.plural + '/status/:status', function(req, res) {
     configListParams(req, true);
     exports.list(req, res);
   });
-  router.get('/' + options.listName + '/query/:query', function(req, res) {
+  router.get('/' + options.plural + '/query/:query', function(req, res) {
     req.params.model = options.model;
     req.params.query = JSON.parse(req.params.query);
     exports.list(req, res);
   });
-  router.get('/' + options.listName + '/page/:page', function(req, res) {
+  router.get('/' + options.plural + '/page/:page', function(req, res) {
     configListParams(req);
     exports.paginate(req, res);
   });
-  router.get('/' + options.listName + '/status/:status/page/:page', function(req, res) {
+  router.get('/' + options.plural + '/status/:status/page/:page', function(req, res) {
     configListParams(req, true);
     exports.paginate(req, res);
   });

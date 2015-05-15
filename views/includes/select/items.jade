@@ -2,7 +2,7 @@
 td.text-center
   |{{$index + 1}}
 each item in page.select.items
-  if item.name
+  if item.name || item.details
     td(class=item.className ng-click="click = !click; detail = selectItem._id")
       div(tooltip=tooltip)
         if item.details

@@ -1,1 +1,2 @@
-script(src='/javascripts/app/controllers/#{page.controller}Controller#{minifier}.js', type='text/javascript')
+- var controllerUrl = page.controller.name ? '/' + page.controller.service.name + '/controller/' + page.controller.service.name + minifier + '.js' : '/javascripts/app/controllers/' + page.controller + 'Controller' + minifier + '.js';
+script(src=controllerUrl type='text/javascript')

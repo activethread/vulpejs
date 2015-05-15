@@ -1146,17 +1146,26 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
           reset: i18n.__('Reset'),
           search: i18n.__('Search'),
           nothingSelected: i18n.__('Nothing is selected')
-        }
+        };
       });
     }
     if (vulpejs.ui.name) {
       vulpejs.act.clear.item(false);
-      vulpejs.model.validate();
-      vulpejs.model.list();
       if (vulpejs.load.arrays.length > 0) {
         angular.forEach(vulpejs.load.arrays, function(array) {
           vulpejs.act.load.array(array);
         });
+      }
+      var itemId = $('#item-id');
+      if (itemId.length === 1) {
+        var values = itemId.text().split(':');
+        if (values.length === 2) {
+          vulpejs.model.populate = true;
+        }
+        vulpejs.model.find(values[0]);
+      } else {
+        vulpejs.model.validate();
+        vulpejs.model.list();
       }
       vulpejs.ui.hotkeys();
       vulpejs.ui.tab.hotkeys();

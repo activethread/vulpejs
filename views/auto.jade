@@ -1,7 +1,10 @@
 extends layouts/manager
 
 block content
-  div(ng-controller="#{page.controller}Controller")
+  - var controller = page.controller.name ? page.controller.name + 'Controller' : page.controller + 'Controller';
+  div(ng-controller=controller)
+    if page.item
+      #item-id.hide=page.item.id + (page.item.populate ? ':true' : '')
     if page.inputs
       unless page.submit
         - page.submit='submit()'

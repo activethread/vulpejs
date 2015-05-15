@@ -1,6 +1,8 @@
 // CRYPTO
 var crypto = require('crypto');
 var fs = require('fs');
+var jsObfuscator = require('js-obfuscator');
+var js_min = require('uglify-js');
 
 exports.arrayObjectIndexOf = function(array, property, searchTerm) {
   for (var i = 0, len = array.length; i < len; ++i) {
@@ -200,6 +202,23 @@ exports.from = {
     return buffer(value, 'ucs2', true);
   }
 };
+
+exports.js = {
+  obfuscate: function(code, callback) {
+    jsObfuscator(code, {}).then(function(obfuscated) {
+      if (obfuscated === 'undefined') {
+        var ast = js_min.parse(code);
+        ast.figure_out_scope();
+        ast.compute_char_frequency();
+        ast.mangle_names();
+        obfuscated = ast.print_to_string();
+      }
+      exports.tryExecute(callback.success, obfuscated);
+    }, function(error) {
+      exports.tryExecute(callback.error, error);
+    });
+  }
+}
 
 var defaultDiacriticsRemovalap = [{
   'base': 'A',
