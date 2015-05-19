@@ -1,5 +1,5 @@
 div.btn-group.pull-right
-  a.btn.btn-default.btn-sm(ng-click="vulpejs.ui.showing = !vulpejs.ui.showing; vulpejs.model.create()" tooltip=__('Click to add new'))
+  a.btn.btn-default.btn-sm(ng-click="vulpejs.ui.showing = !vulpejs.ui.showing; vulpejs.model.create()" tooltip=__('Click to add new') tooltip-append-to-body="true")
     i.fa.fa-plus.fa-fw
-  a.btn.btn-default.btn-sm(ng-click="vulpejs.ui.showing = !vulpejs.ui.showing" tooltip=__('Click to show/hide'))
+  a.btn.btn-default.btn-sm(ng-click="vulpejs.ui.showing = !vulpejs.ui.showing" tooltip=__('Click to show/hide') tooltip-append-to-body="true")
     i.fa.fa-eye.fa-fw(id="items-{{name}}-toggle" ng-class="{'fa-eye-slash':!vulpejs.ui.showing}")

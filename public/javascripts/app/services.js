@@ -222,6 +222,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
   var vulpejs = {
     $store: $store,
     $authenticator: $authenticator,
+    $cookies: $cookies,
     $timeout: $timeout,
     $filter: $filter,
     $window: $window,
@@ -563,7 +564,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
                 }
                 vulpejs.message.success('Record successfully saved!');
                 $timeout(function() {
-                  vulpejs.model.list();
+                  vulpejs.model.list(vulpejs.ui.pagination.current);
                   vulpejs.ui.focus();
                 }, 100);
                 vulpejs.model.saveAfter(vulpejs);
@@ -612,7 +613,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
           vulpejs.message.success('Status successfully changed!');
           vulpejs.model.statusAfter(vulpejs);
           $timeout(function() {
-            vulpejs.model.list($rootScope.currentPage + 1);
+            vulpejs.model.list(vulpejs.ui.pagination.current);
             vulpejs.ui.focus();
           }, 100);
         }).error(httpErrorHandler);
@@ -631,7 +632,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
               url: '/' + vulpejs.ui.name + '/' + id
             }).success(function() {
               vulpejs.act.clear.item(false);
-              vulpejs.model.list();
+              vulpejs.model.list(vulpejs.ui.pagination.current);
               vulpejs.message.success('Record successfully deleted!');
               vulpejs.model.removeAfter(vulpejs);
             }).error(httpErrorHandler);
@@ -934,20 +935,24 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
       },
       pagination: {
         size: pagination.items,
+        current: 0,
         totalPages: 0,
         totalItems: 0,
         history: {
           size: pagination.history,
+          current: 0,
           totalPages: 0,
           totalItems: 0,
           changeHandler: function(newPageNumber) {
             vulpejs.message.clean();
+            vulpejs.ui.pagination.history.current = newPageNumber;
             vulpejs.model.history.list(newPageNumber);
             vulpejs.itemHistory.version = null;
           }
         },
         changeHandler: function(newPageNumber) {
           vulpejs.message.clean();
+          vulpejs.ui.pagination.current = newPageNumber;
           vulpejs.model.list(newPageNumber);
         }
       }
@@ -1165,7 +1170,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
         vulpejs.model.find(values[0]);
       } else {
         vulpejs.model.validate();
-        vulpejs.model.list();
+        vulpejs.model.list(vulpejs.ui.pagination.current);
       }
       vulpejs.ui.hotkeys();
       vulpejs.ui.tab.hotkeys();

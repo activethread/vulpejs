@@ -41,6 +41,10 @@ module.exports = function(options) {
         }
       },
       root: root,
+      upload: {
+        tmp: root.dir + '/public/uploaded/tmp/',
+        files: root.dir + '/public/uploaded/files/'
+      },
       backend: false,
       release: '',
       version: '',
@@ -127,6 +131,9 @@ module.exports = function(options) {
   }
   if (options.page) {
     vulpejs.app.page = options.page;
+  }
+  if (options.upload) {
+    vulpejs.app.upload = options.upload;
   }
 
   // APP MODELS
