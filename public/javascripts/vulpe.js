@@ -95,8 +95,8 @@ var vulpe = {
           var parts = append.split('~');
           parts.forEach(function(attr) {
             if (attr) {
-              if (attr.indexOf(':') !== -1) {
-                var attrParts = attr.split(':');
+              if (attr.indexOf('^') !== -1) {
+                var attrParts = attr.split('^');
                 var attrName = attrParts[0];
                 var attrValue = attrParts[1];
                 if (attrName === 'ui-mask') {

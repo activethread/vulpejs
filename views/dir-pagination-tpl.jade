@@ -1,0 +1,11 @@
+ul(class="pagination slide-down" ng-if="1 < pages.length")
+  li(ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == 1 }")
+    a(href="" ng-click="setCurrent(1)" tooltip=__('Go to first page') tooltip-append-to-body="true" tooltip-enable="pagination.current > 1") &laquo;
+  li(ng-if="directionLinks" ng-class="{ disabled : pagination.current == 1 }")
+    a(href="" ng-click="setCurrent(pagination.current - 1)" tooltip=__('Go to previous page') tooltip-append-to-body="true" tooltip-enable="pagination.current > 1") &lsaquo;
+  li(ng-repeat="pageNumber in pages track by $index" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }")
+    a(href="" ng-click="setCurrent(pageNumber)" tooltip=__('Go to page %s', '{{pageNumber}}') tooltip-append-to-body="true" tooltip-enable="pagination.current !== pageNumber") {{ pageNumber }}
+  li(ng-if="directionLinks" ng-class="{ disabled : pagination.current == pagination.last }")
+    a(href="" ng-click="setCurrent(pagination.current + 1)" tooltip=__('Go to next page') tooltip-append-to-body="true" tooltip-enable="pagination.current < pagination.last") &rsaquo;
+  li(ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == pagination.last }")
+    a(href="" ng-click="setCurrent(pagination.last)" tooltip=__('Go to last page') tooltip-append-to-body="true" tooltip-enable="pagination.current < pagination.last") &raquo;

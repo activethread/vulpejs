@@ -11,7 +11,7 @@ exports.get = function(options) {
     if (error) {
       vulpejs.debug.error('Error on parse template ' + options.name + ': ' + error);
       if (options.res) {
-        vulpejs.routes.responseError(options.res, error);
+        vulpejs.routes.response.error(options.res, error);
       }
     } else {
       vulpejs.utils.tryExecute(options.callback, out);

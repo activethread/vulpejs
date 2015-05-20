@@ -88,9 +88,7 @@ module.exports = function(options) {
         items: 15,
         history: 5
       },
-      page: {
-        minifier: true
-      }
+      minifier: true
     }
   };
   if (options.backend) {
@@ -123,17 +121,22 @@ module.exports = function(options) {
   if (options.smtp) {
     vulpejs.app.smtp = options.smtp;
   }
-  if (options.env) {
+  if (process.env.APP_ENV) {
+    vulpejs.app.env = process.env.APP_ENV;
+  } else if (options.env) {
     vulpejs.app.env = options.env;
   }
   if (options.pagination) {
     vulpejs.app.pagination = options.pagination;
   }
-  if (options.page) {
-    vulpejs.app.page = options.page;
+  if (!options.minifier) {
+    vulpejs.app.minifier = false;
   }
   if (options.upload) {
     vulpejs.app.upload = options.upload;
+  }
+  if (options.on) {
+    vulpejs.app.on = options.on;
   }
 
   // APP MODELS
@@ -146,5 +149,8 @@ module.exports = function(options) {
   vulpejs.routes.start(options);
   vulpejs.mail.start();
 
+  if (vulpejs.app.on) {
+    vulpejs.utils.tryExecute(vulpejs.app.on.ready);
+  }
   return vulpejs;
 };

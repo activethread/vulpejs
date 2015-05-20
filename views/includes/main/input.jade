@@ -54,7 +54,7 @@ if input.mask
   - append += (append.length === 0 ? '' : '~') + input.mask;
 
 if input.maskPattern
-  - append += (append.length === 0 ? '' : '~') + 'ui-mask:' + input.maskPattern;
+  - append += (append.length === 0 ? '' : '~') + 'ui-mask^' + input.maskPattern;
 
 if input.autofocus
   - append += (append.length === 0 ? '' : '~') + 'autofocus';
@@ -78,75 +78,75 @@ if input.onlyNumbers
   - append += (append.length === 0 ? '' : '~') + 'only-numbers';
 
 if input.requiredIf
-  - append += (append.length === 0 ? '' : '~') + 'ng-required:' + input.requiredIf;
+  - append += (append.length === 0 ? '' : '~') + 'ng-required^' + input.requiredIf;
 else if input.required
   - append += (append.length === 0 ? '' : '~') + 'required';
  
 if input.rows
- - append += (append.length === 0 ? '' : '~') + 'rows:' + input.rows;
+ - append += (append.length === 0 ? '' : '~') + 'rows^' + input.rows;
 
 if input.showIf
-  - divAppend += (divAppend.length === 0 ? '' : '~') + 'ng-if:' + input.showIf;
+  - divAppend += (divAppend.length === 0 ? '' : '~') + 'ng-if^' + input.showIf;
   - divClass += ' slide-down';
 
 if input.hideIf
-  - divAppend += (divAppend.length === 0 ? '' : '~') + 'ng-hide:' + input.hideIf;
+  - divAppend += (divAppend.length === 0 ? '' : '~') + 'ng-hide^' + input.hideIf;
   - divClass += ' slide-down';
 
 if input.readonly
   - hideAppend += (append.length === 0 ? '' : '~') + 'ng-cloak';
-  - hideAppend += (append.length === 0 ? '' : '~') + 'ng-hide:' + input.readonly;
+  - hideAppend += (append.length === 0 ? '' : '~') + 'ng-hide^' + input.readonly;
   - showAppend += (append.length === 0 ? '' : '~') + 'ng-cloak';
-  - showAppend += (append.length === 0 ? '' : '~') + 'ng-show:' + input.readonly;
+  - showAppend += (append.length === 0 ? '' : '~') + 'ng-show^' + input.readonly;
   if input.type === 'star-rating'
-    //- append += (append.length === 0 ? '' : '~') + 'ng-readonly:' + input.readonly;
+    //- append += (append.length === 0 ? '' : '~') + 'ng-readonly^' + input.readonly;
   else
-    - append += (append.length === 0 ? '' : '~') + 'ng-hide:' + input.readonly;
+    - append += (append.length === 0 ? '' : '~') + 'ng-hide^' + input.readonly;
 
 if input.validate
-  - append += (append.length === 0 ? '' : '~') + 'ui-validate:' + input.validate;
+  - append += (append.length === 0 ? '' : '~') + 'ui-validate^' + input.validate;
 
 if input.validateWatch
-  - append += (append.length === 0 ? '' : '~') + 'ui-validate-watch:' + input.validateWatch;
+  - append += (append.length === 0 ? '' : '~') + 'ui-validate-watch^' + input.validateWatch;
 
 if input.on
   if input.on.blur
-    - append += (append.length === 0 ? '' : '~') + 'ng-blur:' + input.on.blur;
+    - append += (append.length === 0 ? '' : '~') + 'ng-blur^' + input.on.blur;
   if input.on.change
-    - append += (append.length === 0 ? '' : '~') + 'ng-change:' + input.on.change;
+    - append += (append.length === 0 ? '' : '~') + 'ng-change^' + input.on.change;
   if input.on.click
-    - append += (append.length === 0 ? '' : '~') + 'ng-click:' + input.on.click;
+    - append += (append.length === 0 ? '' : '~') + 'ng-click^' + input.on.click;
 else if input.items
-  - append += (append.length === 0 ? '' : '~') + "ng-change:vulpejs.ui.on.change({type: 'SELECT', name: '" + input.name + "', items: '" + input.items.name + "', value: '" + input.items.value + "', label: '" + input.items.label + "'})";
+  - append += (append.length === 0 ? '' : '~') + "ng-change^vulpejs.ui.on.change({type: 'SELECT', name: '" + input.name + "', items: '" + input.items.name + "', value: '" + input.items.value + "', label: '" + input.items.label + "'})";
 
 if input.typeahead && input.typeahead.on && input.typeahead.on.select
   if input.typeahead.on.select.indexOf('=') !== -1
     - var parts = input.typeahead.on.select.split('=');
     - var onSelect = "vulpejs.ui.on.select({type: 'TYPEAHEAD', rootProperty:'" + parts[0] + "', item: $item, itemProperty: '" + parts[1] + "'})";
-    - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select:' + onSelect;
+    - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select^' + onSelect;
   else
-    - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select:' + input.typeahead.on.select;
+    - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select^' + input.typeahead.on.select;
   
 if input.toggle
   - append += (append.length === 0 ? '' : '~') + 'toggle-switch';
-  - append += (append.length === 0 ? '' : '~') + 'model:' + ngModel;
+  - append += (append.length === 0 ? '' : '~') + 'model^' + ngModel;
   if input.toggle.on
-    - append += (append.length === 0 ? '' : '~') + 'on-label:' + __(input.toggle.on);
+    - append += (append.length === 0 ? '' : '~') + 'on-label^' + __(input.toggle.on);
   if input.toggle.off
-    - append += (append.length === 0 ? '' : '~') + 'off-label:' + __(input.toggle.off);
+    - append += (append.length === 0 ? '' : '~') + 'off-label^' + __(input.toggle.off);
   if input.toggle.knob
-    - append += (append.length === 0 ? '' : '~') + 'knob-label:' + __(input.toggle.knob);
+    - append += (append.length === 0 ? '' : '~') + 'knob-label^' + __(input.toggle.knob);
   if input.className === 'form-control'
     - input.className = '';
 else
-  - append += (append.length === 0 ? '' : '~') + 'ng-model:' + ngModel;
+  - append += (append.length === 0 ? '' : '~') + 'ng-model^' + ngModel;
   if input.type === 'checkbox' || input.type === 'group'
     - input.className = '';
 
 - var label = __(input.label)
 
 if !input.maskPattern
-  - append += (append.length === 0 ? '' : '~') + 'placeholder:' + label;
+  - append += (append.length === 0 ? '' : '~') + 'placeholder^' + label;
 
 if input.minicolors 
   label.control-label(for=input.id)=label

@@ -17,7 +17,7 @@ exports.send = function(options) {
     if (error) {
       vulpejs.debug.error('Error on send mail \'' + options.subject + '\' to ' + options.to + ': ' + error, info);
       if (options.res) {
-        vulpejs.routes.responseError(options.res, error);
+        vulpejs.routes.response.error(options.res, error);
       }
     } else {
       vulpejs.utils.tryExecute(options.callback);

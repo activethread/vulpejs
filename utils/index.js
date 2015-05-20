@@ -1,5 +1,6 @@
 // CRYPTO
 var crypto = require('crypto');
+var passwd = require('password-generator');
 var fs = require('fs');
 var jsObfuscator = require('js-obfuscator');
 var js_min = require('uglify-js');
@@ -55,6 +56,12 @@ exports.crypt = {
   },
   md5: function(value) {
     return crypto.createHash('md5').update(value).digest('hex');
+  }
+};
+
+exports.passwd = {
+  generate: function() {
+    return passwd(12, false);
   }
 };
 
