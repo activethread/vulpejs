@@ -54,14 +54,21 @@ module.exports = function(options) {
     };
   }
   var mongoUrl = 'mongodb://${auth}${host}/${db}?authSource=admin&w=1';
-  if (options.session.mongo.user && options.session.mongo.pass) {
-    mongoUrl = mongoUrl.replace('${auth}', options.session.mongo.user + ':' + options.session.mongo.pass + '@');
+  var session = options.session.mongo;
+  if (session.env && session.env[vulpejs.app.env]) {
+    session = session.env[vulpejs.app.env];
+    if (!session.port) {
+      session.port = 27017;
+    }
+  }
+  if (session.user && session.pass) {
+    mongoUrl = mongoUrl.replace('${auth}', session.user + ':' + session.pass + '@');
   } else {
     mongoUrl = mongoUrl.replace('${auth}', '');
   }
-  mongoUrl = mongoUrl.replace('${host}', options.session.mongo.host);
-  mongoUrl = mongoUrl.replace('${port}', options.session.mongo.port);
-  mongoUrl = mongoUrl.replace('${db}', options.session.mongo.db);
+  mongoUrl = mongoUrl.replace('${host}', session.host);
+  mongoUrl = mongoUrl.replace('${port}', session.port);
+  mongoUrl = mongoUrl.replace('${db}', session.db);
   exp.use(session({
     secret: '1234567890QWERTY',
     resave: true,

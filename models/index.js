@@ -119,14 +119,21 @@ exports.start = function(options) {
     }
   });
   var mongoUrl = 'mongodb://${auth}${host}:${port}/${db}?authSource=admin&w=1';
-  if (options.database.user && options.database.pass) {
-    mongoUrl = mongoUrl.replace('${auth}', options.database.user + ':' + options.database.pass + '@');
+  var database = options.database;
+  if (database.env && database.env[vulpejs.app.env]) {
+    database = database.env[vulpejs.app.env];
+    if (!database.port) {
+      database.port = 27017;
+    }
+  }
+  if (database.user && database.pass) {
+    mongoUrl = mongoUrl.replace('${auth}', database.user + ':' + database.pass + '@');
   } else {
     mongoUrl = mongoUrl.replace('${auth}', '');
   }
-  mongoUrl = mongoUrl.replace('${host}', options.database.host);
-  mongoUrl = mongoUrl.replace('${port}', options.database.port);
-  mongoUrl = mongoUrl.replace('${db}', options.database.name);
+  mongoUrl = mongoUrl.replace('${host}', database.host);
+  mongoUrl = mongoUrl.replace('${port}', database.port);
+  mongoUrl = mongoUrl.replace('${db}', database.name);
   vulpejs.mongoose.connect(mongoUrl);
   autoIncrement.initialize(vulpejs.mongoose.connection);
 };
