@@ -9,6 +9,9 @@ module.exports = function(options) {
     dir: path.resolve(__dirname + '/../'),
     context: ''
   };
+  if (process.env.APP_ENV) {
+    options.env = process.env.APP_ENV;
+  }
 
   global.vulpejs = {
     root: {
@@ -121,9 +124,7 @@ module.exports = function(options) {
   if (options.smtp) {
     vulpejs.app.smtp = options.smtp;
   }
-  if (process.env.APP_ENV) {
-    vulpejs.app.env = process.env.APP_ENV;
-  } else if (options.env) {
+  if (options.env) {
     vulpejs.app.env = options.env;
   }
   if (options.pagination) {

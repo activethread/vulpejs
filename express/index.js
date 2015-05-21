@@ -54,21 +54,21 @@ module.exports = function(options) {
     };
   }
   var mongoUrl = 'mongodb://${auth}${host}/${db}?authSource=admin&w=1';
-  var session = options.session.mongo;
-  if (session.env && session.env[vulpejs.app.env]) {
-    session = session.env[vulpejs.app.env];
-    if (!session.port) {
-      session.port = 27017;
+  var sessionMongo = options.session.mongo;
+  if (sessionMongo.env && sessionMongo.env[options.env]) {
+    sessionMongo = sessionMongo.env[options.env];
+    if (!sessionMongo.port) {
+      sessionMongo.port = 27017;
     }
   }
-  if (session.user && session.pass) {
-    mongoUrl = mongoUrl.replace('${auth}', session.user + ':' + session.pass + '@');
+  if (sessionMongo.user && sessionMongo.pass) {
+    mongoUrl = mongoUrl.replace('${auth}', sessionMongo.user + ':' + sessionMongo.pass + '@');
   } else {
     mongoUrl = mongoUrl.replace('${auth}', '');
   }
-  mongoUrl = mongoUrl.replace('${host}', session.host);
-  mongoUrl = mongoUrl.replace('${port}', session.port);
-  mongoUrl = mongoUrl.replace('${db}', session.db);
+  mongoUrl = mongoUrl.replace('${host}', sessionMongo.host);
+  mongoUrl = mongoUrl.replace('${port}', sessionMongo.port);
+  mongoUrl = mongoUrl.replace('${db}', sessionMongo.db);
   exp.use(session({
     secret: '1234567890QWERTY',
     resave: true,
