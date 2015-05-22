@@ -1,16 +1,16 @@
-- var controllerName = page.controller.name ? page.controller.name : page.controller;
+- var controllerName = ui.controller.name ? ui.controller.name : ui.controller;
 - var formName = 'mainForm';
 - var itemName = 'vulpejs.item';
-if page.main
-  if page.main.formName
-    - formName = page.main.formName;
-  if page.main.itemName
-    - itemName = page.main.itemName;
+if ui.main
+  if ui.main.formName
+    - formName = ui.main.formName;
+  if ui.main.itemName
+    - itemName = ui.main.itemName;
 else 
-  if page.formName
-    - formName = page.formName;
-  if page.itemName
-    - itemName = page.itemName;
+  if ui.formName
+    - formName = ui.formName;
+  if ui.itemName
+    - itemName = ui.itemName;
 
 unless input.model
   - input.model = input.name;

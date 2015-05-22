@@ -68,7 +68,7 @@ var vulpe = {
         ]);
     }
   },
-  view: {
+  ui: {
     datetimepicker: function() {
       if ($.datetimepicker) {
         $('.input-group.date').datetimepicker({
@@ -123,8 +123,8 @@ var vulpe = {
           vulpe.utils.diacriticsMap[letters[j]] = vulpe.utils.defaultDiacriticsRemovalap[i].base;
         }
       }
-      vulpe.view.datetimepicker();
-      vulpe.view.editor();
+      vulpe.ui.datetimepicker();
+      vulpe.ui.editor();
       var language = $.cookie('appLanguage'),
         flag = 'br';
       if (language === 'en') {
@@ -463,7 +463,7 @@ var vulpe = {
 
   $(function() {
     moment.locale(window.navigator.userLanguage || window.navigator.language);
-    vulpe.view.init();
+    vulpe.ui.init();
     if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
       var msViewportStyle = document.createElement('style');
       msViewportStyle.appendChild(document.createTextNode('@-ms-viewport{width:auto!important}'));

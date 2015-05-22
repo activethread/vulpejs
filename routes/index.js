@@ -117,12 +117,12 @@ exports.render = function(res, name, options) {
       version: vulpejs.app.version
     };
   }
-  if (!options.page) {
-    options.page = {
+  if (!options.ui) {
+    options.ui = {
       minifier: vulpejs.app.minifier
     };
-  } else if (!options.page.minifier) {
-    options.page.minifier = vulpejs.app.minifier;
+  } else if (!options.ui.minifier) {
+    options.ui.minifier = vulpejs.app.minifier;
   }
   res.render(name, options);
 };
@@ -854,7 +854,7 @@ exports.login = function(req, res) {
     res.redirect('/');
   } else {
     exports.render(res, 'login', {
-      page: {
+      ui: {
         controller: 'Login',
         title: 'Access Control'
       }
@@ -990,16 +990,16 @@ exports.makeRoutes = function(options) {
     });
   }
   // CONTROLLER
-  if (options.page && options.page.controller && vulpejs.utils.isObject(options.page.controller)) {
-    if (options.page.controller.service && !options.page.controller.service.name) {
-      options.page.controller.service.name = options.name;
+  if (options.ui && options.ui.controller && vulpejs.utils.isObject(options.ui.controller)) {
+    if (options.ui.controller.service && !options.ui.controller.service.name) {
+      options.ui.controller.service.name = options.name;
     }
-    router.get('/' + options.name + '/controller/' + options.name + (options.page.minifier ? '.min' : '') + '.js', function(req, res) {
+    router.get('/' + options.name + '/controller/' + options.name + (options.ui.minifier ? '.min' : '') + '.js', function(req, res) {
       res.writeHead(200, {
         'Content-Type': 'text/javascript'
       });
-      var code = 'vulpe.ng.controller(' + JSON.stringify(options.page.controller) + ');';
-      if (options.page.minifier) {
+      var code = 'vulpe.ng.controller(' + JSON.stringify(options.ui.controller) + ');';
+      if (options.ui.minifier) {
         vulpejs.utils.js.obfuscate(code, {
           success: function(obfuscated) {
             res.write(obfuscated);
@@ -1017,7 +1017,7 @@ exports.makeRoutes = function(options) {
   }
   // VIEW
   var doView = function(req, res) {
-    if (options.page && options.page.controller && (typeof options.page.auto === 'undefined' || options.page.auto)) {
+    if (options.ui && options.ui.controller && (typeof options.ui.auto === 'undefined' || options.ui.auto)) {
       var loadView = function(view, callback) {
         res.render(view, function(error, html) {
           if (error) {
@@ -1032,23 +1032,23 @@ exports.makeRoutes = function(options) {
       };
       var render = function() {
         exports.render(res, 'auto', {
-          page: options.page
+          ui: options.ui
         });
       };
-      if (options.page.actions) {
-        loadView(options.page.actions, function(html) {
-          options.page.htmlActions = html;
+      if (options.ui.actions) {
+        loadView(options.ui.actions, function(html) {
+          options.ui.htmlActions = html;
           render();
         });
-      } else if (options.page.main && options.page.main.actions) {
-        loadView(options.page.main.actions, function(html) {
-          options.page.main.htmlActions = html;
-          if (options.page.select && options.page.select.actions && typeof options.page.select.actions === 'string') {
-            loadView(options.page.select.actions, function(html) {
-              options.page.select.htmlActions = html;
-              if (options.page.select.viewActions) {
-                loadView(options.page.select.viewActions, function(html) {
-                  options.page.select.htmlViewActions = html;
+      } else if (options.ui.main && options.ui.main.actions) {
+        loadView(options.ui.main.actions, function(html) {
+          options.ui.main.htmlActions = html;
+          if (options.ui.select && options.ui.select.actions && typeof options.ui.select.actions === 'string') {
+            loadView(options.ui.select.actions, function(html) {
+              options.ui.select.htmlActions = html;
+              if (options.ui.select.viewActions) {
+                loadView(options.ui.select.viewActions, function(html) {
+                  options.ui.select.htmlViewActions = html;
                   render();
                 });
               } else {
@@ -1062,9 +1062,9 @@ exports.makeRoutes = function(options) {
       } else {
         render();
       }
-    } else if (options.page) {
+    } else if (options.ui) {
       exports.render(res, options.name, {
-        page: options.page
+        ui: options.ui
       });
     } else {
       exports.render(res, options.name);
@@ -1075,21 +1075,21 @@ exports.makeRoutes = function(options) {
   });
   // FIND
   router.get('/' + options.name + '/:id', function(req, res) {
-    delete options.page.item;
+    delete options.ui.item;
     req.params.model = options.model;
     exports.find(req, res);
   });
   router.get('/' + options.name + '/view/:populate?/:id', function(req, res) {
-    options.page.item = {
+    options.ui.item = {
       id: req.params.id
     };
     if (req.params.populate) {
-      options.page.item.populate = true;
+      options.ui.item.populate = true;
     }
     doView(req, res);
   });
   router.get('/' + options.name + '/populate/:id', function(req, res) {
-    delete options.page.item;
+    delete options.ui.item;
     if (options.populate) {
       req.params.populate = options.populate;
     }

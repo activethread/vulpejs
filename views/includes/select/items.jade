@@ -1,7 +1,7 @@
-- var tooltip = page.select.detail ? __('Click to expand/collapse') : '';
+- var tooltip = ui.select.detail ? __('Click to expand/collapse') : '';
 td.text-center
   |{{$index + 1}}
-each item in page.select.items
+each item in ui.select.items
   if item.name || item.details
     td(class=item.className ng-click="click = !click; detail = selectItem._id")
       div(tooltip=tooltip)
@@ -38,11 +38,11 @@ each item in page.select.items
                   br
                   =__(image.title)
 td
-  if typeof page.select.actions === 'string'
-    |!{page.select.htmlActions}
+  if typeof ui.select.actions === 'string'
+    |!{ui.select.htmlActions}
   else
     include actions
-      each action in page.select.actions
+      each action in ui.select.actions
         unless action.className
           - action.className = '';
         unless action.show

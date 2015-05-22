@@ -1,21 +1,21 @@
 - var modules = "";
-if page.editor
+if ui.editor
   - modules += ", 'textAngular'";
-if page.minicolors
+if ui.minicolors
   - modules += ", 'minicolors'";
-if page.switch
+if ui.switch
   - modules += ", 'toggle-switch'";
-if page.uploader
+if ui.uploader
   - modules += ", 'blueimp.fileupload'";
-if page.tree
+if ui.tree
   - modules += ", 'ui.tree'";
-if page.flow
+if ui.flow
   - modules += ", 'flow'";
-if page.recaptcha
+if ui.recaptcha
   - modules += ", 'vcRecaptcha'";
-if page.multiSelect
+if ui.multiSelect
   - modules += ", 'isteven-multi-select', 'angularjs-dropdown-multiselect'"
-if page.rangeSlider
+if ui.rangeSlider
   - modules += ", 'ui-rangeSlider'"
 if modules !== ""
   script(type="text/javascript").

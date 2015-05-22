@@ -456,7 +456,6 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
         });
         $http.get(vulpejs.url.get() + (vulpejs.model.populate ? '/populate' : '') + '/' + id).success(function(data) {
           vulpejs.item = data.item;
-          vulpejs.itemOld = vulpejs.copy(vulpejs.item);
           vulpejs.ui.showing = !vulpejs.ui.showing;
           vulpejs.itemHistory.data = data.history.items;
           if (vulpejs.itemHistory.data.length !== 0) {
@@ -471,6 +470,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
             item: vulpejs.item
           });
           vulpejs.act.load.properties();
+          vulpejs.itemOld = vulpejs.copy(vulpejs.item);
           $timeout(function() {
             vulpejs.ui.focus();
           }, 100);
@@ -983,16 +983,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
         value = vulpejs.item;
         valueOld = vulpejs.itemOld;
       }
-      for (var property in value) {
-        if (valueOld.hasOwnProperty(property)) {
-          var valuex = valueOld[property];
-          var valuey = value[property];
-          if ((angular.isArray(valuex) && valuex.length != valuey.length) || (angular.isObject(valuex) && vulpejs.hasChanged(valuex, valuey)) || (valuex !== valuey)) {
-            return true;
-          }
-        }
-      }
-      return false;
+      return angular.toJson(value) !== angular.toJson(valueOld);
     },
     copy: function(value) {
       return angular.copy(value);

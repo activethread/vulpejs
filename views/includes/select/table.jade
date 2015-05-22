@@ -1,29 +1,29 @@
-unless page.select.filter
-  - page.select.filter = {filter:{search:{colspan:1}, status : {colspan:1, items:[]}}};
-unless page.select.items
-  - page.select.items = [];
-unless page.select.actions
-  - page.select.actions = [];
+unless ui.select.filter
+  - ui.select.filter = {filter:{search:{colspan:1}, status : {colspan:1, items:[]}}};
+unless ui.select.items
+  - ui.select.items = [];
+unless ui.select.actions
+  - ui.select.actions = [];
 thead
   tr
-    td(colspan=(page.select.filter.search.colspan + 1))
+    td(colspan=(ui.select.filter.search.colspan + 1))
       input(type="text" name="search" class="form-control" placeholder=__('Search') ng-model="search")
-    td(colspan=page.select.filter.status.colspan)
+    td(colspan=ui.select.filter.status.colspan)
       select(name="status" class="form-control" ng-model="vulpejs.filter.status" ng-change="vulpejs.model.list()")
         option(value='')=__('Select a Status')
-        if page.select.filter.status.items
-          each item in page.select.filter.status.items
+        if ui.select.filter.status.items
+          each item in ui.select.filter.status.items
             option(value=item.value)=__(item.label)
   tr
     th=__('Line')
-    each item in page.select.items
+    each item in ui.select.items
       if item.width
         - var style = 'width: ' + item.width + ';'
         th(style=style)=__(item.label)
 tbody
   tr.slide-down(ng-cloak ng-if="vulpejs.items.length === 0")
-    td(colspan=(page.select.filter.search.colspan + 1 + page.select.filter.status.colspan))=__('Empty')
-  if page.select.detail
+    td(colspan=(ui.select.filter.search.colspan + 1 + ui.select.filter.status.colspan))=__('Empty')
+  if ui.select.detail
     tr.click.slide-down(dir-paginate-start="selectItem in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse" total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
       include items
     tr.scale-fade(dir-paginate-end ng-cloak ng-if="click && detail === selectItem._id")

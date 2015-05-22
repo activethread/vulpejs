@@ -19,7 +19,7 @@ app.controller('MessagesController', ['$rootScope', '$scope', '$http', '$timeout
     $(document).scrollTop(0);
     $scope.interval = $timeout(function() {
       $scope.close($scope.messages.length - 1);
-    }, 3000);
+    }, 5000);
   });
   $scope.$on('cleanMessagesBroadcast', function() {
     $scope.messages = [];

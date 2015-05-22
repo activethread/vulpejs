@@ -1,46 +1,46 @@
 extends layouts/manager
 
 block content
-  - var controller = page.controller.name ? page.controller.name + 'Controller' : page.controller + 'Controller';
+  - var controller = ui.controller.name ? ui.controller.name + 'Controller' : ui.controller + 'Controller';
   div(ng-controller=controller)
-    if page.item
-      #item-id.hide=page.item.id + (page.item.populate ? ':true' : '')
-    if page.inputs
-      unless page.submit
-        - page.submit='submit()'
-      form(name="form" role="form" ng-submit=page.submit submitted="vulpejs.ui.form.submitted" novalidate shake-that)
+    if ui.item
+      #item-id.hide=ui.item.id + (ui.item.populate ? ':true' : '')
+    if ui.inputs
+      unless ui.submit
+        - ui.submit='submit()'
+      form(name="form" role="form" ng-submit=ui.submit submitted="vulpejs.ui.form.submitted" novalidate shake-that)
         div.panel.panel-default.box-shadow
-          div.panel-heading=__(page.title)
+          div.panel-heading=__(ui.title)
           div.panel-body.slide-down
-            if page.actions
-              |!{page.htmlActions}
+            if ui.actions
+              |!{ui.htmlActions}
             else
               include includes/main/simple-actions
-            each input in page.inputs
+            each input in ui.inputs
               include includes/main/input
 
-    if page.main
-      unless page.main.submit
-        - page.main.submit='vulpejs.model.save()'
-      unless page.main.form
-        - page.main.form={enctype:'application/x-www-form-urlencoded'};
-      form(name="mainForm" role="form" enctype=page.main.form.enctype ng-submit=page.main.submit submitted="vulpejs.ui.form.submitted" novalidate shake-that)
+    if ui.main
+      unless ui.main.submit
+        - ui.main.submit='vulpejs.model.save()'
+      unless ui.main.form
+        - ui.main.form={enctype:'application/x-www-form-urlencoded'};
+      form(name="mainForm" role="form" enctype=ui.main.form.enctype ng-submit=ui.main.submit submitted="vulpejs.ui.form.submitted" novalidate shake-that)
         .panel.panel-default(ng-class="{'box-shadow':vulpejs.ui.showing}")
           .panel-heading
             .row
-              .col-lg-6=__(page.main.title)
+              .col-lg-6=__(ui.main.title)
               .col-lg-6
                 include includes/main/view-actions
           .panel-body.slide-down(ng-cloak ng-show="vulpejs.ui.showing")
             .row
               .col-lg-12
-                if page.main.actions
-                  |!{page.main.htmlActions}
+                if ui.main.actions
+                  |!{ui.main.htmlActions}
                 else
                   include includes/main/actions
-                if page.main.tabs
+                if ui.main.tabs
                   tabset
-                    each tab in page.main.tabs
+                    each tab in ui.main.tabs
                       - var select = "";
                       unless tab.focus
                         - select = "vulpejs.ui.tab.focus('" + tab.focus + "')";
@@ -48,17 +48,17 @@ block content
                         each input in tab.inputs
                           include includes/main/input
                 else
-                  each input in page.main.inputs
+                  each input in ui.main.inputs
                     include includes/main/input
 
-    if page.select
+    if ui.select
       .panel.panel-default(ng-class="{'box-shadow':!vulpejs.ui.showing}")
         .panel-heading
           .row
-            .col-lg-6=__(page.select.title)
+            .col-lg-6=__(ui.select.title)
             .col-lg-6
-              if page.select.viewActions
-                |!{page.select.htmlViewActions}
+              if ui.select.viewActions
+                |!{ui.select.htmlViewActions}
               else
                 include includes/select/view-actions
         .panel-body.slide-down(ng-hide="vulpejs.ui.showing")
@@ -67,7 +67,3 @@ block content
               table.table.table-striped.table-bordered.table-hover
                 include includes/select/table
               include includes/select/paginate
-
-    script(type="text/javascript").
-      vulpe.view.inputs();
-  include includes/script
