@@ -1209,7 +1209,7 @@ exports.start = function(options) {
   var getLocale = function(request, response, next) {
     response.locals.i18n = {
       getLocale: function() {
-        return vulpejs.i18n.getLocale.apply(request, arguments);
+        return res.cookie('appLanguage') ? res.cookie('appLanguage') : vulpejs.i18n.getLocale.apply(request, arguments);
       }
     };
 
@@ -1271,6 +1271,13 @@ exports.start = function(options) {
 
   vulpejs.express.app.use(getLocale);
   configure();
+  // LANGUAGE
+  router.get('/language/:language', exports.language);
+
+  // LOGIN
+  router.get('/login', exports.login);
+  router.post('/login', exports.doLogin);
+  router.get('/logout', exports.logout);
 
   router.get('/global/debug/:enable', function(req, res) {
     vulpejs.app.debug = eval(req.params.enable);
