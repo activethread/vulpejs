@@ -1209,7 +1209,7 @@ exports.start = function(options) {
   var getLocale = function(request, response, next) {
     response.locals.i18n = {
       getLocale: function() {
-        return res.cookie('appLanguage') ? res.cookie('appLanguage') : vulpejs.i18n.getLocale.apply(request, arguments);
+        return response.cookie('appLanguage') ? response.cookie('appLanguage') : vulpejs.i18n.getLocale.apply(request, arguments);
       }
     };
 
