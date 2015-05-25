@@ -35,7 +35,7 @@ exports.response = {
  * @param {Boolean} next True if is autenticated and False if is not.
  */
 exports.checkAuth = function(req, res, next) {
-  if (!req.cookies.appLanguage) {
+  if (!req.cookies.appLanguage || req.cookies.appLanguage === 'undefined') {
     res.cookie('appLanguage', 'pt');
   }
   var skip = false;
