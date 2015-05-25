@@ -35,6 +35,9 @@ exports.response = {
  * @param {Boolean} next True if is autenticated and False if is not.
  */
 exports.checkAuth = function(req, res, next) {
+  if (!req.cookies.appLanguage) {
+    res.cookie('appLanguage', 'pt');
+  }
   var skip = false;
   for (var i = 0, len = loginSkip.length; i < len; ++i) {
     var skipUri = vulpejs.app.root.context + loginSkip[i];
@@ -100,9 +103,6 @@ exports.checkAuth = function(req, res, next) {
 };
 
 exports.render = function(res, name, options) {
-  if (!res.cookie('appLanguage')) {
-    res.cookie('appLanguage', 'pt');
-  }
   res.cookie('pagination', JSON.stringify(vulpejs.app.pagination));
   if (!options) {
     options = {
@@ -1209,7 +1209,7 @@ exports.start = function(options) {
   var getLocale = function(request, response, next) {
     response.locals.i18n = {
       getLocale: function() {
-        return response.cookie('appLanguage') ? response.cookie('appLanguage') : vulpejs.i18n.getLocale.apply(request, arguments);
+        return request.cookies.appLanguage || vulpejs.i18n.getLocale.apply(request, arguments);
       }
     };
 
