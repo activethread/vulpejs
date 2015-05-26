@@ -120,8 +120,8 @@ exports.start = function(options) {
   });
   var mongoUrl = 'mongodb://${auth}${host}:${port}/${db}?authSource=admin&w=1';
   var database = options.database;
-  if (database.env && database.env[vulpejs.app.env]) {
-    database = database.env[vulpejs.app.env];
+  if (database && database[vulpejs.app.env]) {
+    database = database[vulpejs.app.env];
     if (!database.port) {
       database.port = 27017;
     }

@@ -55,8 +55,8 @@ module.exports = function(options) {
   }
   var mongoUrl = 'mongodb://${auth}${host}/${db}?authSource=admin&w=1';
   var sessionMongo = options.session.mongo;
-  if (sessionMongo.env && sessionMongo.env[options.env]) {
-    sessionMongo = sessionMongo.env[options.env];
+  if (sessionMongo && sessionMongo[options.env]) {
+    sessionMongo = sessionMongo[options.env];
     if (!sessionMongo.port) {
       sessionMongo.port = 27017;
     }

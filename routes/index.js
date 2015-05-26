@@ -119,10 +119,10 @@ exports.render = function(res, name, options) {
   }
   if (!options.ui) {
     options.ui = {
-      minifier: vulpejs.app.minifier
+      minifier: vulpejs.app.minifier[vulpejs.app.env]
     };
   } else if (!options.ui.minifier) {
-    options.ui.minifier = vulpejs.app.minifier;
+    options.ui.minifier = vulpejs.app.minifier[vulpejs.app.env];
   }
   res.render(name, options);
 };
@@ -994,12 +994,12 @@ exports.makeRoutes = function(options) {
     if (options.ui.controller.service && !options.ui.controller.service.name) {
       options.ui.controller.service.name = options.name;
     }
-    router.get('/' + options.name + '/controller/' + options.name + (options.ui.minifier ? '.min' : '') + '.js', function(req, res) {
+    router.get('/' + options.name + '/controller/' + options.name + (vulpejs.app.minifier[vulpejs.app.env] ? '.min' : '') + '.js', function(req, res) {
       res.writeHead(200, {
         'Content-Type': 'text/javascript'
       });
       var code = 'vulpe.ng.controller(' + JSON.stringify(options.ui.controller) + ');';
-      if (options.ui.minifier) {
+      if (vulpejs.app.minifier[vulpejs.app.env]) {
         vulpejs.utils.js.obfuscate(code, {
           success: function(obfuscated) {
             res.write(obfuscated);

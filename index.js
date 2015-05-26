@@ -37,11 +37,9 @@ module.exports = function(options) {
     cron: require('cron'),
     app: {
       url: {
-        env: {
-          development: 'http://localhost:3000',
-          test: 'http://localhost:3000',
-          production: 'http://localhost:3000'
-        }
+        development: 'http://localhost:3000',
+        test: 'http://localhost:3000',
+        production: 'http://localhost:3000'
       },
       root: root,
       upload: {
@@ -91,7 +89,11 @@ module.exports = function(options) {
         items: 15,
         history: 5
       },
-      minifier: true
+      minifier: {
+        development: false,
+        test: false,
+        production: true
+      }
     }
   };
   if (options.backend) {
@@ -130,8 +132,8 @@ module.exports = function(options) {
   if (options.pagination) {
     vulpejs.app.pagination = options.pagination;
   }
-  if (!options.minifier) {
-    vulpejs.app.minifier = false;
+  if (options.minifier) {
+    vulpejs.app.minifier = options.minifier;
   }
   if (options.upload) {
     vulpejs.app.upload = options.upload;
