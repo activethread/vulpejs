@@ -317,6 +317,17 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
       error: {
         handle: {}
       },
+      ajax: function(options) {
+        $.ajax({
+          url: options.url
+        }).done(function(data) {
+          if (options.callback.success) {
+            vulpe.utils.tryExecute(options.callback.success, data);
+          } else {
+            vulpe.utils.tryExecute(options.callback, data);
+          };
+        });
+      }
     },
     context: {
 

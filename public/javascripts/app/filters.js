@@ -312,3 +312,13 @@ app.filter('toSpacedWords', [function() {
     return input;
   };
 }]);
+
+app.filter('toHHMMSS', [function() {
+  return function(input) {
+    if (typeof input === 'number' || input instanceof Number) {
+      return vulpe.utils.toHHMMSS(input);
+    }
+
+    return input;
+  };
+}]);
