@@ -17,6 +17,8 @@ if ui.multiSelect
   - modules += ", 'isteven-multi-select', 'angularjs-dropdown-multiselect'"
 if ui.rangeSlider
   - modules += ", 'ui-rangeSlider'"
+if ui.dragDrop
+  - modules += ", 'dndLists'"
 if modules !== ""
   script(type="text/javascript").
     vulpe.ng.app = angular.module('app', ['app.controllers'#{modules}]);
