@@ -326,6 +326,7 @@ exports.doRemove = function(options) {
     var validateQuery = {
       server: options.item._id
     };
+    // TODO: Remove Validate
     // for (var i = 0, len = options.validate.exists.dependencies.length; i < leng; ++i) {
     //   vulpejs.mongoose.model(options.validate.exists[i]).count(query).exec(function(error, total) {
     //     if (error) {
@@ -1021,46 +1022,68 @@ exports.makeRoutes = function(options) {
   // VIEW
   var doView = function(req, res) {
     if (options.ui && options.ui.controller && (typeof options.ui.auto === 'undefined' || options.ui.auto)) {
-      var loadView = function(view, callback) {
-        res.render(view, function(error, html) {
-          if (error) {
-            vulpejs.debug.error('RENDER-VIEW', {
-              view: view,
-              html: html,
-              error: error
-            });
-          }
-          callback(html);
-        });
-      };
+      var views = [];
       var render = function() {
         exports.render(res, 'auto', {
           ui: options.ui
         });
       };
       if (options.ui.actions) {
-        loadView(options.ui.actions, function(html) {
-          options.ui.htmlActions = html;
-          render();
+        views.push({
+          uri: options.ui.actions,
+          name: 'htmlActions'
         });
       } else if (options.ui.main && options.ui.main.actions) {
-        loadView(options.ui.main.actions, function(html) {
-          options.ui.main.htmlActions = html;
-          if (options.ui.select && options.ui.select.actions && typeof options.ui.select.actions === 'string') {
-            loadView(options.ui.select.actions, function(html) {
-              options.ui.select.htmlActions = html;
-              if (options.ui.select.viewActions) {
-                loadView(options.ui.select.viewActions, function(html) {
-                  options.ui.select.htmlViewActions = html;
-                  render();
-                });
-              } else {
-                render();
-              }
+        views.push({
+          uri: options.ui.main.actions,
+          name: 'htmlActions',
+          main: true
+        });
+      } else if (options.ui.select) {
+        if (options.ui.select.actions && typeof options.ui.select.actions === 'string') {
+          views.push({
+            uri: options.ui.select.actions,
+            name: 'htmlActions',
+            select: true
+          });
+          if (options.ui.select.viewActions) {
+            views.push({
+              uri: options.ui.select.viewActions,
+              name: 'htmlViewActions',
+              select: true
             });
-          } else {
-            render();
           }
+        }
+        if (options.ui.select.filter && typeof options.ui.select.filter === 'string') {
+          views.push({
+            uri: options.ui.select.filter,
+            name: 'htmlFilter',
+            select: true
+          });
+        }
+      }
+      if (views.length > 0) {
+        vulpejs.async.each(views, function(view, callback) {
+          res.render(view.uri, function(error, html) {
+            if (error) {
+              vulpejs.debug.error('RENDER-VIEW', {
+                view: view.uri,
+                html: html,
+                error: error
+              });
+            } else {
+              if (!view.main && !view.select) {
+                options.ui[view.name] = html;
+              } else if (view.main) {
+                options.ui.main[view.name] = html;
+              } else if (view.select) {
+                options.ui.select[view.name] = html;
+              }
+            }
+            callback();
+          });
+        }, function() {
+          render();
         });
       } else {
         render();

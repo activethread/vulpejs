@@ -3,7 +3,10 @@ td.text-center
   |{{$index + 1}}
 each item in ui.select.items
   if item.name || item.details
-    td(class=item.className ng-click="click = !click; detail = selectItem._id")
+    - var click = "click = !click; detail = selectItem._id;";
+    unless ui.select.detail
+      - click = "vulpejs.model.find(selectItem._id);";
+    td(class=item.className ng-click=click)
       div(tooltip=tooltip)
         if item.details
           each detail in item.details

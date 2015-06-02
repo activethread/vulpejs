@@ -6,14 +6,18 @@ unless ui.select.actions
   - ui.select.actions = [];
 thead
   tr
-    td(colspan=(ui.select.filter.search.colspan + 1))
-      input(type="text" name="search" class="form-control" placeholder=__('Search') ng-model="search")
-    td(colspan=ui.select.filter.status.colspan)
-      select(name="status" class="form-control" ng-model="vulpejs.filter.status" ng-change="vulpejs.model.list()")
-        option(value='')=__('Select a Status')
-        if ui.select.filter.status.items
-          each item in ui.select.filter.status.items
-            option(value=item.value)=__(item.label)
+    if typeof ui.select.filter === 'string'
+      td(colspan="99")
+        |!{ui.select.htmlFilter}
+    else
+      td(colspan=(ui.select.filter.search.colspan + 1))
+        input(type="text" name="search" class="form-control" placeholder=__('Search') ng-model="search")
+      td(colspan=ui.select.filter.status.colspan)
+        select(name="status" class="form-control" ng-model="vulpejs.filter.status" ng-change="vulpejs.model.list()")
+          option(value='')=__('Select a Status')
+          if ui.select.filter.status.items
+            each item in ui.select.filter.status.items
+              option(value=item.value)=__(item.label)
   tr
     th=__('Line')
     each item in ui.select.items
@@ -22,7 +26,7 @@ thead
         th(style=style)=__(item.label)
 tbody
   tr.slide-down(ng-cloak ng-if="vulpejs.items.length === 0")
-    td(colspan=(ui.select.filter.search.colspan + 1 + ui.select.filter.status.colspan))=__('Empty')
+    td(colspan=(typeof ui.select.filter === 'string' ? 99 : ui.select.filter.search.colspan + 1 + ui.select.filter.status.colspan))=__('Empty')
   if ui.select.detail
     tr.click.slide-down(dir-paginate-start="selectItem in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse" total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
       include items
