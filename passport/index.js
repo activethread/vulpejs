@@ -37,7 +37,7 @@ passport.deserializeUser(function(id, done) {
     _id: id
   }, function(error, user) {
     if (error) {
-      return done(new Error(vulpejs.i18n.__('User ' + id + ' does not exist')));
+      return done(new Error(vulpejs.i18n.__('User %s does not exist', id)));
     }
     return done(null, user);
   });

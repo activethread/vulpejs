@@ -736,6 +736,9 @@ exports.doFind = function(options) {
   if (!options.populate) {
     options.populate = '';
   }
+  if (!options.fields) {
+    options.fields = '';
+  }
   if (options.id) {
     options.one = true;
     if (!options.query) {
@@ -747,7 +750,7 @@ exports.doFind = function(options) {
     options.query = {};
   }
   if (options.one) {
-    Model.findOne(options.query).populate(options.populate).exec(function(error, item) {
+    Model.findOne(options.query).populate(options.populate).select(options.fields).exec(function(error, item) {
       if (error) {
         vulpejs.debug.error('FIND-ONE', error);
       } else if (options && options.callback) {
@@ -759,7 +762,7 @@ exports.doFind = function(options) {
     if (!options.orderBy) {
       options.orderBy = {};
     }
-    Model.find(options.query).populate(options.populate).sort(options.orderBy).exec(function(error, items) {
+    Model.find(options.query).populate(options.populate).sort(options.orderBy).select(options.fields).exec(function(error, items) {
       if (error) {
         vulpejs.debug.error('FIND-MANY', error);
       } else if (options && options.callback) {

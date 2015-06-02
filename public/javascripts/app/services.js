@@ -326,6 +326,8 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
           } else {
             vulpe.utils.tryExecute(options.callback, data);
           };
+        }).fail(function(error) {
+          vulpe.utils.tryExecute(options.callback.error, error);
         });
       }
     },
