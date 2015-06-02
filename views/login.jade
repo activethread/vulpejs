@@ -5,7 +5,8 @@ block content
     form.form-signin(name="form" role="form" ng-submit="vulpejs.login()" method="post" autocomplete="off" novalidate shake-that submitted="submitted")
       .panel.panel-default.box-shadow
         .panel-heading
-          h3.panel-title=__('Access Control')
+          .row
+            .col-lg-12=__('Access Control')
         .panel-body
           .form-group(ng-class="{'has-error': form.username.$invalid && submitted}")
             input#login-username.form-control(type="email" name="username" ng-model="user.username" placeholder=__("Email") required autofocus)
