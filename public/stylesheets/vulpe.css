@@ -18,3 +18,7 @@ ul.rating li.filled {
 ul.readonly li.filled {
   color: #666;
 }
+.release {
+  font-size: 7px;
+  margin-left: 2px;
+}
