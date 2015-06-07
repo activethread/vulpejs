@@ -6,7 +6,7 @@ Open-Source Full-Stack solution to Node.js applications with `Express.js`, `Jade
 Add VulpeJS dependency in your `package.json`:
 
     ...
-    "vulpejs": "~0.0.4",
+    "vulpejs": "~0.0.5",
     ...
 
 And run install:
