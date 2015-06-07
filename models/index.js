@@ -13,12 +13,12 @@ exports.validatePresenceOf = function(value) {
 };
 
 /**
- * Get model from schema.
+ * Make model from schema.
  * @param   {Object} options {name, schema}
  * @returns {Object} Model
  */
-exports.getModel = function(options) {
-  var Schema = exports.makeSchema(options);
+exports.make = function(options) {
+  var Schema = exports.schema(options);
   Schema.pre('save', function(next) {
     this.modified = Date.now();
     next();
@@ -32,7 +32,7 @@ exports.getModel = function(options) {
  * @param   {Object} options {name, schema}
  * @returns {Object} Schema
  */
-exports.makeSchema = function(options) {
+exports.schema = function(options) {
   var Schema = vulpejs.mongoose.Schema;
   var Model = new Schema(options.schema);
 
@@ -75,7 +75,7 @@ exports.start = function(options) {
       vulpejs.debug.log(vulpejs.i18n.__('Database successfully started!'));
       vulpejs.schedules.start();
     };
-    require(root.dir + '/vulpejs/models/security');
+    require(root.vulpejs.dir + '/models/security');
     var modelsDir = vulpejs.app.root.dir + '/models/';
     var listModules = function(callback) {
       vulpejs.io.read.dir(modelsDir, function(list) {

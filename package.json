@@ -1,10 +1,10 @@
 {
   "name": "vulpejs",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.4",
   "dependencies": {
+    "debug": "~2.1.3",
+    "request": "~2.57.0",
     "express": "~4.12.3",
-    "express-paginate": "~0.0.8",
     "express-session": "~1.11.1",
     "body-parser": "~1.12.3",
     "compression": "~1.4.3",
@@ -14,28 +14,22 @@
     "method-override": "~2.3.2",
     "morgan": "~1.5.2",
     "serve-favicon": "~2.2.0",
-    "debug": "~2.1.3",
     "jade": "~1.9.2",
     "mongoose": "~4.0.1",
     "mongoose-paginate": "~3.1.3",
+    "mongoose-auto-increment": "~4.0.0",
     "connect-mongo": "~0.8.0",
+    "connect-multiparty": "~1.2.5",
     "i18n": "~0.5.0",
     "passport": "~0.2.1",
     "passport-local": "~1.0.0",
     "async": "~0.9.0",
     "nodemailer": "~1.3.4",
     "nodemailer-smtp-transport": "~1.0.2",
-    "scp2": "~0.2.1",
-    "ssh2shell": "~1.4.1",
-    "shelljs": "~0.4.0",
-    "dustfs": "~0.0.6",
+    "dustjs-linkedin": "~2.7.1",
+    "xml2js": "~0.4.9",
     "moment": "~2.10.2",
     "cron": "~1.0.9",
-    "grunt": "~0.4.5",
-    "grunt-contrib-jshint": "~0.11.2",
-    "grunt-contrib-nodeunit": "~0.4.1",
-    "grunt-contrib-uglify": "~0.9.1",
-    "grunt-contrib-concat": "~0.5.1",
     "aws-sdk": "~2.1.24",
     "formidable": "~1.0.17",
     "lwip": "~0.0.6",
@@ -43,5 +37,28 @@
     "uglify-js": "~2.4.21",
     "js-obfuscator": "~0.1.0",
     "password-generator": "~0.2.4"
-  }
+  },
+  "description": "Vulpe JS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lordfelipe/vulpejs.git"
+  },
+  "keywords": [
+    "vulpejs",
+    "express",
+    "passport",
+    "angular",
+    "jade",
+    "mongodb"
+  ],
+  "author": "Geraldo Felipe <lordfelipe@gmail.com> (http://www.vulpe.org)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lordfelipe/vulpejs/issues"
+  },
+  "homepage": "https://github.com/lordfelipe/vulpejs"
 }

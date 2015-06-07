@@ -954,7 +954,7 @@ exports.language = function(req, res) {
  * @param   {Object} options {name, plural, model, remove:{executeBefore}, save:{data}, populate}
  * @returns {Object} Express router.
  */
-exports.makeRoutes = function(options) {
+exports.make = function(options) {
   var router = vulpejs.express.router;
   // INIT OPTIONS
   if (!options.plural) {
@@ -1021,13 +1021,22 @@ exports.makeRoutes = function(options) {
   }
   // VIEW
   var doView = function(req, res) {
-    if (options.ui && options.ui.controller && (typeof options.ui.auto === 'undefined' || options.ui.auto)) {
-      var views = [];
-      var render = function() {
+    var auto = (options.ui && options.ui.controller && (typeof options.ui.auto === 'undefined' || options.ui.auto));
+    var views = [];
+    var render = function() {
+      if (auto) {
         exports.render(res, 'auto', {
           ui: options.ui
         });
-      };
+      } else if (options.ui) {
+        exports.render(res, options.name, {
+          ui: options.ui
+        });
+      } else {
+        exports.render(res, options.name);
+      }
+    };
+    if (auto) {
       if (options.ui.actions) {
         views.push({
           uri: options.ui.actions,
@@ -1062,38 +1071,34 @@ exports.makeRoutes = function(options) {
           });
         }
       }
-      if (views.length > 0) {
-        vulpejs.async.each(views, function(view, callback) {
-          res.render(view.uri, function(error, html) {
-            if (error) {
-              vulpejs.debug.error('RENDER-VIEW', {
-                view: view.uri,
-                html: html,
-                error: error
-              });
-            } else {
-              if (!view.main && !view.select) {
-                options.ui[view.name] = html;
-              } else if (view.main) {
-                options.ui.main[view.name] = html;
-              } else if (view.select) {
-                options.ui.select[view.name] = html;
-              }
+    }
+    if (views.length > 0) {
+      vulpejs.async.each(views, function(view, callback) {
+        res.render(view.uri, function(error, html) {
+          if (error && error.length > 0) {
+            vulpejs.debug.error('RENDER-VIEW', {
+              view: view.uri,
+              html: html,
+              error: error
+            });
+          } else {
+            if (view.include) {
+              options.ui.includes[view.name] = html;
+            } else if (!view.main && !view.select) {
+              options.ui[view.name] = html;
+            } else if (view.main) {
+              options.ui.main[view.name] = html;
+            } else if (view.select) {
+              options.ui.select[view.name] = html;
             }
-            callback();
-          });
-        }, function() {
-          render();
+          }
+          callback();
         });
-      } else {
+      }, function() {
         render();
-      }
-    } else if (options.ui) {
-      exports.render(res, options.name, {
-        ui: options.ui
       });
     } else {
-      exports.render(res, options.name);
+      render();
     }
   };
   router.get('/' + options.name, function(req, res) {

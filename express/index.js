@@ -16,8 +16,9 @@ var MongoStore = require('connect-mongo')(session);
 module.exports = function(options) {
   var exp = express();
   // view engine setup
-  exp.set('views', [root.dir + '/views', root.dir + '/vulpejs/views']);
+  exp.set('views', [root.dir + '/views', root.vulpejs.dir + '/views']);
   exp.set('view engine', 'jade');
+  exp.locals.basedir = root.vulpejs.dir;
 
   exp.use(favicon(root.dir + '/public/images/favicon.ico'));
   exp.use(compression());
@@ -78,7 +79,7 @@ module.exports = function(options) {
     })
   }));
   exp.use(methodOverride());
-  exp.use(express.static(path.join(root.dir, 'vulpejs/public')));
+  exp.use(express.static(path.join(root.vulpejs.dir, 'public')));
   exp.use(express.static(path.join(root.dir, 'public')));
 
   return {

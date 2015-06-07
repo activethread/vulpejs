@@ -6,7 +6,7 @@
  * @returns {Object} Model
  */
 module.exports = function() {
-  return vulpejs.models.getModel({
+  return vulpejs.models.make({
     name: 'Secutiry',
     schema: {
       url: {

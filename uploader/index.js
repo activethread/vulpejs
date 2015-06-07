@@ -152,8 +152,7 @@ module.exports = function(opts) {
       var that = this;
       if (!sss) {
         var uploadDir = req.params.uploadDir || options.uploadDir;
-        var baseUrl = (options.useSSL ? 'https:' : 'http:') +
-          '//' + req.headers.host;
+        var baseUrl = (options.useSSL ? 'https:' : 'http:') + '//' + req.headers.host;
         var url = baseUrl + options.uploadUrl + encodeURIComponent(that.name);
         that.url = url;
         that.deleteUrl = url;

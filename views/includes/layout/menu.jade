@@ -9,8 +9,8 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
       include release
   div#app-navbar.collapse.navbar-collapse
     if ui.error
-          ul.nav.navbar-nav
-            li#home
-              a(href="/")=__('Go to Home')
+      ul.nav.navbar-nav
+        li#home
+          a(href="/")=__('Go to Home')
     else
-      include ../../../../views/includes/layout/menu
+      include ../../../../../views/includes/layout/menu

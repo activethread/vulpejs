@@ -1116,7 +1116,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
   };
 
   var httpErrorHandler = function(data, status, header, config) {
-    if (angular.isFunction($vulpejs.http.error.handle)) {
+    if (angular.isFunction(vulpejs.http.error.handle)) {
       vulpejs.http.error.handle({
         operation: vulpejs.operation,
         data: data,

@@ -6,7 +6,10 @@ module.exports = function(options) {
   }
   var path = require('path');
   global.root = {
-    dir: path.resolve(__dirname + '/../'),
+    dir: path.resolve(__dirname + '/../../'),
+    vulpejs: {
+      dir: path.resolve(__dirname)
+    },
     context: ''
   };
   if (process.env.APP_ENV) {
@@ -15,7 +18,7 @@ module.exports = function(options) {
 
   global.vulpejs = {
     root: {
-      dir: root.dir + '/vulpejs'
+      dir: root.vulpejs.dir
     },
     debug: require('./debug'),
     models: require('./models'),
