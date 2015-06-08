@@ -1,6 +1,6 @@
 {
   "name": "vulpejs",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "dependencies": {
     "debug": "~2.2.0",
     "request": "~2.57.0",
@@ -38,7 +38,7 @@
     "js-obfuscator": "~0.1.0",
     "password-generator": "~1.0.0"
   },
-  "description": "Vulpe JS",
+  "description": "VulpeJS is a Open-Source Full-Stack solution to Node.js applications",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -48,11 +48,15 @@
     "url": "https://github.com/lordfelipe/vulpejs.git"
   },
   "keywords": [
+    "vulpe",
     "vulpejs",
     "express",
+    "expressjs",
     "passport",
     "angular",
+    "angularjs",
     "jade",
+    "jade-lang",
     "mongodb"
   ],
   "author": "Geraldo Felipe <lordfelipe@gmail.com> (http://www.vulpe.org)",

@@ -28,76 +28,78 @@ exports.response = {
   }
 };
 
-/**
- * Check auth if user is authenticated.
- * @param {Object}  req  Request
- * @param {Object}  res  Response
- * @param {Boolean} next True if is autenticated and False if is not.
- */
-exports.checkAuth = function(req, res, next) {
-  if (!req.cookies.appLanguage || req.cookies.appLanguage === 'undefined') {
-    res.cookie('appLanguage', 'pt');
-  }
-  var skip = false;
-  for (var i = 0, len = loginSkip.length; i < len; ++i) {
-    var skipUri = vulpejs.app.root.context + loginSkip[i];
-    if (skipUri === req.originalUrl || req.originalUrl.indexOf(skipUri) === 0) {
-      skip = true;
-      break;
+exports.auth = {
+  /**
+   * Check if user is authenticated.
+   * @param {Object}  req  Request
+   * @param {Object}  res  Response
+   * @param {Boolean} next Call next if is autenticated.
+   */
+  check: function(req, res, next) {
+    if (!req.cookies.appLanguage || req.cookies.appLanguage === 'undefined') {
+      res.cookie('appLanguage', 'pt');
     }
-  }
-  if (!req.isAuthenticated()) {
-    if (!skip) {
-      req.session['redirect-to'] = req.originalUrl;
-      res.redirect(vulpejs.app.root.context + '/login');
-      return;
-    }
-    next();
-  } else {
-    var roles = req.session['user-roles'];
-    if (skip || !roles || roles.length === 0 || !vulpejs.app.security.routes || vulpejs.app.security.routes.length === 0) {
-      next();
-      return;
-    }
-    var hasRouteRoles = function(route) {
-      if (route === '') {
-        return false;
-      }
-      var roleExists = !route.roles || route.roles.length === 0;
-      if (!roleExists) {
-        for (var i = 0, len = roles.length; i < len; ++i) {
-          if (route.roles.indexOf(roles[i]) !== -1) {
-            roleExists = true;
-            break;
-          }
-        }
-      }
-      return roleExists;
-    };
-    var routeWildcard = '';
-    var requestedRoute = '';
-    var roleExists = false;
-    var routeExists = false;
-    var routes = vulpejs.app.security.routes.length;
-    for (var i = 0; i < routes; ++i) {
-      var route = vulpejs.app.security.routes[i];
-      if (route.uri === '/**') {
-        routeWildcard = route;
-      } else if ((route.uri === '/' && req.originalUrl === route.uri) || (route.uri !== '/' && req.originalUrl.indexOf(route.uri) === 0)) {
-        requestedRoute = route;
+    var skip = false;
+    for (var i = 0, len = loginSkip.length; i < len; ++i) {
+      var skipUri = vulpejs.app.root.context + loginSkip[i];
+      if (skipUri === req.originalUrl || req.originalUrl.indexOf(skipUri) === 0) {
+        skip = true;
         break;
       }
     }
-    if (((requestedRoute === '' && routeWildcard === '') || hasRouteRoles(requestedRoute)) || (routeWildcard !== '' && hasRouteRoles(routeWildcard))) {
+    if (!req.isAuthenticated()) {
+      if (!skip) {
+        req.session['redirect-to'] = req.originalUrl;
+        res.redirect(vulpejs.app.root.context + '/login');
+        return;
+      }
       next();
     } else {
-      res.status(403);
-      exports.render(res, 'error', {
-        error: {
-          status: 403,
-          message: 'Forbidden'
+      var roles = req.session['user-roles'];
+      if (skip || !roles || roles.length === 0 || !vulpejs.app.security.routes || vulpejs.app.security.routes.length === 0) {
+        next();
+        return;
+      }
+      var hasRouteRoles = function(route) {
+        if (route === '') {
+          return false;
         }
-      });
+        var roleExists = !route.roles || route.roles.length === 0;
+        if (!roleExists) {
+          for (var i = 0, len = roles.length; i < len; ++i) {
+            if (route.roles.indexOf(roles[i]) !== -1) {
+              roleExists = true;
+              break;
+            }
+          }
+        }
+        return roleExists;
+      };
+      var routeWildcard = '';
+      var requestedRoute = '';
+      var roleExists = false;
+      var routeExists = false;
+      var routes = vulpejs.app.security.routes.length;
+      for (var i = 0; i < routes; ++i) {
+        var route = vulpejs.app.security.routes[i];
+        if (route.uri === '/**') {
+          routeWildcard = route;
+        } else if ((route.uri === '/' && req.originalUrl === route.uri) || (route.uri !== '/' && req.originalUrl.indexOf(route.uri) === 0)) {
+          requestedRoute = route;
+          break;
+        }
+      }
+      if (((requestedRoute === '' && routeWildcard === '') || hasRouteRoles(requestedRoute)) || (routeWildcard !== '' && hasRouteRoles(routeWildcard))) {
+        next();
+      } else {
+        res.status(403);
+        exports.render(res, 'error', {
+          error: {
+            status: 403,
+            message: 'Forbidden'
+          }
+        });
+      }
     }
   }
 };
@@ -998,7 +1000,7 @@ exports.make = function(options) {
     if (options.ui.controller.service && !options.ui.controller.service.name) {
       options.ui.controller.service.name = options.name;
     }
-    router.get('/' + options.name + '/controller/' + options.name + (vulpejs.app.minifier[vulpejs.app.env] ? '.min' : '') + '.js', function(req, res) {
+    router.get('/javascripts/app/controllers/' + options.ui.controller.name + 'Controller' + (vulpejs.app.minifier[vulpejs.app.env] ? '.min' : '') + '.js', function(req, res) {
       res.writeHead(200, {
         'Content-Type': 'text/javascript'
       });

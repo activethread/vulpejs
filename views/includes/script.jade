@@ -1,2 +1,1 @@
-- var controllerUrl = ui.controller.name ? '/' + ui.controller.service.name + '/controller/' + ui.controller.service.name + minifier + '.js' : '/javascripts/app/controllers/' + ui.controller + 'Controller' + minifier + '.js';
-script(src=controllerUrl type='text/javascript')
+script(charset="utf-8" src='/javascripts/app/controllers/' + (ui.controller.name ? ui.controller.name : ui.controller) + 'Controller' + minifier + '.js' type='text/javascript')
