@@ -1,7 +1,14 @@
 "use strict";
-var CronJob = require('cron').CronJob;
 
-exports.startJobs = function(options) {
+exports.CronJob = require('cron').CronJob;
+
+/**
+ * Start jobs
+ *
+ * @param  {Object} options {jobs}
+ * @return {}
+ */
+exports.start = function(options) {
   if (options.env && vulpejs.app.env !== options.env) {
     return;
   }
@@ -19,7 +26,7 @@ exports.startJobs = function(options) {
       job.error = function(message) {
         vulpejs.debug.error('Job[' + job.name + ']', message);
       };
-      new CronJob({
+      new exports.CronJob({
         cronTime: job.cron,
         onTick: function() {
           job.command(job);
@@ -31,6 +38,11 @@ exports.startJobs = function(options) {
   }
 };
 
-exports.start = function() {
+/**
+ * Init Schedules Module
+ *
+ * @return {}
+ */
+exports.init = function() {
   require(root.dir + '/schedules');
 };

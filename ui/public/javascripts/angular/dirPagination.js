@@ -115,7 +115,7 @@
          *
          * @param expression
          * @param paginationId
-         * @returns {*}
+         * @return {*}
          */
         function getRepeatExpression(expression, paginationId) {
             var repeatExpression,
@@ -180,7 +180,7 @@
          * @param scope
          * @param attrs
          * @param paginationId
-         * @returns {*}
+         * @return {*}
          */
         function makeCurrentPageGetterFn(scope, attrs, paginationId) {
             var currentPageGetter;
@@ -338,7 +338,7 @@
          * @param rowsPerPage
          * @param paginationRange
          * @param collectionLength
-         * @returns {Array}
+         * @return {Array}
          */
         function generatePagesArray(currentPage, collectionLength, rowsPerPage, paginationRange) {
             var pages = [];
@@ -378,7 +378,7 @@
          * @param currentPage
          * @param paginationRange
          * @param totalPages
-         * @returns {*}
+         * @return {*}
          */
         function calculatePageNumber(i, currentPage, paginationRange, totalPages) {
             var halfWay = Math.ceil(paginationRange/2);
@@ -403,7 +403,7 @@
     /**
      * This filter slices the collection into pages based on the current page number and number of items per page.
      * @param paginationService
-     * @returns {Function}
+     * @return {Function}
      */
     function itemsPerPageFilter(paginationService) {
 

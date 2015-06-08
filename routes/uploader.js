@@ -1,4 +1,5 @@
 "use strict";
+
 var fs = require('fs');
 var uploader = require(root.vulpejs.dir + '/uploader')({
   tmpDir: root.dir + '/public/uploaded/tmp',
@@ -29,6 +30,12 @@ var uploader = require(root.vulpejs.dir + '/uploader')({
   }
 });
 
+/**
+ * Uploader Module
+ *
+ * @param  {Router} router
+ * @return {} Express route
+ */
 module.exports = function(router) {
 
   router.get('/upload', function(req, res) {

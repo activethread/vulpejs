@@ -1,3 +1,5 @@
+"use strict";
+
 // CRYPTO
 var crypto = require('crypto');
 var passwd = require('password-generator');
@@ -5,36 +7,32 @@ var fs = require('fs');
 var jsObfuscator = require('js-obfuscator');
 var js_min = require('uglify-js');
 
-exports.arrayObjectIndexOf = function(array, property, searchTerm) {
-  for (var i = 0, len = array.length; i < len; ++i) {
-    if (array[i][property] === searchTerm) {
-      return i
-    };
+exports.array = {
+  /**
+   * Return index of array on search by term in specific property.
+   *
+   * @param  {Array} array
+   * @param  {String} property
+   * @param  {String} searchTerm
+   * @return {Integer} Index
+   */
+  indexOf: function(array, property, searchTerm) {
+    for (var i = 0, len = array.length; i < len; ++i) {
+      var value = array[i][property];
+      if (value === searchTerm || value.indexOf(searchTerm) !== -1) {
+        return i
+      };
+    }
+    return -1;
   }
-  return -1;
 };
 
-exports.getContentTypeByFile = function(fileName) {
-  var contentType = 'application/octet-stream';
-  var file = fileName.toLowerCase();
-
-  if (file.indexOf('.html') >= 0) {
-    contentType = 'text/html';
-  } else if (file.indexOf('.css') >= 0) {
-    contentType = 'text/css';
-  } else if (file.indexOf('.json') >= 0) {
-    contentType = 'application/json';
-  } else if (file.indexOf('.js') >= 0) {
-    contentType = 'application/x-javascript';
-  } else if (file.indexOf('.png') >= 0) {
-    contentType = 'image/png';
-  } else if (file.indexOf('.jpg') >= 0) {
-    contentType = 'image/jpg';
-  }
-
-  return contentType;
-};
-
+/**
+ * Check if value is empty.
+ *
+ * @param  {} value
+ * @return {Boolean}
+ */
 exports.isEmpty = function(value) {
   var empty = true;
   if (typeof value === 'string' || (typeof value === 'object' && Object.prototype.toString.call(value) === '[object Array]')) {
@@ -43,6 +41,12 @@ exports.isEmpty = function(value) {
   return empty;
 };
 
+/**
+ * Check if value is not empty.
+ *
+ * @param  {String} value
+ * @return {Boolean}
+ */
 exports.isNotEmpty = function(value) {
   return !exports.isEmpty(value);
 };
@@ -96,45 +100,47 @@ exports.time = {
   }
 };
 
-/**
- * Compare two objects to order.
- * @param   {Object} a Object
- * @param   {Object} b Object
- * @returns {Number} Order to sort.
- */
-exports.compare = function(a, b) {
-  if (a < b) {
-    return -1;
+exports.compare = {
+  /**
+   * Compare two objects to order.
+   * @param   {Object} a Object
+   * @param   {Object} b Object
+   * @return {Number} Order to sort.
+   */
+  normal: function(a, b) {
+    if (a < b) {
+      return -1;
+    }
+    if (a > b) {
+      return 1;
+    }
+    return 0;
+  },
+  /**
+   * Compare two objects to order reverse.
+   *
+   * @param   {Object} a Object
+   * @param   {Object} b Object
+   * @return {Number} Order to sort.
+   */
+  reverse: function(a, b) {
+    if (a > b) {
+      return -1;
+    }
+    if (a < b) {
+      return 1;
+    }
+    return 0;
   }
-  if (a > b) {
-    return 1;
-  }
-  return 0;
-};
-
-/**
- * Compare two objects to order reverse.
- * @param   {Object} a Object
- * @param   {Object} b Object
- * @returns {Number} Order to sort.
- */
-exports.compareReverse = function(a, b) {
-  if (a > b) {
-    return -1;
-  }
-  if (a < b) {
-    return 1;
-  }
-  return 0;
 };
 
 /**
  * Try execute function with parameter.
  * @param   {Function} execute Function to execute
  * @param   {Object}   data    Data to return
- * @returns {Boolean}  True if is function to execute and False if not.
+ * @return {Boolean}  True if is function to execute and False if not.
  */
-exports.tryExecute = function(execute, data) {
+exports.execute = function(execute, data) {
   if (typeof(execute) === 'function') {
     if (!data) {
       execute();
@@ -146,10 +152,25 @@ exports.tryExecute = function(execute, data) {
   return false;
 };
 
-exports.getFilesizeInBytes = function(filename) {
-  var stats = fs.statSync(filename);
-  var fileSizeInBytes = stats["size"];
-  return fileSizeInBytes;
+exports.getContentTypeByFile = function(fileName) {
+  var contentType = 'application/octet-stream';
+  var file = fileName.toLowerCase();
+
+  if (file.indexOf('.html') >= 0) {
+    contentType = 'text/html';
+  } else if (file.indexOf('.css') >= 0) {
+    contentType = 'text/css';
+  } else if (file.indexOf('.json') >= 0) {
+    contentType = 'application/json';
+  } else if (file.indexOf('.js') >= 0) {
+    contentType = 'application/x-javascript';
+  } else if (file.indexOf('.png') >= 0) {
+    contentType = 'image/png';
+  } else if (file.indexOf('.jpg') >= 0) {
+    contentType = 'image/jpg';
+  }
+
+  return contentType;
 };
 
 exports.linux = /^linux/.test(process.platform);
@@ -220,9 +241,9 @@ exports.js = {
         ast.mangle_names();
         obfuscated = ast.print_to_string();
       }
-      exports.tryExecute(callback.success, obfuscated);
+      exports.execute(callback.success, obfuscated);
     }, function(error) {
-      exports.tryExecute(callback.error, error);
+      exports.execute(callback.error, error);
     });
   }
 }

@@ -1,5 +1,11 @@
 "use strict";
 
+/**
+ * VulpeJS module
+ *
+ * @param  {} options {url, models, routes, database, session}
+ * @return {VulpeJS}
+ */
 module.exports = function(options) {
   if (!options) {
     options = {};
@@ -39,6 +45,9 @@ module.exports = function(options) {
     xml2js: require('xml2js'),
     cron: require('cron'),
     app: {
+      cors: {
+        enabled: false
+      },
       url: {
         development: 'http://localhost:3000',
         test: 'http://localhost:3000',
@@ -56,22 +65,78 @@ module.exports = function(options) {
       debug: false,
       callback: {
         login: {
+          /**
+           * Callback on login error.
+           *
+           * @param  {} data
+           * @return {}
+           */
           error: function(data) {},
+          /**
+           * Callback on login successfully.
+           *
+           * @param  {} data
+           * @return {}
+           */
           success: function(data) {},
+          /**
+           * Callback on unauthorized login.
+           *
+           * @param  {} data
+           * @return {}
+           */
           unauthorized: function(data) {}
         },
         logout: function(data) {},
-        save: {
-          success: function(data) {},
-          error: function(data) {}
-        },
-        remove: {
-          success: function(data) {},
-          error: function(data) {}
-        },
-        list: {
-          success: function(data) {},
-          error: function(data) {}
+        model: {
+          save: {
+            /**
+             * Callback on model save successfully.
+             *
+             * @param  {} data
+             * @return {}
+             */
+            success: function(data) {},
+            /**
+             * Callback on model save error.
+             *
+             * @param  {} data
+             * @return {}
+             */
+            error: function(data) {}
+          },
+          remove: {
+            /**
+             * Callback on model remove successfully.
+             *
+             * @param  {} data
+             * @return {}
+             */
+            success: function(data) {},
+            /**
+             * Callback on model remove error.
+             *
+             * @param  {} data
+             * @return {}
+             */
+            error: function(data) {}
+          },
+          list: {
+            /**
+             * Callback on model list successfully.
+             *
+             * @param  {} data
+             * @return {}
+             */
+            success: function(data) {},
+            /**
+             * Callback on model list error.
+             *
+             * @param  {} data
+             * @return {}
+             */
+            error: function(data) {}
+          }
         }
       },
       smtp: {
@@ -101,6 +166,9 @@ module.exports = function(options) {
   };
   if (options.backend) {
     vulpejs.app.backend = options.backend;
+  }
+  if (options.cors) {
+    vulpejs.app.cors = options.cors;
   }
   if (options.url) {
     vulpejs.app.url = options.url;
@@ -146,17 +214,26 @@ module.exports = function(options) {
   }
 
   // APP MODELS
-  vulpejs.models.start(options);
-  // PASSPORT
-  vulpejs.passport = require('./passport');
+  vulpejs.models.init(options);
   // I18N
-  require('./i18n')(options);
+  if (!options.i18n) {
+    options.i18n = {
+      locales: ['pt', 'en', 'es'],
+      defaultLocale: 'pt',
+      cookie: 'appLanguage',
+      indent: '  ',
+      directory: root.dir + '/locales'
+    };
+  }
+  vulpejs.i18n.configure(options.i18n);
+  vulpejs.express.app.use(vulpejs.i18n.init);
+
   // APP ROUTES
-  vulpejs.routes.start(options);
-  vulpejs.mail.start();
+  vulpejs.routes.init(options);
+  vulpejs.mail.init();
 
   if (vulpejs.app.on) {
-    vulpejs.utils.tryExecute(vulpejs.app.on.ready);
+    vulpejs.utils.execute(vulpejs.app.on.ready);
   }
   return vulpejs;
 };

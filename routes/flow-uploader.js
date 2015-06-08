@@ -1,10 +1,10 @@
 "use strict";
 
-var router = vulpejs.express.router;
 var multipart = require('connect-multiparty');
+var router = vulpejs.express.router;
 var flow = require(vulpejs.root.dir + '/uploader/flow.js')(vulpejs.app.upload.files);
 
-var ACCESS_CONTROLL_ALLOW_ORIGIN = false;
+var ACCESS_CONTROLL_ALLOW_ORIGIN = vulpejs.app.cors.enabled;
 
 router.post('/flow/upload', multipart({
   uploadDir: vulpejs.app.upload.tmp

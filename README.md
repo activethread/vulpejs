@@ -13,7 +13,7 @@ Works on Linux (stable) & MacOSx (stable) & Windows (stable).
 Add VulpeJS dependency in your `package.json`:
 ```json
 ...
-"vulpejs": "~0.0.8",
+"vulpejs": "~0.0.9",
 ...
 ```
 
@@ -32,7 +32,7 @@ Add Model `models/city.js`
 
   /**
    * Create City Model
-   * @returns {Object} Model
+   * @return {Object} Model
    */
   module.exports = vulpejs.models.make({
     name: 'City',
@@ -68,7 +68,7 @@ Add Route `routes/city.js`
 
 /**
  * Create City Routes
- * @returns {Object} Express Router
+ * @return {Object} Express Router
  */
 module.exports = vulpejs.routes.make({
   name: 'city',

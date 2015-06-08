@@ -142,56 +142,65 @@ var vulpe = {
         return diacriticsMap[a] || a;
       });
     },
-    toHHMMSS: function(value) {
-      var sec_num = parseInt(value, 10);
-      var hours = Math.floor(sec_num / 3600);
-      var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-      var seconds = sec_num - (hours * 3600) - (minutes * 60);
+    regex: {
+      time: new RegExp(/(\d)(?=(\d{2})+(?!\d))/g)
+    },
+    time: {
+      toHHMMSS: function(value) {
+        var sec_num = parseInt(value, 10);
+        var hours = Math.floor(sec_num / 3600);
+        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        var seconds = sec_num - (hours * 3600) - (minutes * 60);
 
-      if (hours < 10) {
-        hours = "0" + hours;
+        if (hours < 10) {
+          hours = "0" + hours;
+        }
+        if (minutes < 10) {
+          minutes = "0" + minutes;
+        }
+        if (seconds < 10) {
+          seconds = "0" + seconds;
+        }
+        var time = hours + ':' + minutes + ':' + seconds;
+        return time;
       }
-      if (minutes < 10) {
-        minutes = "0" + minutes;
-      }
-      if (seconds < 10) {
-        seconds = "0" + seconds;
-      }
-      var time = hours + ':' + minutes + ':' + seconds;
-      return time;
     },
-    formatDate: function(date) {
-      if (date.indexOf('/') != -1) {
-        return date.substring(3, 5) + '/' + date.substring(0, 2) + '/' + date.substring(6, 10);
+    date: {
+      format: function(date) {
+        if (date.indexOf('/') != -1) {
+          return date.substring(3, 5) + '/' + date.substring(0, 2) + '/' + date.substring(6, 10);
+        }
+        return date.substring(2, 4) + '/' + date.substring(0, 2) + '/' + date.substring(4, 8);
       }
-      return date.substring(2, 4) + '/' + date.substring(0, 2) + '/' + date.substring(4, 8);
     },
-    tryExecute: function(execute, data) {
-      if (typeof(execute) === 'function') {
+    execute: function(command, data) {
+      if (typeof(command) === 'function') {
         if (data) {
-          execute(data);
+          command(data);
         } else {
-          execute();
+          command();
         }
       }
     },
-    compare: function(a, b) {
-      if (a < b) {
-        return -1;
+    compare: {
+      normal: function(a, b) {
+        if (a < b) {
+          return -1;
+        }
+        if (a > b) {
+          return 1;
+        }
+        return 0;
+      },
+      reverse: function(a, b) {
+        if (a > b) {
+          return -1;
+        }
+        if (a < b) {
+          return 1;
+        }
+        return 0;
       }
-      if (a > b) {
-        return 1;
-      }
-      return 0;
-    },
-    compareReverse: function(a, b) {
-      if (a > b) {
-        return -1;
-      }
-      if (a < b) {
-        return 1;
-      }
-      return 0;
     },
     protocol: function() {
       return window.location.protocol + '//';

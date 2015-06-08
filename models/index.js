@@ -1,13 +1,12 @@
 "use strict";
 
-var mongoosePaginate = require('mongoose-paginate');
-
+exports.paginate = require('mongoose-paginate');
 exports.autoIncrement = require('mongoose-auto-increment');
 
 /**
  * Validate presence of value.
  * @param   {String}  value Value
- * @returns {Boolean} True if exists and False if not.
+ * @return {Boolean} True if exists and False if not.
  */
 exports.validatePresenceOf = function(value) {
   return value && value.length;
@@ -16,7 +15,7 @@ exports.validatePresenceOf = function(value) {
 /**
  * Make model from schema.
  * @param   {Object} options {name, schema}
- * @returns {Object} Model
+ * @return {Object} Model
  */
 exports.make = function(options) {
   var Schema = exports.schema(options);
@@ -31,18 +30,24 @@ exports.make = function(options) {
 /**
  * Make schema from options.
  * @param   {Object} options {name, schema}
- * @returns {Object} Schema
+ * @return {Object} Schema
  */
 exports.schema = function(options) {
   var Schema = vulpejs.mongoose.Schema;
   var Model = new Schema(options.schema);
 
-  Model.plugin(mongoosePaginate);
+  Model.plugin(exports.paginate);
 
   return Model;
 };
 
-exports.start = function(options) {
+/**
+ * Init Models Module
+ *
+ * @param  {Object} options
+ * @return {}
+ */
+exports.init = function(options) {
   var vulpejs = global.vulpejs;
   if (!options.database) {
     options.database = {
@@ -74,7 +79,7 @@ exports.start = function(options) {
   db.once('open', function() {
     var init = function() {
       vulpejs.debug.log(vulpejs.i18n.__('Database successfully started!'));
-      vulpejs.schedules.start();
+      vulpejs.schedules.init();
     };
     require(root.vulpejs.dir + '/models/security');
     var modelsDir = vulpejs.app.root.dir + '/models/';

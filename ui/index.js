@@ -1,5 +1,12 @@
 "use strict";
 
+/**
+ * Configure input
+ * 
+ * @param  {String} type
+ * @param  {Object} options [description]
+ * @return {Object} Input object
+ */
 var input = function(type, options) {
   var config = {
     type: type,

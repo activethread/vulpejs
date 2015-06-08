@@ -16,7 +16,7 @@ app.factory("$store", ['$parse', '$cookieStore', function($parse, $cookieStore) 
      *
      * @param res -
      *            a string that will be parsed for type
-     * @returns {*} - whatever the real type of stored value was
+     * @return {*} - whatever the real type of stored value was
      */
     parseValue: function(res) {
       var val;
@@ -48,7 +48,7 @@ app.factory("$store", ['$parse', '$cookieStore', function($parse, $cookieStore) 
      *            a string that will be used as the accessor for the pair
      * @param value -
      *            the value of the localStorage item
-     * @returns {*} - will return whatever it is you've stored in the local storage
+     * @return {*} - will return whatever it is you've stored in the local storage
      */
     set: function(key, value) {
       if (!supported) {
@@ -68,7 +68,7 @@ app.factory("$store", ['$parse', '$cookieStore', function($parse, $cookieStore) 
      *
      * @param key -
      *            the string that you set as accessor for the pair
-     * @returns {*} - Object,String,Float,Boolean depending on what you stored
+     * @return {*} - Object,String,Float,Boolean depending on what you stored
      */
     get: function(key) {
       if (!supported) {
@@ -86,7 +86,7 @@ app.factory("$store", ['$parse', '$cookieStore', function($parse, $cookieStore) 
      *
      * @param key -
      *            the accessor value
-     * @returns {boolean} - if everything went as planned
+     * @return {boolean} - if everything went as planned
      */
     remove: function(key) {
       if (!supported) {
@@ -109,7 +109,7 @@ app.factory("$store", ['$parse', '$cookieStore', function($parse, $cookieStore) 
      *            the name of the variable you are binding
      * @param def -
      *            the default value (OPTIONAL)
-     * @returns {*} - returns whatever the stored value is
+     * @return {*} - returns whatever the stored value is
      */
     bind: function($scope, key, def) {
       def = def || '';
@@ -206,7 +206,7 @@ app.factory('$messages', ['$rootScope', function($rootScope) {
  * @param   {Object}         $timeout       Timeout
  * @param   {Object}         i18n           I18N
  * @param   {Object}         $store         $store
- * @returns {String|Boolean}
+ * @return {String|Boolean}
  */
 app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$messages', '$dialogs', '$timeout', 'i18n', '$store', '$cookieStore', '$cookies', '$sce', '$window', '$filter', function($rootScope, $parse, $http, $authenticator, $messages, $dialogs, $timeout, i18n, $store, $cookieStore, $cookies, $sce, $window, $filter) {
   var nothing = function() {};
@@ -258,7 +258,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     dialog: {
       confirm: function(options) {
         $dialogs.confirm(vulpejs.i18n('Confirmation'), vulpejs.i18n(options.message)).result.then(function(btn) {
-          vulpe.utils.tryExecute(options.callback);
+          vulpe.utils.execute(options.callback);
         }, function(btn) {});
       }
     },
@@ -269,12 +269,12 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
           params: options.params || {}
         }).success(function(data) {
           if (options.callback.success) {
-            vulpe.utils.tryExecute(options.callback.success, data);
+            vulpe.utils.execute(options.callback.success, data);
           } else {
-            vulpe.utils.tryExecute(options.callback, data);
+            vulpe.utils.execute(options.callback, data);
           };
         }).error(function(data, status, header, config) {
-          vulpe.utils.tryExecute(options.callback.error, {
+          vulpe.utils.execute(options.callback.error, {
             data: data,
             status: status,
             header: header,
@@ -289,12 +289,12 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
           params: options.params || {}
         }).success(function(data) {
           if (options.callback.success) {
-            vulpe.utils.tryExecute(options.callback.success, data);
+            vulpe.utils.execute(options.callback.success, data);
           } else {
-            vulpe.utils.tryExecute(options.callback, data);
+            vulpe.utils.execute(options.callback, data);
           };
         }).error(function(data, status, header, config) {
-          vulpe.utils.tryExecute(options.callback.error, {
+          vulpe.utils.execute(options.callback.error, {
             data: data,
             status: status,
             header: header,
@@ -304,9 +304,9 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
       },
       post: function(options) {
         $http.post(options.url, options.data).success(function(data) {
-          vulpe.utils.tryExecute(options.callback.success, data);
+          vulpe.utils.execute(options.callback.success, data);
         }).error(function(data, status, header, config) {
-          vulpe.utils.tryExecute(options.callback.error, {
+          vulpe.utils.execute(options.callback.error, {
             data: data,
             status: status,
             header: header,
@@ -322,12 +322,12 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
           url: options.url
         }).done(function(data) {
           if (options.callback.success) {
-            vulpe.utils.tryExecute(options.callback.success, data);
+            vulpe.utils.execute(options.callback.success, data);
           } else {
-            vulpe.utils.tryExecute(options.callback, data);
+            vulpe.utils.execute(options.callback, data);
           };
         }).fail(function(error) {
-          vulpe.utils.tryExecute(options.callback.error, error);
+          vulpe.utils.execute(options.callback.error, error);
         });
       }
     },
@@ -986,7 +986,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     on: {
       ready: function(execute) {
         $(document).ready(function() {
-          vulpe.utils.tryExecute(execute);
+          vulpe.utils.execute(execute);
         });
       },
       change: function(type) {}
@@ -1142,7 +1142,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     $authenticator.userDetails();
     vulpejs.init(vulpejs);
     if (application.init) {
-      vulpe.utils.tryExecute(application.init);
+      vulpe.utils.execute(application.init);
     }
     if ($scope) {
       $(document).ready(function() {

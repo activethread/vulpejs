@@ -126,8 +126,8 @@ app.filter('cpfCnpj', function() {
   };
 });
 
-function formatReal(int) {
-  var tmp = int + '';
+function formatReal(value) {
+  var tmp = value + '';
   var res = tmp.replace('.', '');
   tmp = res.replace(',', '');
   var neg = false;
@@ -316,7 +316,7 @@ app.filter('toSpacedWords', [function() {
 app.filter('toHHMMSS', [function() {
   return function(input) {
     if (typeof input === 'number' || input instanceof Number) {
-      return vulpe.utils.toHHMMSS(input);
+      return vulpe.utils.time.toHHMMSS(input);
     }
 
     return input;

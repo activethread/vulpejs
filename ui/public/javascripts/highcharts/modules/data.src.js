@@ -826,7 +826,7 @@
 	 * Populates readers with column indexes. A reader can be added without
 	 * a specific index and for those readers the index is taken sequentially
 	 * from the free columns (this is handled by the ColumnCursor instance).
-	 * @returns {boolean}
+	 * @return {boolean}
 	 */
 	SeriesBuilder.prototype.populateColumns = function (freeIndexes) {
 		var builder = this,
@@ -858,7 +858,7 @@
 	 * on the names of the readers.
 	 * @param columns
 	 * @param rowIndex
-	 * @returns {Array | Object}
+	 * @return {Array | Object}
 	 */
 	SeriesBuilder.prototype.read = function (columns, rowIndex) {
 		var builder = this,
@@ -916,7 +916,7 @@
 	/**
 	 * Returns an array of column indexes that the builder will use when
 	 * reading data.
-	 * @returns {Array}
+	 * @return {Array}
 	 */
 	SeriesBuilder.prototype.getReferencedColumnIndexes = function () {
 		var i,
@@ -936,7 +936,7 @@
 	/**
 	 * Returns true if the builder has a reader for the given configName.
 	 * @param configName
-	 * @returns {boolean}
+	 * @return {boolean}
 	 */
 	SeriesBuilder.prototype.hasReader = function (configName) {
 		var i, columnReader;

@@ -1,3 +1,5 @@
+"use strict";
+
 var path = require('path');
 // EXPRESS
 var express = require('express');
@@ -13,12 +15,18 @@ var session = require('express-session');
 // MONGO STORE
 var MongoStore = require('connect-mongo')(session);
 
+/**
+ * Express Module
+ *
+ * @param  {} options
+ * @return {} Express app and router {app, router}
+ */
 module.exports = function(options) {
   var exp = express();
   // view engine setup
-  exp.set('views', [root.dir + '/views', root.vulpejs.dir + '/views']);
+  exp.set('views', [root.dir + '/views', root.vulpejs.dir + '/ui/views']);
   exp.set('view engine', 'jade');
-  exp.locals.basedir = root.vulpejs.dir;
+  exp.locals.basedir = root.vulpejs.dir + '/ui';
 
   exp.use(favicon(root.dir + '/public/images/favicon.ico'));
   exp.use(compression());
@@ -79,11 +87,12 @@ module.exports = function(options) {
     })
   }));
   exp.use(methodOverride());
-  exp.use(express.static(path.join(root.vulpejs.dir, 'public')));
+  exp.use(express.static(path.join(root.vulpejs.dir, 'ui/public')));
   exp.use(express.static(path.join(root.dir, 'public')));
 
   return {
     app: exp,
-    router: express.Router()
+    router: express.Router(),
+    passport: require('./passport')(exp)
   };
 };

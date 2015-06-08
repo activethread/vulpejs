@@ -1,5 +1,7 @@
 "use strict";
 
+exports.multipart = require('connect-multiparty');
+
 var loginSkip = ['/login', '/logout', '/sign-up', '/sign-up-confirm', '/reset-password', '/forgot-password', '/fonts', '/javascripts', '/stylesheets', '/images', '/i18n', '/language'];
 
 exports.response = {
@@ -148,7 +150,7 @@ exports.doSave = function(options) {
       options.callback = {};
     }
     var callback = function(item, error) {
-      vulpejs.utils.tryExecute(error ? vulpejs.app.callback.save.error : vulpejs.app.callback.save.success, {
+      vulpejs.utils.execute(error ? vulpejs.app.callback.save.error : vulpejs.app.callback.save.success, {
         type: options.item._id ? 'UPDATE' : 'INSERT',
         model: options.model,
         message: error || '',
@@ -162,7 +164,7 @@ exports.doSave = function(options) {
       }, function(error, oldItem) {
         if (error) {
           vulpejs.debug.error('ITEM-FIND', error);
-          vulpejs.utils.tryExecute(options.callback.error);
+          vulpejs.utils.execute(options.callback.error);
         } else {
           var content = JSON.stringify(oldItem);
           var history = new History({
@@ -187,9 +189,9 @@ exports.doSave = function(options) {
               callback(obj, error);
               if (error) {
                 vulpejs.debug.error('ITEM-UPDATE', error);
-                vulpejs.utils.tryExecute(options.callback.error);
+                vulpejs.utils.execute(options.callback.error);
               } else {
-                vulpejs.utils.tryExecute(options.callback.success, obj);
+                vulpejs.utils.execute(options.callback.success, obj);
               }
             });
           };
@@ -197,7 +199,7 @@ exports.doSave = function(options) {
             history.save(function(error, obj) {
               if (error) {
                 vulpejs.debug.error('HISTORY-SAVE', error);
-                vulpejs.utils.tryExecute(options.callback.error);
+                vulpejs.utils.execute(options.callback.error);
               } else {
                 save();
               }
@@ -212,9 +214,9 @@ exports.doSave = function(options) {
         callback(obj, error);
         if (error) {
           vulpejs.debug.error('ITEM-SAVE', error);
-          vulpejs.utils.tryExecute(options.callback.error);
+          vulpejs.utils.execute(options.callback.error);
         } else {
-          vulpejs.utils.tryExecute(options.callback.success, obj);
+          vulpejs.utils.execute(options.callback.success, obj);
         }
       });
     }
@@ -234,10 +236,10 @@ exports.doSave = function(options) {
     Model.count(query).exec(function(error, total) {
       if (error) {
         vulpejs.debug.error('VALIDATE-SAVE-ITEM', error);
-        vulpejs.utils.tryExecute(options.callback.error);
+        vulpejs.utils.execute(options.callback.error);
       } else {
         if (total > 0) {
-          vulpejs.utils.tryExecute(options.callback.validate, {
+          vulpejs.utils.execute(options.callback.validate, {
             exists: true,
             total: total
           });
@@ -276,7 +278,7 @@ exports.save = function(req, res, options) {
     userId: userId,
     callback: {
       success: function(obj) {
-        if (!vulpejs.utils.tryExecute(options.callback, {
+        if (!vulpejs.utils.execute(options.callback, {
             item: obj,
             postedItem: options.item,
             res: res
@@ -305,7 +307,7 @@ exports.doRemove = function(options) {
   var Model = vulpejs.mongoose.model(options.model);
   var query = options.query;
   var callback = function(item, error) {
-    vulpejs.utils.tryExecute(error ? vulpejs.app.callback.remove.error : vulpejs.app.callback.remove.success, {
+    vulpejs.utils.execute(error ? vulpejs.app.callback.remove.error : vulpejs.app.callback.remove.success, {
       type: 'DELETE',
       model: options.model,
       message: error || '',
@@ -318,9 +320,9 @@ exports.doRemove = function(options) {
       callback(item, error);
       if (error) {
         vulpejs.debug.error(error);
-        vulpejs.utils.tryExecute(options.callback.error);
+        vulpejs.utils.execute(options.callback.error);
       } else {
-        vulpejs.utils.tryExecute(options.callback.success, item);
+        vulpejs.utils.execute(options.callback.success, item);
       }
     });
   }
@@ -333,10 +335,10 @@ exports.doRemove = function(options) {
     //   vulpejs.mongoose.model(options.validate.exists[i]).count(query).exec(function(error, total) {
     //     if (error) {
     //       vulpejs.debug.error(error);
-    //       vulpejs.utils.tryExecute(options.callback.error);
+    //       vulpejs.utils.execute(options.callback.error);
     //     } else {
     //       if (total > 0) {
-    //         vulpejs.utils.tryExecute(options.callback.validate, {
+    //         vulpejs.utils.execute(options.callback.validate, {
     //           exists: true,
     //           total: total
     //         });
@@ -349,10 +351,10 @@ exports.doRemove = function(options) {
     vulpejs.mongoose.model(options.validate.exists.dependency).count(validateQuery).exec(function(error, total) {
       if (error) {
         vulpejs.debug.error('VALIDATE-REMOVE-ITEM', error);
-        vulpejs.utils.tryExecute(options.callback.error);
+        vulpejs.utils.execute(options.callback.error);
       } else {
         if (total > 0) {
-          vulpejs.utils.tryExecute(options.callback.validate, {
+          vulpejs.utils.execute(options.callback.validate, {
             exists: true,
             total: total
           });
@@ -398,7 +400,7 @@ exports.remove = function(req, res, options) {
     userId: userId,
     callback: {
       success: function(obj) {
-        if (!vulpejs.utils.tryExecute(options.callback, {
+        if (!vulpejs.utils.execute(options.callback, {
             item: obj,
             res: res
           })) {
@@ -426,7 +428,7 @@ exports.doList = function(options) {
   var query = options.query || {};
   var Model = vulpejs.mongoose.model(options.model);
   var callback = function(items, error) {
-    vulpejs.utils.tryExecute(error ? vulpejs.app.callback.list.error : vulpejs.app.callback.list.success, {
+    vulpejs.utils.execute(error ? vulpejs.app.callback.list.error : vulpejs.app.callback.list.success, {
       type: 'SELECT',
       model: options.model,
       message: error || '',
@@ -438,9 +440,9 @@ exports.doList = function(options) {
     callback(items, error);
     if (error) {
       vulpejs.debug.error('LIST-ITEMS', error);
-      vulpejs.utils.tryExecute(options.callback.error);
+      vulpejs.utils.execute(options.callback.error);
     } else {
-      vulpejs.utils.tryExecute(options.callback.success, items);
+      vulpejs.utils.execute(options.callback.success, items);
     }
   });
 };
@@ -483,7 +485,7 @@ exports.doPaginate = function(options) {
   }
   var Model = vulpejs.mongoose.model(options.model);
   var callback = function(items, error) {
-    vulpejs.utils.tryExecute(error ? vulpejs.app.callback.list.error : vulpejs.app.callback.list.success, {
+    vulpejs.utils.execute(error ? vulpejs.app.callback.list.error : vulpejs.app.callback.list.success, {
       type: 'SELECT',
       model: options.model,
       message: error || 'page:' + page,
@@ -495,9 +497,9 @@ exports.doPaginate = function(options) {
     callback(items, error);
     if (error) {
       vulpejs.debug.error('PAGE-ITEMS', error);
-      vulpejs.utils.tryExecute(options.callback.error);
+      vulpejs.utils.execute(options.callback.error);
     } else {
-      vulpejs.utils.tryExecute(options.callback.success, {
+      vulpejs.utils.execute(options.callback.success, {
         pageCount: pageCount,
         items: items,
         itemCount: itemCount
@@ -568,7 +570,7 @@ exports.distinctArray = function(req, res) {
     if (error) {
       vulpejs.debug.error('DISTINCT-ARRAY', error);
     } else {
-      items.sort(exports.compare);
+      items.sort(vulpejs.utils.compare.normal);
       res.json(items);
     }
   });
@@ -624,7 +626,7 @@ exports.find = function(req, res, options) {
           exports.response.error(res, error);
         } else {
           if (options && options.callback) {
-            vulpejs.utils.tryExecute(options.callback, {
+            vulpejs.utils.execute(options.callback, {
               item: item,
               res: res
             });
@@ -656,7 +658,7 @@ exports.aggregate = function(req, res, options) {
         vulpejs.debug.error('AGGREGATE', err);
       } else {
         if (options && options.callback) {
-          vulpejs.utils.tryExecute(options.callback, results);
+          vulpejs.utils.execute(options.callback, results);
         } else {
           res.json({
             items: results
@@ -699,14 +701,14 @@ exports.findAndCallback = function(req, res, options) {
       if (error) {
         res.status(500);
         if (options.callbackError) {
-          vulpejs.utils.tryExecute(options.callbackError, error);
+          vulpejs.utils.execute(options.callbackError, error);
         } else {
           res.json({
             error: error
           });
         }
       } else if (options && options.callback) {
-        vulpejs.utils.tryExecute(options.callback, item);
+        vulpejs.utils.execute(options.callback, item);
       }
     });
   } else if (options.many) {
@@ -717,14 +719,14 @@ exports.findAndCallback = function(req, res, options) {
       if (error) {
         res.status(500);
         if (options.callbackError) {
-          vulpejs.utils.tryExecute(options.callbackError, error);
+          vulpejs.utils.execute(options.callbackError, error);
         } else {
           res.json({
             error: error
           });
         }
       } else if (options && options.callback) {
-        vulpejs.utils.tryExecute(options.callback, items);
+        vulpejs.utils.execute(options.callback, items);
       }
     });
   }
@@ -757,7 +759,7 @@ exports.doFind = function(options) {
       if (error) {
         vulpejs.debug.error('FIND-ONE', error);
       } else if (options && options.callback) {
-        vulpejs.utils.tryExecute(options.callback, item);
+        vulpejs.utils.execute(options.callback, item);
       }
     });
   } else
@@ -769,7 +771,7 @@ exports.doFind = function(options) {
       if (error) {
         vulpejs.debug.error('FIND-MANY', error);
       } else if (options && options.callback) {
-        vulpejs.utils.tryExecute(options.callback, items);
+        vulpejs.utils.execute(options.callback, items);
       }
     });
   }
@@ -799,7 +801,7 @@ exports.findByIdAndUpdate = function(req, res, options) {
       exports.response.error(res, error);
       return;
     } else if (options && options.callback) {
-      vulpejs.utils.tryExecute(options.callback, item);
+      vulpejs.utils.execute(options.callback, item);
     } else {
       exports.response.success(res);
     }
@@ -843,7 +845,7 @@ exports.status = function(req, res, options) {
     if (error) {
       exports.response.error(res, error);
     } else if (options && options.callback) {
-      vulpejs.utils.tryExecute(options.callback, item);
+      vulpejs.utils.execute(options.callback, item);
     } else {
       exports.response.success(res);
     }
@@ -873,12 +875,12 @@ exports.login = function(req, res) {
  * @param   {Object}   req  Request
  * @param   {Object}   res  Response
  * @param   {Function} next Next Function
- * @returns {Object}   User details.
+ * @return {Object}   User details.
  */
 exports.doLogin = function(req, res, next) {
   vulpejs.passport.authenticate('local', function(error, user, info) {
     if (error) {
-      vulpejs.utils.tryExecute(vulpejs.app.callback.login.error, {
+      vulpejs.utils.execute(vulpejs.app.callback.login.error, {
         user: user,
         error: error
       });
@@ -886,7 +888,7 @@ exports.doLogin = function(req, res, next) {
     }
 
     if (!user) {
-      vulpejs.utils.tryExecute(vulpejs.app.callback.login.unauthorized, {
+      vulpejs.utils.execute(vulpejs.app.callback.login.unauthorized, {
         user: user
       });
       return res.redirect(401, '/login');
@@ -894,7 +896,7 @@ exports.doLogin = function(req, res, next) {
 
     req.logIn(user, function(error) {
       if (error) {
-        vulpejs.utils.tryExecute(vulpejs.app.callback.login.error, {
+        vulpejs.utils.execute(vulpejs.app.callback.login.error, {
           user: user,
           error: error
         });
@@ -911,7 +913,7 @@ exports.doLogin = function(req, res, next) {
       req.session['user-roles'] = user.roles;
       var url = req.session['redirect-to'] || '/';
       delete req.session['redirect-to'];
-      vulpejs.utils.tryExecute(vulpejs.app.callback.login.success, {
+      vulpejs.utils.execute(vulpejs.app.callback.login.success, {
         user: user
       });
       user.hashed_password = '';
@@ -934,7 +936,7 @@ exports.logout = function(req, res) {
   if (req.isAuthenticated()) {
     req.logout();
   }
-  vulpejs.utils.tryExecute(vulpejs.app.callback.logout, {
+  vulpejs.utils.execute(vulpejs.app.callback.logout, {
     user: req.session['user-id']
   });
   delete req.session['user-id'];
@@ -954,7 +956,7 @@ exports.language = function(req, res) {
 /**
  * Make default routes.
  * @param   {Object} options {name, plural, model, remove:{executeBefore}, save:{data}, populate}
- * @returns {Object} Express router.
+ * @return {Object} Express router.
  */
 exports.make = function(options) {
   var router = vulpejs.express.router;
@@ -1199,7 +1201,14 @@ exports.make = function(options) {
 
   return router;
 };
-exports.start = function(options) {
+
+/**
+ * Init Routes Module
+ *
+ * @param  {Object} options
+ * @return {}
+ */
+exports.init = function(options) {
   var router = vulpejs.express.router;
   var path = require('path');
 

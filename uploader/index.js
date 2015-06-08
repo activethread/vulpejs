@@ -1,5 +1,6 @@
 'use strict';
 var utils = require('../utils');
+var io = require('../io');
 
 module.exports = function(opts) {
   var path = require('path'),
@@ -104,7 +105,7 @@ module.exports = function(opts) {
 
   function uploadFile(remoteFilename, fileName, callback) {
     var fileBuffer = fs.readFileSync(fileName);
-    var metaData = utils.getContentTypeByFile(fileName);
+    var metaData = io.file.contentType(fileName);
 
     s3.putObject({
       ACL: options.storage.aws.acl,

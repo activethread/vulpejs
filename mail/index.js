@@ -20,12 +20,17 @@ exports.send = function(options) {
         vulpejs.routes.response.error(options.res, error);
       }
     } else {
-      vulpejs.utils.tryExecute(options.callback);
+      vulpejs.utils.execute(options.callback);
     }
   });
 };
 
-exports.start = function() {
+/**
+ * Init Mail Module
+ *
+ * @return {}
+ */
+exports.init = function() {
   vulpejs.smtp = {
     transport: nodemailer.createTransport(smtpTransport(vulpejs.app.smtp))
   };

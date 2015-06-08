@@ -1,4 +1,5 @@
 "use strict";
+
 var http = require('http');
 
 /**
@@ -13,7 +14,7 @@ exports.get = function(options, callback) {
       html += chunk.toString();
     });
     res.on('end', function() {
-      vulpejs.utils.tryExecute(callback, html);
+      vulpejs.utils.execute(callback, html);
     });
   }).on('error', function(e) {
     vulpejs.debug.error("HTTP GET error: " + e.message, options);

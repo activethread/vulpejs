@@ -87,7 +87,7 @@
 
         /**
          * Syntactic sugar. Returns a promise to return the i18n service, once the translation map is loaded.
-         * @returns {defer.promise|*|promise}
+         * @return {defer.promise|*|promise}
          */
         this.i18n = function() {
           var serviceDeferred = $q.defer();
@@ -102,7 +102,7 @@
 
         /**
          * Returns a promise to return the translation map, once it is loaded.
-         * @returns {defer.promise|*|promise}
+         * @return {defer.promise|*|promise}
          */
         this.ensureLocaleIsLoaded = function() {
           return this._localeLoadedDeferred.promise;
@@ -111,7 +111,7 @@
         /**
          * Retrieve a translation object from the translation catalog, using object notation.
          * @param {String} literal The path of the object to look up.
-         * @returns {*}
+         * @return {*}
          */
         this.getTranslationObject = function(literal) {
           var result = literal.split(i18nProvider.objectNotation).reduce(function(object, index) {
@@ -124,7 +124,7 @@
         /**
          * Translate a given term, using the currently loaded translation map.
          * @param {String} name The string to translate.
-         * @returns {String} The translated string or the input, if no translation was available.
+         * @return {String} The translated string or the input, if no translation was available.
          */
         this.__ = function(name) {
           if (!$rootScope.i18n) {
@@ -163,7 +163,7 @@
          * @param {Number} count The number of items, depending on which the correct translation term will be chosen.
          * @param {String} singular The term that should be used if the count equals 1.
          * @param {String} plural The term that should be used if the count doesn't equal 1.
-         * @returns {String} The translated phrase depending on the count.
+         * @return {String} The translated phrase depending on the count.
          */
         this.__n = function(count, singular, plural) {
           if (!$rootScope.i18n) {
@@ -294,7 +294,7 @@
        * Check if the given input is a number.
        * @see http://stackoverflow.com/a/1830844/259953
        * @param n The input to check.
-       * @returns {boolean} true if the input is a number; false otherwise.
+       * @return {boolean} true if the input is a number; false otherwise.
        */
       function isNumber(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);

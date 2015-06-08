@@ -3,7 +3,7 @@
 /**
  * Create Security Model
  * @param   {Object} mongoose Mongoose
- * @returns {Object} Model
+ * @return {Object} Model
  */
 module.exports = function() {
   return vulpejs.models.make({
