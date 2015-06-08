@@ -41,7 +41,7 @@
   "description": "VulpeJS is a Open-Source Full-Stack solution to Node.js applications",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"no test specified\""
   },
   "repository": {
     "type": "git",
