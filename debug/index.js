@@ -1,7 +1,12 @@
 var fs = require('fs');
+var debug = require('debug');
 var moment = require('moment');
 var mkdirp = require('mkdirp');
 var utils = require('../utils');
+
+exports.server = function(name) {
+  return debug(name + ':server');
+};
 
 var logsDir = root.dir + '/logs/';
 var debugFile = logsDir + 'debug.log';

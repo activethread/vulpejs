@@ -148,9 +148,6 @@ else
 if !input.maskPattern
   - append += (append.length === 0 ? '' : '~') + 'placeholder^' + label;
 
-if input.minicolors 
-  label.control-label(for=input.id)=label
-
 - var divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && vulpejs.ui.form.submitted}";
 
 if input.readonly
@@ -162,8 +159,7 @@ if input.type === 'show' || input.type === 'timer'
     - divClass = input.className;
 
 div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
-  unless input.minicolors
-    label.control-label(for=input.id)=label
+  label.control-label(for=input.id)=label
   if input.type === 'checkbox' || input.type === 'group'
     br
   if input.type === 'textarea'
@@ -268,6 +264,9 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
         span.input-group-addon=input.group.value
     else if input.typeahead
       input(type=input.type class=input.className name=input.name id=input.id typeahead=input.typeahead.query append=append ng-cloak ng-hide="#{input.readonly}")
+    else if input.minicolors
+      div
+        input(type=input.type class=input.className name=input.name id=input.id append=append ng-cloak ng-hide="#{input.readonly}")
     else
       input(type=input.type class=input.className name=input.name id=input.id append=append ng-cloak ng-hide="#{input.readonly}")
   if input.validateMessage 

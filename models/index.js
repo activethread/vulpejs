@@ -1,7 +1,8 @@
 "use strict";
 
 var mongoosePaginate = require('mongoose-paginate');
-var autoIncrement = require('mongoose-auto-increment')
+
+exports.autoIncrement = require('mongoose-auto-increment');
 
 /**
  * Validate presence of value.
@@ -135,5 +136,5 @@ exports.start = function(options) {
   mongoUrl = mongoUrl.replace('${port}', database.port);
   mongoUrl = mongoUrl.replace('${db}', database.name);
   vulpejs.mongoose.connect(mongoUrl);
-  autoIncrement.initialize(vulpejs.mongoose.connection);
+  exports.autoIncrement.initialize(vulpejs.mongoose.connection);
 };
