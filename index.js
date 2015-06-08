@@ -3,7 +3,7 @@
 /**
  * VulpeJS module
  *
- * @param  {} options {url, models, routes, database, session}
+ * @param  {} options (url, models, routes, database, session)
  * @return {VulpeJS}
  */
 module.exports = function(options) {
