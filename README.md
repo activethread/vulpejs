@@ -1,5 +1,7 @@
 # Vulpe JS
 
+[![Join the chat at https://gitter.im/lordfelipe/vulpejs](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/lordfelipe/vulpejs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Open-Source Full-Stack solution to Node.js applications with `Express.js`, `Jade`, `Angular.JS` and `MongoDB`.
 
 ## Install
