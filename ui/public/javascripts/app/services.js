@@ -282,7 +282,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
           });
         });
       },
-      delete: function(options) {
+      'delete': function(options) {
         $http({
           url: options.url,
           method: 'DELETE',
@@ -972,10 +972,12 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     },
     hasRoles: function(roles) {
       var user = $authenticator.userDetails();
-      for (var i = 0; i < roles.length; i++) {
-        var role = roles[i];
-        if (user.roles.indexOf(role) !== -1) {
-          return true;
+      if (user) {
+        for (var i = 0; i < roles.length; i++) {
+          var role = roles[i];
+          if (user.roles.indexOf(role) !== -1) {
+            return true;
+          }
         }
       }
       return false;
@@ -1061,7 +1063,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
           } else {
             var prefix = '#' + options.name.replace(/\-/g, '') + '-';
             if (angular.isObject(options.focus)) {
-              $(prefix + (vulpejs.item._id ? options.focus.edit : options.focus.new)).focus();
+              $(prefix + (vulpejs.item._id ? options.focus.edit : options.focus.create)).focus();
             } else {
               $(prefix + options.focus).focus();
             }

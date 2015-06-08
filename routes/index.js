@@ -878,7 +878,7 @@ exports.login = function(req, res) {
  * @return {Object}   User details.
  */
 exports.doLogin = function(req, res, next) {
-  vulpejs.passport.authenticate('local', function(error, user, info) {
+  vulpejs.express.passport.authenticate('local', function(error, user, info) {
     if (error) {
       vulpejs.utils.execute(vulpejs.app.callback.login.error, {
         user: user,
