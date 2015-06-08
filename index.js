@@ -87,6 +87,12 @@ module.exports = function(options) {
            */
           unauthorized: function(data) {}
         },
+        /**
+         * Callback on logout.
+         *
+         * @param  {} data
+         * @return {}
+         */
         logout: function(data) {},
         model: {
           save: {
