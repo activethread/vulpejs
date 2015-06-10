@@ -19,7 +19,7 @@ thead
             each item in ui.select.filter.status.items
               option(value=item.value)=__(item.label)
   tr
-    th=__('Line')
+    th=__('#')
     each item in ui.select.items
       if item.width
         - var style = 'width: ' + item.width + ';'

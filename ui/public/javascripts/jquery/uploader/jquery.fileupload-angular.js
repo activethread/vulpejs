@@ -30,15 +30,14 @@
 }(function() {
   'use strict';
 
-  angular.module('blueimp.fileupload', ['i18n', 'dialogs'])
+  angular.module('blueimp.fileupload', [])
 
   // The fileUpload service provides configuration options
   // for the fileUpload directive and default handlers for
   // File Upload events:
   .provider('fileUpload', function() {
     var scopeEvalAsync = function(expression) {
-        var scope = angular.element(this)
-          .fileupload('option', 'scope');
+        var scope = angular.element(this).fileupload('option', 'scope');
         // Schedule a new $digest cycle if not already inside of one
         // and evaluate the given expression:
         scope.$evalAsync(expression);
@@ -193,7 +192,7 @@
           if (i === $config.units.length - 1 || bytes >= unit.size) {
             return prefix + (bytes / unit.size).toFixed(2) + suffix;
           }
-          i += 1;
+          ++i;
         }
       };
     };
@@ -202,8 +201,9 @@
   // The FileUploadController initializes the fileupload widget and
   // provides scope methods to control the File Upload functionality:
   .controller('FileUploadController', [
-    '$rootScope', '$scope', '$element', '$attrs', '$window', 'fileUpload', 'i18n', '$dialogs',
-    function($rootScope, $scope, $element, $attrs, $window, fileUpload, i18n, $dialogs) {
+    '$rootScope', '$scope', '$element', '$attrs', 'fileUpload', 'VulpeJS',
+    function($rootScope, $scope, $element, $attrs, fileUpload, VulpeJS) {
+      var vulpejs = new VulpeJS().init();
       var uploadMethods = {
         progress: function() {
           return $element.fileupload('progress');
@@ -230,7 +230,7 @@
           return $element.fileupload('processing', data);
         }
       };
-      $scope.disabled = !$window.jQuery.support.fileInput;
+      $scope.disabled = !vulpejs.$window.jQuery.support.fileInput;
       $rootScope.queue = $rootScope.queue || [];
       $scope.clear = function(files) {
         var queue = this.queue,
@@ -242,7 +242,7 @@
           length = files.length;
         }
         while (i) {
-          i -= 1;
+          --i;
           if (queue[i] === file) {
             return queue.splice(i, length);
           }
@@ -250,12 +250,10 @@
       };
       $scope.replace = function(oldFiles, newFiles) {
         var queue = this.queue,
-          file = oldFiles[0],
-          i,
-          j;
-        for (i = 0; i < queue.length; i += 1) {
+          file = oldFiles[0];
+        for (var i = 0; i < queue.length; ++i) {
           if (queue[i] === file) {
-            for (j = 0; j < newFiles.length; j += 1) {
+            for (var j = 0; j < newFiles.length; ++j) {
               queue[i + j] = newFiles[j];
             }
             return;
@@ -263,11 +261,9 @@
         }
       };
       $scope.applyOnQueue = function(method) {
-        var list = this.queue.slice(0),
-          i,
-          file;
-        for (i = 0; i < list.length; i += 1) {
-          file = list[i];
+        var list = this.queue.slice(0);
+        for (var i = 0; i < list.length; ++i) {
+          var file = list[i];
           if (file[method]) {
             file[method]();
           }
@@ -277,14 +273,20 @@
         this.applyOnQueue('$submit');
       };
       $scope.cancel = function() {
-        $dialogs.confirm(i18n.__('Confirmation'), i18n.__('Do you really want to cancel the upload?')).result.then(function(btn) {
-          $scope.applyOnQueue('$cancel');
-        }, function(btn) {});
+        vulpejs.dialog.confirm({
+          message: 'Do you really want to cancel the upload?',
+          callback: function(btn) {
+            $scope.applyOnQueue('$cancel');
+          }
+        });
       };
       $scope.removeAll = function() {
-        $dialogs.confirm(i18n.__('Confirmation'), i18n.__('Do you really want to delete all selected files?')).result.then(function(btn) {
-          $rootScope.removeAll();
-        }, function(btn) {});
+        vulpejs.dialog.confirm({
+          message: 'Do you really want to delete all selected files?',
+          callback: function(btn) {
+            vulpejs.upload.doRemoveAll();
+          }
+        });
       };
       // Add upload methods to the scope:
       angular.extend($scope, uploadMethods);
@@ -336,7 +338,7 @@
         if (data && data.files) {
           data.files.forEach(function(file) {
             if (file.error) {
-              file.error = i18n.__(file.error);
+              file.error = vulpejs.i18n(file.error);
             }
           });
         }

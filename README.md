@@ -10,10 +10,10 @@ Works on Linux (stable) & MacOSx (stable) & Windows (stable).
 [![NPM](https://nodei.co/npm/vulpejs.png?downloads=true&downloadRank=true)](https://nodei.co/npm/vulpejs/)
 
 ## Install
-Add VulpeJS dependency in your `package.json`:
+Add VulpeJS dependency in your `package.json`
 ```json
 ...
-"vulpejs": "~0.0.10",
+"vulpejs": "~0.0.11",
 ...
 ```
 

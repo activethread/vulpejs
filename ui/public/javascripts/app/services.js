@@ -238,6 +238,12 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     },
     now: [],
     ever: [],
+    store: function(name, value) {
+      return value ? $store.set(name, value) : $store.get(name);
+    },
+    watch: function(name, callback) {
+      $rootScope.$watch(name, callback);
+    },
     message: {
       success: function(msg) {
         $messages.addSuccessMessage(msg);
@@ -258,8 +264,14 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     dialog: {
       confirm: function(options) {
         $dialogs.confirm(vulpejs.i18n('Confirmation'), vulpejs.i18n(options.message)).result.then(function(btn) {
-          vulpe.utils.execute(options.callback);
-        }, function(btn) {});
+          if (options.callback.yes) {
+            vulpe.utils.execute(options.callback.yes, btn);
+          } else {
+            vulpe.utils.execute(options.callback, btn);
+          }
+        }, function(btn) {
+          vulpe.utils.execute(options.callback.no, btn);
+        });
       }
     },
     http: {
@@ -780,6 +792,18 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
             });
           }
         }
+      },
+      label: function(array, properties) {
+        angular.forEach(array, function(value) {
+          properties.forEach(function(property) {
+            if (value.label) {
+              value.label += ' - ' + value[property];
+            } else {
+              value.label = value[property];
+            }
+          });
+        });
+        return array;
       }
     },
     eval: {
@@ -926,6 +950,9 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
           if (type && type === 'TYPEAHEAD') {
             vulpejs.item[options.rootProperty] = options.$item[options.itemProperty];
           }
+        },
+        toggle: {
+          'default': function(model, value) {}
         }
       },
       flow: {
@@ -1020,6 +1047,27 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     params: {},
     redirect: function(url) {
       vulpejs.$window.location = url;
+    },
+    upload: {
+      doRemoveAll: function() {
+        angular.forEach($rootScope.queue, function(file) {
+          if (file.selected) {
+            vulpejs.http['delete']({
+              url: file.url,
+              params: {
+                app: vulpejs.app.name
+              },
+              callback: function() {
+                for (var i = 0; i < $rootScope.queue.length; i++) {
+                  if ($rootScope.queue[i].name === file.name) {
+                    $rootScope.queue.splice(i, 1);
+                  }
+                }
+              }
+            });
+          }
+        });
+      }
     }
   };
   vulpejs.debug = $cookieStore.get('debug') || vulpejs.debug;
@@ -1141,25 +1189,24 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
   };
 
   service.prototype.init = function($scope) {
-    $authenticator.userDetails();
     vulpejs.init(vulpejs);
-    if (application.init) {
-      vulpe.utils.execute(application.init);
-    }
+    vulpe.utils.execute(application.init);
     if ($scope) {
       $(document).ready(function() {
-        if ($scope.mainForm) {
-          vulpejs.ui.form = $scope.mainForm;
-        };
+        vulpejs.ui.form = $scope.mainForm || {};
         $scope.multiSelectTranslation = {
-          selectAll: i18n.__('Select all'),
-          selectNone: i18n.__('Select none'),
-          reset: i18n.__('Reset'),
-          search: i18n.__('Search'),
-          nothingSelected: i18n.__('Nothing is selected')
+          selectAll: vulpejs.i18n('Select all'),
+          selectNone: vulpejs.i18n('Select none'),
+          reset: vulpejs.i18n('Reset'),
+          search: vulpejs.i18n('Search'),
+          nothingSelected: vulpejs.i18n('Nothing is selected')
         };
       });
     }
+    vulpejs.ever = vulpejs.store('vulpejsEver') || [];
+    vulpejs.watch('vulpejs.ever', function() {
+      vulpejs.store('vulpejsEver', vulpejs.ever);
+    });
     if (vulpejs.ui.name) {
       vulpejs.act.clear.item(false);
       if (vulpejs.load.arrays.length > 0) {

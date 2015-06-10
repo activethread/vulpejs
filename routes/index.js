@@ -421,11 +421,12 @@ exports.remove = function(req, res, options) {
 
 /**
  * List from database.
- * @param {Object} options {model, query, populate, orderBy, userId, callback}
+ * @param {Object} options {model, query, populate, sort, userId, callback}
  */
 exports.doList = function(options) {
   var populate = options.populate || '';
   var query = options.query || {};
+  var sort = options.sort || {};
   var Model = vulpejs.mongoose.model(options.model);
   var callback = function(items, error) {
     vulpejs.utils.execute(error ? vulpejs.app.callback.list.error : vulpejs.app.callback.list.success, {
@@ -436,7 +437,7 @@ exports.doList = function(options) {
       user: options.userId
     });
   };
-  Model.find(query).populate(populate).exec(function(error, items) {
+  Model.find(query).populate(populate).sort(sort).exec(function(error, items) {
     callback(items, error);
     if (error) {
       vulpejs.debug.error('LIST-ITEMS', error);
@@ -457,6 +458,7 @@ exports.list = function(req, res) {
     model: req.params.model,
     query: req.params.query || {},
     populate: req.params.populate || '',
+    sort: req.params.sort || {},
     userId: req.session['user-id'],
     callback: {
       success: function(items) {
@@ -473,11 +475,11 @@ exports.list = function(req, res) {
 
 /**
  * Paginate list from database.
- * @param {Object} options {model, query, populate, orderBy, userId, callback}
+ * @param {Object} options {model, query, populate, sort, userId, callback}
  */
 exports.doPaginate = function(options) {
   var populate = options.populate || '';
-  var orderBy = options.orderBy || {};
+  var sort = options.sort || {};
   var query = options.query || {};
   var page = options.page || 1;
   if (page === 0) {
@@ -507,7 +509,7 @@ exports.doPaginate = function(options) {
     }
   }, {
     populate: populate,
-    sortBy: orderBy
+    sortBy: sort
   });
 };
 
@@ -521,7 +523,7 @@ exports.paginate = function(req, res) {
     model: req.params.model,
     query: req.params.query || {},
     populate: req.params.populate || '',
-    orderBy: req.params.orderBy || {},
+    sort: req.params.sort || {},
     page: req.params.page || 1,
     userId: req.session['user-id'],
     callback: {
@@ -712,10 +714,10 @@ exports.findAndCallback = function(req, res, options) {
       }
     });
   } else if (options.many) {
-    if (!options.orderBy) {
-      options.orderBy = '';
+    if (!options.sort) {
+      options.sort = '';
     }
-    Model.find(options.query).populate(options.populate).sort(options.orderBy).exec(function(error, items) {
+    Model.find(options.query).populate(options.populate).sort(options.sort).exec(function(error, items) {
       if (error) {
         res.status(500);
         if (options.callbackError) {
@@ -734,7 +736,7 @@ exports.findAndCallback = function(req, res, options) {
 
 /**
  * Find object/objects in database and execute callback without HTTP response.
- * @param {Object} options {model, object id, query, populate, callback}
+ * @param {Object} options (model, object id, query, populate, sort, callback)
  */
 exports.doFind = function(options) {
   var Model = vulpejs.mongoose.model(options.model);
@@ -764,10 +766,10 @@ exports.doFind = function(options) {
     });
   } else
   if (options.many) {
-    if (!options.orderBy) {
-      options.orderBy = {};
+    if (!options.sort) {
+      options.sort = {};
     }
-    Model.find(options.query).populate(options.populate).sort(options.orderBy).select(options.fields).exec(function(error, items) {
+    Model.find(options.query).populate(options.populate).sort(options.sort).select(options.fields).exec(function(error, items) {
       if (error) {
         vulpejs.debug.error('FIND-MANY', error);
       } else if (options && options.callback) {
@@ -1110,7 +1112,9 @@ exports.make = function(options) {
   });
   // FIND
   router.get('/' + options.name + '/:id', function(req, res) {
-    delete options.ui.item;
+    if (options.ui) {
+      delete options.ui.item;
+    }
     req.params.model = options.model;
     exports.find(req, res);
   });
@@ -1124,7 +1128,9 @@ exports.make = function(options) {
     doView(req, res);
   });
   router.get('/' + options.name + '/populate/:id', function(req, res) {
-    delete options.ui.item;
+    if (options.ui) {
+      delete options.ui.item;
+    }
     if (options.populate) {
       req.params.populate = options.populate;
     }
@@ -1161,11 +1167,16 @@ exports.make = function(options) {
     if (options.populate) {
       req.params.populate = options.populate;
     }
-    if (options.list && options.list.query) {
-      if (status) {
-        options.list.query.status = req.params.status;
+    if (options.list) {
+      if (options.list.query) {
+        if (status) {
+          options.list.query.status = req.params.status;
+        }
+        req.params.query = options.list.query;
       }
-      req.params.query = options.list.query;
+      if (options.list.sort) {
+        req.params.sort = options.list.sort;
+      }
     } else if (status) {
       req.params.query = {
         status: req.params.status

@@ -194,8 +194,8 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
           option(ng-repeat='option in vulpejs.#{input.items.name}#{input.items.filter}' value="{{option.#{input.items.value}}}") {{option.#{input.items.label}}}
   else if input.type === 'group'
     each option in input.options
-      - var model = "vulpejs.group['"+input.name+option.value+"']";
-      div(toggle-switch class=input.className name=input.name model=model id=input.id knob-label=__(option.knob) on-label=__('Yes') off-label=__('No') ng-click="#{input.name}Switch(#{model}, #{option.value});" append=append)
+      - var model = "vulpejs.group['" + input.name + option.value + "']";
+      div(toggle-switch class=input.className name=input.name model=model id=input.id knob-label=__(option.knob) on-label=__('Yes') off-label=__('No') ng-click="vulpejs.ui.on.toggle.#{input.name}(#{model}, #{option.value});" append=append)
       br
   else if input.type === 'show'
     unless input.config
