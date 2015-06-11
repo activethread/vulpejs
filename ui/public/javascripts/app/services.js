@@ -244,6 +244,11 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     watch: function(name, callback) {
       $rootScope.$watch(name, callback);
     },
+    filter: {
+      date: function(value, pattern) {
+        return vulpejs.$filter('date')(value, pattern);
+      }
+    },
     message: {
       success: function(msg) {
         $messages.addSuccessMessage(msg);

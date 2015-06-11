@@ -150,7 +150,7 @@ exports.doSave = function(options) {
       options.callback = {};
     }
     var callback = function(item, error) {
-      vulpejs.utils.execute(error ? vulpejs.app.callback.save.error : vulpejs.app.callback.save.success, {
+      vulpejs.utils.execute(error ? vulpejs.app.callback.model.save.error : vulpejs.app.callback.model.save.success, {
         type: options.item._id ? 'UPDATE' : 'INSERT',
         model: options.model,
         message: error || '',
@@ -307,7 +307,7 @@ exports.doRemove = function(options) {
   var Model = vulpejs.mongoose.model(options.model);
   var query = options.query;
   var callback = function(item, error) {
-    vulpejs.utils.execute(error ? vulpejs.app.callback.remove.error : vulpejs.app.callback.remove.success, {
+    vulpejs.utils.execute(error ? vulpejs.app.callback.model.remove.error : vulpejs.app.callback.model.remove.success, {
       type: 'DELETE',
       model: options.model,
       message: error || '',
@@ -429,7 +429,7 @@ exports.doList = function(options) {
   var sort = options.sort || {};
   var Model = vulpejs.mongoose.model(options.model);
   var callback = function(items, error) {
-    vulpejs.utils.execute(error ? vulpejs.app.callback.list.error : vulpejs.app.callback.list.success, {
+    vulpejs.utils.execute(error ? vulpejs.app.callback.model.list.error : vulpejs.app.callback.model.list.success, {
       type: 'SELECT',
       model: options.model,
       message: error || '',
@@ -487,7 +487,7 @@ exports.doPaginate = function(options) {
   }
   var Model = vulpejs.mongoose.model(options.model);
   var callback = function(items, error) {
-    vulpejs.utils.execute(error ? vulpejs.app.callback.list.error : vulpejs.app.callback.list.success, {
+    vulpejs.utils.execute(error ? vulpejs.app.callback.model.list.error : vulpejs.app.callback.model.list.success, {
       type: 'SELECT',
       model: options.model,
       message: error || 'page:' + page,

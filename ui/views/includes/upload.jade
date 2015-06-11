@@ -1,4 +1,4 @@
-form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multipart/form-data" data-file-upload="options" ng-class="{'fileupload-processing': processing() || loadingFiles}")
+form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multipart/form-data" file-upload="vulpejs.upload.options" ng-class="{'fileupload-processing': processing() || vulpejs.upload.loadingFiles}")
   .row.fileupload-buttonbar
     .col-lg-12
       .btn-group
@@ -9,15 +9,15 @@ form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multip
         button.btn.btn-primary.start(type="button" ng-click="submit()")
           i.fa.fa-upload.fa-fw
           span=__('Start upload')
-        button.btn.btn-warning.cancel(type="button" ng-click="vulpejs.model.cancel()")
+        button.btn.btn-warning.cancel(type="button" ng-click="cancel()")
           i.fa.fa-ban.fa-fw
           span=__('Cancel upload')
-        button.btn.btn-danger.delete(type="button" ng-click="vulpejs.model.removeAll()")
+        button.btn.btn-danger.delete(type="button" ng-click="removeAll()")
           i.fa.fa-trash-o.fa-fw
           span=__('Delete')
   .row.fileupload-progressbar
     .col-lg-12.fade(ng-class="{in: active()}")
-      .progress.progress-striped.active(data-file-upload-progress="progress()")
+      .progress.progress-striped.active(file-upload-progress="progress()")
         .progress-bar.progress-bar-success.text-center(data-ng-style="{width: num + '%'}") {{num + '%'}}
       .progress-extended &nbsp;
   table.table.table-striped.table-bordered.table-hover.files.ng-cloak.slide-down(role="presentation" ng-show="queue.length > 0")
@@ -47,11 +47,11 @@ form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multip
           strong(ng-show="file.error" class="error text-danger") {{file.error}}
         td
           p(class="size") {{file.size | formatFileSize}}
-          .progress.progress-striped.active.fade(ng-class="{pending: 'in'}[file.$state()]" data-file-upload-progress="file.$progress()")
+          .progress.progress-striped.active.fade(ng-class="{pending: 'in'}[file.$state()]" file-upload-progress="file.$progress()")
             .progress-bar.progress-bar-success.text-center(ng-style="{width: num + '%'}") {{num + '%'}}
         td
           .btn-group(ng-cloak ng-show="!file.$destroy")
-            button.btn.btn-primary.btn-sm.start(type="button" ng-click="file.$submit()" ng-hide="!file.$submit || options.autoUpload" ng-disabled="file.$state() == 'pending' || file.$state() == 'rejected'")
+            button.btn.btn-primary.btn-sm.start(type="button" ng-click="file.$submit()" ng-hide="!file.$submit || vulpejs.upload.options.autoUpload" ng-disabled="file.$state() == 'pending' || file.$state() == 'rejected'")
               i.fa.fa-upload.fa-fw
               =__('Start')
             button.btn.btn-warning.btn-sm.cancel(type="button" ng-click="file.$cancel()" ng-hide="!file.$cancel")
