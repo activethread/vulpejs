@@ -953,7 +953,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
         select: function(options) {
           var type = options.type;
           if (type && type === 'TYPEAHEAD') {
-            vulpejs.item[options.rootProperty] = options.$item[options.itemProperty];
+            vulpejs.item[options.rootProperty] = options.item[options.itemProperty];
           }
         },
         toggle: {
