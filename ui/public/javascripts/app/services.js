@@ -960,22 +960,43 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
           'default': function(model, value) {}
         }
       },
-      flow: {
-        submitBefore: nothing,
-        submitAfter: nothing,
-        submit: function($flow, model) {
-          var $model = $parse(model);
-          vulpejs.ui.flow.submitBefore($flow, $model);
-          $flow.upload();
-          vulpejs.ui.flow.submitAfter($flow, $model);
+      uploader: {
+        doRemoveAll: function() {
+          angular.forEach($rootScope.queue, function(file) {
+            if (file.selected) {
+              vulpejs.http['delete']({
+                url: file.url,
+                params: {
+                  app: vulpejs.app.name
+                },
+                callback: function() {
+                  for (var i = 0; i < $rootScope.queue.length; i++) {
+                    if ($rootScope.queue[i].name === file.name) {
+                      $rootScope.queue.splice(i, 1);
+                    }
+                  }
+                }
+              });
+            }
+          });
         },
-        successBefore: nothing,
-        successAfter: nothing,
-        success: function($flow, $file, model) {
-          var $model = $parse(model);
-          vulpejs.ui.flow.successBefore($flow, $file, $model);
-          $parse(model).assign($rootScope, window.location.origin + '/flow/download/' + $file.uniqueIdentifier + '?' + Date.now());
-          vulpejs.ui.flow.successAfter($flow, $file, $model);
+        flow: {
+          submitBefore: nothing,
+          submitAfter: nothing,
+          submit: function($flow, model) {
+            var $model = $parse(model);
+            vulpejs.ui.uploader.flow.submitBefore($flow, $model);
+            $flow.upload();
+            vulpejs.ui.uploader.flow.submitAfter($flow, $model);
+          },
+          successBefore: nothing,
+          successAfter: nothing,
+          success: function($flow, $file, model) {
+            var $model = $parse(model);
+            vulpejs.ui.uploader.flow.successBefore($flow, $file, $model);
+            $parse(model).assign($rootScope, window.location.origin + '/flow/download/' + $file.uniqueIdentifier + '?' + Date.now());
+            vulpejs.ui.uploader.flow.successAfter($flow, $file, $model);
+          }
         }
       },
       pagination: {
@@ -1052,27 +1073,6 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     params: {},
     redirect: function(url) {
       vulpejs.$window.location = url;
-    },
-    upload: {
-      doRemoveAll: function() {
-        angular.forEach($rootScope.queue, function(file) {
-          if (file.selected) {
-            vulpejs.http['delete']({
-              url: file.url,
-              params: {
-                app: vulpejs.app.name
-              },
-              callback: function() {
-                for (var i = 0; i < $rootScope.queue.length; i++) {
-                  if ($rootScope.queue[i].name === file.name) {
-                    $rootScope.queue.splice(i, 1);
-                  }
-                }
-              }
-            });
-          }
-        });
-      }
     }
   };
   vulpejs.debug = $cookieStore.get('debug') || vulpejs.debug;

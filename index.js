@@ -54,9 +54,33 @@ module.exports = function(options) {
         production: 'http://localhost:3000'
       },
       root: root,
-      upload: {
-        tmp: root.dir + '/public/uploaded/tmp/',
-        files: root.dir + '/public/uploaded/files/'
+      database: {
+        development: {
+          host: 'localhost',
+          port: 27017,
+          name: 'appName',
+          user: 'admin',
+          pass: 'q1w2e3r4'
+        }
+      },
+      session: {
+        mongo: {
+          development: {
+            host: 'localhost',
+            db: 'express',
+            port: 27017,
+            collection: 'session',
+            user: 'admin',
+            pass: 'q1w2e3r4'
+          }
+        }
+      },
+      uploader: {
+        dir: {
+          public: root.dir + '/public/uploaded/',
+          tmp: root.dir + '/public/uploaded/tmp/',
+          files: root.dir + '/public/uploaded/files/'
+        }
       },
       backend: false,
       release: '',
@@ -212,11 +236,17 @@ module.exports = function(options) {
   if (options.minifier) {
     vulpejs.app.minifier = options.minifier;
   }
-  if (options.upload) {
-    vulpejs.app.upload = options.upload;
+  if (options.uploader) {
+    vulpejs.app.uploader = options.uploader;
   }
   if (options.on) {
     vulpejs.app.on = options.on;
+  }
+  if (options.database) {
+    vulpejs.app.database = options.database;
+  }
+  if (options.session) {
+    vulpejs.app.session = options.session;
   }
 
   // APP MODELS

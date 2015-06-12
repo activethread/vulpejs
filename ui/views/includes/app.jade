@@ -6,11 +6,12 @@ if ui.minicolors
 if ui.switch
   - modules += ", 'toggle-switch'";
 if ui.uploader
-  - modules += ", 'blueimp.fileupload'";
+  if ui.uploader.flow
+    - modules += ", 'flow'";
+  if ui.uploader.blueimp
+    - modules += ", 'blueimp.fileupload'";
 if ui.tree
   - modules += ", 'ui.tree'";
-if ui.flow
-  - modules += ", 'flow'";
 if ui.recaptcha
   - modules += ", 'vcRecaptcha'";
 if ui.multiSelect

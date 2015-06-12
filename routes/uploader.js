@@ -2,9 +2,9 @@
 
 var fs = require('fs');
 var uploader = require(root.vulpejs.dir + '/uploader')({
-  tmpDir: root.dir + '/public/uploaded/tmp',
-  publicDir: root.dir + '/public/uploaded',
-  uploadDir: root.dir + '/public/uploaded/files',
+  tmpDir: vulpejs.app.uploader.dir.tmp,
+  publicDir: vulpejs.app.uploader.dir.public || vulpejs.app.uploader.dir.files + '../',
+  uploadDir: vulpejs.app.uploader.dir.files,
   uploadUrl: '/uploaded/files/',
   downloadUrl: '/download/files/',
   maxPostSize: 11000000000, // 11 GB

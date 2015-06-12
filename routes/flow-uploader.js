@@ -2,12 +2,12 @@
 
 var multipart = require('connect-multiparty');
 var router = vulpejs.express.router;
-var flow = require(vulpejs.root.dir + '/uploader/flow.js')(vulpejs.app.upload.files);
+var flow = require(vulpejs.root.dir + '/uploader/flow.js')(vulpejs.app.uploader.dir.files);
 
 var ACCESS_CONTROLL_ALLOW_ORIGIN = vulpejs.app.cors.enabled;
 
 router.post('/flow/upload', multipart({
-  uploadDir: vulpejs.app.upload.tmp
+  uploadDir: vulpejs.app.uploader.dir.tmp
 }), function(req, res) {
   flow.post(req, function(status, filename, original_filename, identifier) {
     if (ACCESS_CONTROLL_ALLOW_ORIGIN) {

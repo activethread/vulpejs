@@ -123,11 +123,18 @@ exports.render = function(res, name, options) {
   }
   if (!options.ui) {
     options.ui = {
-      minifier: vulpejs.app.minifier[vulpejs.app.env]
+      minifier: vulpejs.app.minifier[vulpejs.app.env],
+      uploader: {}
     };
-  } else if (!options.ui.minifier) {
-    options.ui.minifier = vulpejs.app.minifier[vulpejs.app.env];
+  } else {
+    if (!options.ui.minifier) {
+      options.ui.minifier = vulpejs.app.minifier[vulpejs.app.env];
+    }
+    if (!options.ui.uploader) {
+      options.ui.uploader = {};
+    }
   }
+
   res.render(name, options);
 };
 

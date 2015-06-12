@@ -10,47 +10,47 @@ var vulpe = {
     },
     app: angular.module('app', ['app.controllers']),
     config: function(options) {
-      if (options.upload) {
+      if (options.uploader) {
         var flow = function(flowFactoryProvider, options) {
           flowFactoryProvider.defaults = {
-            target: options.upload.target || '/flow/upload',
-            permanentErrors: options.upload.permanentErrors || [500, 501],
-            maxChunkRetries: options.upload.maxChunkRetries || 1,
-            chunkRetryInterval: options.upload.chunkRetryInterval || 5000,
-            simultaneousUploads: options.upload.simultaneousUploads || 1
+            target: options.uploader.target || '/flow/upload',
+            permanentErrors: options.uploader.permanentErrors || [500, 501],
+            maxChunkRetries: options.uploader.maxChunkRetries || 1,
+            chunkRetryInterval: options.uploader.chunkRetryInterval || 5000,
+            simultaneousUploads: options.uploader.simultaneousUploads || 1
           };
           flowFactoryProvider.factory = vulpe.ng.fustyFlowFactory;
         };
-        var jquery = function($httpProvider, fileUploadProvider, options) {
+        var blueimp = function($httpProvider, fileUploadProvider, options) {
           delete $httpProvider.defaults.headers.common['X-Requested-With'];
           fileUploadProvider.defaults.redirect = window.location.href.replace(
             /\/[^\/]*$/,
             '/cors/result.html?%s'
           );
           angular.extend(fileUploadProvider.defaults, {
-            disableImageResize: options.upload.disableImageResize || /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
-            maxFileSize: options.upload.maxFileSize || 11000000000,
-            acceptFileTypes: options.upload.acceptFileTypes || /(\.|\/)(mp4|mov)$/i,
-            prependFiles: options.upload.prependFiles || true
+            disableImageResize: options.uploader.disableImageResize || /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
+            maxFileSize: options.uploader.maxFileSize || 11000000000,
+            acceptFileTypes: options.uploader.acceptFileTypes || /(\.|\/)(mp4|mov)$/i,
+            prependFiles: options.uploader.prependFiles || true
           });
         };
-        if (options.upload.flow && options.upload.jquery) {
+        if (options.uploader.flow && options.uploader.blueimp) {
           vulpe.ng.app.config(['$httpProvider', 'fileUploadProvider', 'flowFactoryProvider',
             function($httpProvider, fileUploadProvider, flowFactoryProvider) {
               flow(flowFactoryProvider, options);
-              jquery($httpProvider, fileUploadProvider, options)
+              blueimp($httpProvider, fileUploadProvider, options)
             }
           ]);
-        } else if (options.upload.flow) {
+        } else if (options.uploader.flow) {
           vulpe.ng.app.config(['flowFactoryProvider',
             function(flowFactoryProvider) {
               flow(flowFactoryProvider, options);
             }
           ]);
-        } else if (options.upload.jquery) {
+        } else if (options.uploader.blueimp) {
           vulpe.ng.app.config(['$httpProvider', 'fileUploadProvider',
             function($httpProvider, fileUploadProvider) {
-              jquery($httpProvider, fileUploadProvider, options)
+              blueimp($httpProvider, fileUploadProvider, options)
             }
           ]);
         }

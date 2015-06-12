@@ -284,7 +284,7 @@
         vulpejs.dialog.confirm({
           message: 'Do you really want to delete all selected files?',
           callback: function(btn) {
-            vulpejs.upload.doRemoveAll();
+            vulpejs.ui.uploader.doRemoveAll();
           }
         });
       };
