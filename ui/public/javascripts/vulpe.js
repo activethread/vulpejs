@@ -30,7 +30,7 @@ var vulpe = {
           angular.extend(fileUploadProvider.defaults, {
             disableImageResize: options.uploader.disableImageResize || /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
             maxFileSize: options.uploader.maxFileSize || 11000000000,
-            acceptFileTypes: options.uploader.acceptFileTypes || /(\.|\/)(mp4|mov)$/i,
+            acceptFileTypes: options.uploader.acceptFileTypes || /(\.|\/)(mp4|mov|avi|mpeg|wmv)$/i,
             prependFiles: options.uploader.prependFiles || true
           });
         };

@@ -980,6 +980,10 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
             }
           });
         },
+        event: {
+          submit: function() {},
+          add: function() {}
+        },
         flow: {
           submitBefore: nothing,
           submitAfter: nothing,

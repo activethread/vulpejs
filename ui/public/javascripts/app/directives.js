@@ -231,7 +231,7 @@ app.directive("starRating", ['$timeout', function($timeout) {
     scope: {
       ratingValue: "=ngModel",
       max: "=?",
-      onRatingSelected: "&?",
+      onSelect: "&?",
       readonly: "=?"
     },
     link: function(scope, elem, attrs) {
@@ -250,7 +250,7 @@ app.directive("starRating", ['$timeout', function($timeout) {
       scope.toggle = function(index) {
         if (scope.readonly === undefined || scope.readonly === false) {
           scope.ratingValue = index + 1;
-          scope.onRatingSelected({
+          scope.onSelect({
             rating: index + 1
           });
         }

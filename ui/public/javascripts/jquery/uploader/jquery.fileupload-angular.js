@@ -299,6 +299,7 @@
         fileUpload.defaults
       )).on('fileuploadadd', function(e, data) {
         data.scope = $scope;
+        vulpejs.ui.uploader.event.submit();
       }).on('fileuploadfail', function(e, data) {
         if (data.errorThrown === 'abort') {
           return;
@@ -309,6 +310,8 @@
             data.result = angular.fromJson(data.jqXHR.responseText);
           } catch (ignore) {}
         }
+      }).on('fileuploadsubmit', function(e, data) {
+        vulpejs.ui.uploader.event.submit();
       }).on([
         'fileuploadadd',
         'fileuploadsubmit',
