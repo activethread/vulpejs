@@ -35,9 +35,9 @@ each item in ui.select.items
               |{{selectItem.#{item.name}}}
           if item.images
             each image in item.images
-              img(src="/images/#{image.name}" ng-cloak ng-if=image.showIf title=__(image.title))
+              img(src="/images/#{image.name}" ng-cloak ng-if=image.show title=__(image.title))
               if item.showTitle
-                span(ng-cloak ng-if=image.showIf)
+                span(ng-cloak ng-if=image.show)
                   br
                   =__(image.title)
 td

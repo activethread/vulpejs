@@ -61,10 +61,6 @@ if input.mask
 if input.autofocus
   - append += (append.length === 0 ? '' : '~') + 'autofocus';
 
-if input.minicolors
-  - append += (append.length === 0 ? '' : '~') + 'minicolors';
-
-
 if input.case
   - input.case = input.case.toLowerCase();
   if input.case === 'lower'
@@ -274,9 +270,9 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
         span.input-group-addon=input.group.value
     else if input.typeahead
       input(type=input.type class=input.style['class'] name=input.name id=input.id typeahead=input.typeahead.query append=append ng-cloak ng-hide="#{input.readonly}")
-    else if input.minicolors
+    else if input.type === 'color-picker'
       div
-        input(type=input.type class=input.style['class'] name=input.name id=input.id append=append ng-cloak ng-hide="#{input.readonly}")
+        input(type=input.type class=input.style['class'] name=input.name id=input.id minicolors append=append ng-cloak ng-hide="#{input.readonly}")
     else
       input(type=input.type class=input.style['class'] name=input.name id=input.id append=append ng-cloak ng-hide="#{input.readonly}")
   if input.validate && input.validate.message 
@@ -313,7 +309,7 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
       - input.link.on = {click: ''};
     unless input.link.show
       if input.show
-        - input.link.show = input.showIf;
+        - input.link.show = input.show;
       else
       - input.link.show = ngModel;
     unless input.link.label

@@ -13,7 +13,7 @@ Works on Linux (stable) & MacOSx (stable) & Windows (stable).
 Add VulpeJS dependency in your `package.json`
 ```json
 ...
-"vulpejs": "~0.0.13",
+"vulpejs": "~0.0.14",
 ...
 ```
 
@@ -95,20 +95,19 @@ module.exports = vulpejs.routes.make({
         }
       }
     },
-    minicolors: true,
     main: {
       title: 'City',
       inputs: [{
         type: 'text',
         name: 'name',
         label: 'Name',
-        capitalizeFirst: true,
+        capitalize: 'first',
         required: true
       }, {
         type: 'text',
         name: 'acronym',
         label: 'Acronym',
-        upperCase: true,
+        case: 'upper',
         required: true
       }]
     },
@@ -132,28 +131,36 @@ module.exports = vulpejs.routes.make({
       items: [{
         name: 'name',
         label: 'Name',
-        width: '55%'
+        style: {
+          width: '55%'
+        }
       }, {
         name: 'acronym',
         label: 'Acronym',
-        width: '10%'
+        style: {
+          width: '10%'
+        }
       }, {
         name: 'status',
-        className: 'text-center',
+        style: {
+          'class': 'text-center',
+          width: '10%'
+        },
         images: [{
           name: 'status-online.png',
-          showIf: "vulpejs.equals(selectItem, 'status', 'ACTIVE')",
+          show: "vulpejs.equals(selectItem, 'status', 'ACTIVE')",
           title: 'Active'
         }, {
           name: 'status-offline.png',
-          showIf: "vulpejs.equals(selectItem, 'status', 'INACTIVE')",
+          show: "vulpejs.equals(selectItem, 'status', 'INACTIVE')",
           title: 'Inactive'
         }],
-        label: 'Status',
-        width: '10%'
+        label: 'Status'
       }, {
         label: 'Actions',
-        width: '25%'
+        style: {
+          width: '25%'
+        }
       }],
       actions: []
     }

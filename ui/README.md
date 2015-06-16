@@ -11,7 +11,11 @@ date|Date Input
 number|Number Input
 password|Password Input
 select|Select Input
+textarea|Textarea Input
+checkbox|Select Input
+radio|Select Input
 editor|Text editor Input
+color-picker|Color picker Input
 range-slider|Ranger slider Input
 image-uploader|Image upload Input
 file-uploader|Image upload Input
@@ -22,6 +26,8 @@ star-rating|Rating Input
 Field|Type|Default|Mandatory|Example|Description
 :---:|:--:|-------|---------|-------|-----------
 name|String|none|true|`name: "code"`|Input name
+model|String|none|false|`model: "otherCode"`|Input bind property (`vulpejs.item.otherCode`)
+alias|String|none|false|`alias: "external"`|Input alias to bind property (`external.code`)
 label|String|none|false|`label: "Code"`|Input label
 style|Object|none|false|`style: {"class": "input-name"}`|Input CSS
 required|Boolean / Expression|false|false|`required: true` or `requiredIf: "vulpejs.item.name === 'VulpeJS'"`|Input required
@@ -40,7 +46,6 @@ typeahead|Object|none|false|`typeahead: {query: "user.name for user in vulpejs.u
 mask|String / Object|none|false|`mask: "date"` or `mask: {pattern: "99/99/9999"}`|Input mask,
 capitalize|String|normal|false|`capitalize: "all"`|Input capitalize (`all`, `first`, `normal`)
 case|String|normal|false|`"case": "upper"`|Input case (`upper`, `lower`, `normal`)
-minicolors|Boolean|false|false|`minicolors: true`|Enable input color picker
 
 #### Select input specific fields
 Field|Type|Default|Mandatory|Example|Description
@@ -58,6 +63,11 @@ Field|Type|Default|Mandatory|Example|Description
 :---:|:--:|-------|---------|-------|-----------
 rows|Number|2|false|`rows: 5`|Number of rows on Textarea
 
+#### Checkbox input specific fields
+Field|Type|Default|Mandatory|Example|Description
+:---:|:--:|-------|---------|-------|-----------
+toggle|Object|none|false|`{toggle: {on: "Yes", off: "No"}}`|Make checkbox toggle switch
+
 ### Output types
 
 Type|Description
@@ -71,4 +81,4 @@ Field|Type|Example|Description
 :---:|:--:|-------|-----------
 name|String|`name: "code"`|Input name
 label|String|`label: "Code"`|Input label
-showIf|String|`showIf: "vulpejs.item.name !== 'VulpeJS'"`|Input is displayed if this condition is true
+show|String|`show: "vulpejs.item.name !== 'VulpeJS'"`|Input is displayed if this condition is true

@@ -2,7 +2,7 @@
 
 /**
  * Configure input
- * 
+ *
  * @param  {String} type
  * @param  {Object} options [description]
  * @return {Object} Input object
@@ -15,16 +15,13 @@ var input = function(type, options) {
     name: options.name,
     label: options.label,
     required: options.required || false,
-    requiredIf: options.requiredIf || false,
-    showIf: options.showIf || false,
+    show: options.show || false,
     readonly: options.readonly || false
   };
   if (['text', 'date', 'textarea'].indexOf(type) !== -1) {
     if (['text', 'textarea'].indexOf(type) !== -1) {
-      config.capitalizeFirst = options.capitalizeFirst || false;
-      config.capitalize = options.capitalize || false;
-      config.upperCase = options.upperCase || false;
-      config.lowerCase = options.lowerCase || false;
+      config.capitalize = options.capitalize || 'normal';
+      config.case = options.case || 'normal';
     }
     config.mask = options.mask || false;
     config.maskPattern = options.maskPattern || false;

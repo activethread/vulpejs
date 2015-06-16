@@ -1006,31 +1006,54 @@ exports.make = function(options) {
       });
     });
   }
-  // CONTROLLER
-  if (options.ui && options.ui.controller && vulpejs.utils.isObject(options.ui.controller)) {
-    if (options.ui.controller.service && !options.ui.controller.service.name) {
-      options.ui.controller.service.name = options.name;
-    }
-    router.get('/javascripts/app/controllers/' + options.ui.controller.name + 'Controller' + (vulpejs.app.minifier[vulpejs.app.env] ? '.min' : '') + '.js', function(req, res) {
-      res.writeHead(200, {
-        'Content-Type': 'text/javascript'
+  if (options.ui) {
+    var dependency = function(inputs) {
+      inputs.forEach(function(input) {
+        if (input.type === 'color-picker') {
+          options.ui.colorPicker = true;
+          continue;
+        }
+        if (input.type === 'checkbox' && input.toggle) {
+          options.ui.switch = true;
+          continue;
+        }
+        if (input.type.indexOf('upload') !== -1) {
+          options.ui.uploader = true;
+          continue;
+        }
       });
-      var code = 'vulpe.ng.controller(' + JSON.stringify(options.ui.controller) + ');';
-      if (vulpejs.app.minifier[vulpejs.app.env]) {
-        vulpejs.utils.js.obfuscate(code, {
-          success: function(obfuscated) {
-            res.write(obfuscated);
-            res.end();
-          },
-          error: function(error) {
-            exports.response.error(res, error);
-          }
-        });
-      } else {
-        res.write(code);
-        res.end();
+    };
+    if (ui.inputs) {
+
+    } else if (ui.main && ui.main.inputs) {
+
+    }
+    // CONTROLLER
+    if (options.ui.controller && vulpejs.utils.isObject(options.ui.controller)) {
+      if (options.ui.controller.service && !options.ui.controller.service.name) {
+        options.ui.controller.service.name = options.name;
       }
-    });
+      router.get('/javascripts/app/controllers/' + options.ui.controller.name + 'Controller' + (vulpejs.app.minifier[vulpejs.app.env] ? '.min' : '') + '.js', function(req, res) {
+        res.writeHead(200, {
+          'Content-Type': 'text/javascript'
+        });
+        var code = 'vulpe.ng.controller(' + JSON.stringify(options.ui.controller) + ');';
+        if (vulpejs.app.minifier[vulpejs.app.env]) {
+          vulpejs.utils.js.obfuscate(code, {
+            success: function(obfuscated) {
+              res.write(obfuscated);
+              res.end();
+            },
+            error: function(error) {
+              exports.response.error(res, error);
+            }
+          });
+        } else {
+          res.write(code);
+          res.end();
+        }
+      });
+    }
   }
   // VIEW
   var doView = function(req, res) {
