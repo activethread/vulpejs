@@ -143,8 +143,10 @@ module.exports = vulpejs.routes.make({
       }, {
         name: 'status',
         style: {
-          'class': 'text-center',
           width: '10%'
+        },
+        css: {
+          'class': 'text-center'
         },
         images: [{
           name: 'status-online.png',
