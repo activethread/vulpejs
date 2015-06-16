@@ -1,25 +1,26 @@
-- var modules = "";
-if ui.editor
-  - modules += ", 'textAngular'";
-if ui.colorPicker
-  - modules += ", 'minicolors'";
-if ui.switch
-  - modules += ", 'toggle-switch'";
-if ui.uploader
-  if ui.uploader.flow
-    - modules += ", 'flow'";
-  if ui.uploader.blueimp
-    - modules += ", 'blueimp.fileupload'";
-if ui.tree
-  - modules += ", 'ui.tree'";
-if ui.recaptcha
-  - modules += ", 'vcRecaptcha'";
-if ui.multiSelect
-  - modules += ", 'isteven-multi-select', 'angularjs-dropdown-multiselect'"
-if ui.rangeSlider
-  - modules += ", 'ui-rangeSlider'"
-if ui.dragDrop
-  - modules += ", 'dndLists'"
-if modules !== ""
-  script(charset="utf-8" type="text/javascript").
-    vulpe.ng.app = angular.module('app', ['app.controllers'#{modules}]);
+if ui.module
+  - var modules = "";
+  if ui.module.editor
+    - modules += ", 'textAngular'";
+  if ui.module.colorPicker
+    - modules += ", 'minicolors'";
+  if ui.module.switch
+    - modules += ", 'toggle-switch'";
+  if ui.module.uploader
+    if ui.module.uploader.flow
+      - modules += ", 'flow'";
+    if ui.module.uploader.blueimp
+      - modules += ", 'blueimp.fileupload'";
+  if ui.module.tree
+    - modules += ", 'ui.module.tree'";
+  if ui.module.recaptcha
+    - modules += ", 'vcRecaptcha'";
+  if ui.module.multiSelect
+    - modules += ", 'isteven-multi-select', 'angularjs-dropdown-multiselect'"
+  if ui.module.rangeSlider
+    - modules += ", 'ui-rangeSlider'"
+  if ui.module.dragDrop
+    - modules += ", 'dndLists'"
+  if modules !== ""
+    script(charset="utf-8" type="text/javascript").
+      vulpe.ng.app = angular.module('app', ['app.controllers'#{modules}]);

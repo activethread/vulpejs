@@ -1,16 +1,16 @@
-unless ui.uploader.flow
-  - ui.uploader.flow = {init:'{singleFile:true}', emptyImageSize:'99x99'};
-unless ui.uploader.flow.init
-  - ui.uploader.flow.init = '{singleFile:true}';
-unless ui.uploader.flow.emptyImageSize
-  - ui.uploader.flow.emptyImageSize = '99x99';
+unless ui.module.uploader.flow
+  - ui.module.uploader.flow = {init:'{singleFile:true}', emptyImageSize:'99x99'};
+unless ui.module.uploader.flow.init
+  - ui.module.uploader.flow.init = '{singleFile:true}';
+unless ui.module.uploader.flow.emptyImageSize
+  - ui.module.uploader.flow.emptyImageSize = '99x99';
 if flowParams
   - flowParams = ', ' + flowParams;
 else
   - var flowParams = '';
-.well(flow-init="#{ui.uploader.flow.init}" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]" flow-files-submitted="vulpejs.ui.uploader.flow.submit($flow, '#{ngModel}'#{flowParams})" flow-file-success="vulpejs.ui.uploader.flow.success($flow, $file, '#{ngModel}'#{flowParams})")
+.well(flow-init="#{ui.module.uploader.flow.init}" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]" flow-files-submitted="vulpejs.ui.module.uploader.flow.submit($flow, '#{ngModel}'#{flowParams})" flow-file-success="vulpejs.ui.module.uploader.flow.success($flow, $file, '#{ngModel}'#{flowParams})")
   img.thumbnail.slide-down(ng-src="{{#{ngModel}}}" ng-if="$flow.files.length === 0 && #{ngModel}")
-  - var emptyImage = 'https://www.placehold.it/'  + ui.uploader.flow.emptyImageSize + '/EFEFEF/AAAAAA&text=' + __('Empty')
+  - var emptyImage = 'https://www.placehold.it/'  + ui.module.uploader.flow.emptyImageSize + '/EFEFEF/AAAAAA&text=' + __('Empty')
   img.thumbnail.slide-down(src=emptyImage ng-if="$flow.files.length === 0 && !#{ngModel}")
   img.thumbnail.slide-down(ng-if="$flow.files.length" flow-img="$flow.files[0]")
   div

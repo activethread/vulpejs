@@ -3,16 +3,20 @@ td.text-center
   |{{$index + 1}}
 each item in ui.select.items
   if item.name || item.details
-    - var click = "click = !click; detail = selectItem._id;";
+    - var click = "click = !click; detail = item._id;";
     unless ui.select.detail
-      - click = "vulpejs.model.find(selectItem._id);";
-    td(class=item.className ng-click=click)
+      - click = "vulpejs.model.find(item._id);";
+    unless item.css
+      - item.css = {};
+    td(class=item.css['class'] ng-click=click)
       div(tooltip=tooltip)
         if item.details
           each detail in item.details
-            unless detail.class
-              - detail.class = 'col-lg-3';
-            div(class=detail.class)
+            unless detail.css
+            - detail.css = {'class': 'col-lg-3'};
+            unless detail.css['class']
+              - detail.css['class'] = 'col-lg-3';
+            div(class=detail.css['class'])
               if detail.label
                 label=__(detail.label)
                 |&nbsp;
@@ -20,19 +24,19 @@ each item in ui.select.items
                 br
                 span
                   if detail.filter
-                    |{{selectItem.#{detail.value}|#{detail.filter}}}
+                    |{{item.#{detail.value}|#{detail.filter}}}
                   else if detail.i18n
-                    |{{selectItem.#{detail.value}|i18n}}
+                    |{{item.#{detail.value}|i18n}}
                   else
-                    |{{selectItem.#{detail.value}}}
+                    |{{item.#{detail.value}}}
         else
           unless item.images
             if item.filter
-              |{{selectItem.#{item.name}|#{item.filter}}}
+              |{{item.#{item.name}|#{item.filter}}}
             else if item.i18n
-              |{{selectItem.#{item.name}|i18n}}
+              |{{item.#{item.name}|i18n}}
             else
-              |{{selectItem.#{item.name}}}
+              |{{item.#{item.name}}}
           if item.images
             each image in item.images
               img(src="/images/#{image.name}" ng-cloak ng-if=image.show title=__(image.title))
@@ -46,12 +50,14 @@ td
   else
     include actions
       each action in ui.select.actions
-        unless action.className
-          - action.className = '';
+        unless action.css
+          - action.css = {'class': ''};
+        unless action.css['class']
+          - action.css['class'] = '';
         unless action.show
           - action.show = '';
-        span=action.className
-        li(class=action.className ng-if=action.show)
+        span=action.css['class']
+        li(class=action.css['class'] ng-cloak ng-if=action.show)
           if action.link
             unless action.link.click
               - action.link.click = ''

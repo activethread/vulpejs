@@ -5,7 +5,7 @@ Open-Source Full-Stack solution to Node.js applications with `Express.js`, `Jade
 
 Works on Linux (stable) & MacOSx (stable) & Windows (stable).
 
-[![NPM version](https://badge.fury.io/js/vulpejs.svg)](http://badge.fury.io/js/vulpejs) [![Gitter](https://badges.gitter.im/lordfelipe/vulpejs.svg)](https://gitter.im/lordfelipe/vulpejs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://api.travis-ci.org/lordfelipe/vulpejs.svg?branch=master)](https://travis-ci.org/lordfelipe/vulpejs) [![Inline docs](http://inch-ci.org/github/lordfelipe/vulpejs.svg?branch=master)](http://inch-ci.org/github/lordfelipe/vulpejs)
+[![NPM version](https://badge.fury.io/js/vulpejs.svg)](http://badge.fury.io/js/vulpejs) [![Gitter](https://badges.gitter.im/lordfelipe/vulpejs.svg)](https://gitter.im/lordfelipe/vulpejs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://api.travis-ci.org/lordfelipe/vulpejs.svg?branch=master)](https://travis-ci.org/lordfelipe/vulpejs) [![Inline docs](http://inch-ci.org/github/lordfelipe/vulpejs.svg?branch=master)](http://inch-ci.org/github/lordfelipe/vulpejs) [![Dependency Status](https://img.shields.io/lordfelipe/vulpejs/request.svg?style=flat-square)](https://david-dm.org/lordfelipe/vulpejs)
 
 [![NPM](https://nodei.co/npm/vulpejs.png?downloads=true&downloadRank=true)](https://nodei.co/npm/vulpejs/)
 

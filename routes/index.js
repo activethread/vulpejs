@@ -1007,26 +1007,42 @@ exports.make = function(options) {
     });
   }
   if (options.ui) {
+    if (!options.ui.module) {
+      options.ui.module = {};
+    }
     var dependency = function(inputs) {
-      inputs.forEach(function(input) {
+      for (var i = 0, len = inputs.length; i < len; ++i) {
+        var input = inputs[i];
         if (input.type === 'color-picker') {
-          options.ui.colorPicker = true;
+          options.ui.module.colorPicker = true;
           continue;
         }
         if (input.type === 'checkbox' && input.toggle) {
-          options.ui.switch = true;
+          options.ui.module.switch = true;
           continue;
         }
-        if (input.type.indexOf('upload') !== -1) {
-          options.ui.uploader = true;
+        if (input.type === 'editor') {
+          options.ui.module.editor = true;
           continue;
         }
-      });
+        if (input.type.indexOf('-uploader') !== -1) {
+          if (!options.ui.module.uploader) {
+            options.ui.module.uploader = {
+              flow: {}
+            };
+          }
+          continue;
+        }
+        if (input.type === 'range-slider') {
+          options.ui.module.rangeSlider = true;
+          continue;
+        }
+      }
     };
-    if (ui.inputs) {
-
-    } else if (ui.main && ui.main.inputs) {
-
+    if (options.ui.inputs) {
+      dependency(options.ui.inputs);
+    } else if (options.ui.main && options.ui.main.inputs) {
+      dependency(options.ui.main.inputs);
     }
     // CONTROLLER
     if (options.ui.controller && vulpejs.utils.isObject(options.ui.controller)) {

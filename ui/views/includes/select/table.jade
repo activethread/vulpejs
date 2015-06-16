@@ -21,19 +21,24 @@ thead
   tr
     th=__('#')
     each item in ui.select.items
-      if item.width
-        - var style = 'width: ' + item.width + ';'
-        th(style=style)=__(item.label)
+      - var style = '';
+      if item.style && typeof item.style === 'string'
+        - style = item.style;
+      unless item.style
+        - item.style = {};
+      if item.style.width
+        - style = 'width: ' + item.width + ';'
+      th(style=style)=__(item.label)
 tbody
   tr.slide-down(ng-cloak ng-if="vulpejs.items.length === 0")
     td(colspan=(typeof ui.select.filter === 'string' ? 99 : ui.select.filter.search.colspan + 1 + ui.select.filter.status.colspan))=__('Empty')
   if ui.select.detail
-    tr.click.slide-down(dir-paginate-start="selectItem in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse" total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
+    tr.click.slide-down(dir-paginate-start="item in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse" total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
       include items
-    tr.scale-fade(dir-paginate-end ng-cloak ng-if="click && detail === selectItem._id")
+    tr.scale-fade(dir-paginate-end ng-cloak ng-if="click && detail === item._id")
       include detail
   else
-    tr.click.slide-down(dir-paginate="selectItem in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse" total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
+    tr.click.slide-down(dir-paginate="item in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse" total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
       include items
 //- tfoot(ng-cloak ng-if="vulpejs.ui.pagination.totalPages > 1")
 //-   tr

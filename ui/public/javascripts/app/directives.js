@@ -182,15 +182,35 @@ app.directive('currency', function() {
   };
 });
 
-app.directive('onlyNumbers', function() {
+app.directive('onlyNumeric', function() {
   return {
     require: 'ngModel',
     link: function(scope, element, attrs, modelCtrl) {
       modelCtrl.$parsers.push(function(inputValue) {
         if (inputValue == undefined) {
-          return ''
+          return '';
         }
         var transformedInput = inputValue.replace(/[^0-9]/g, '');
+        if (transformedInput != inputValue) {
+          modelCtrl.$setViewValue(transformedInput);
+          modelCtrl.$render();
+        }
+
+        return transformedInput;
+      });
+    }
+  };
+});
+
+app.directive('onlyAlfa', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attrs, modelCtrl) {
+      modelCtrl.$parsers.push(function(inputValue) {
+        if (inputValue == undefined) {
+          return '';
+        }
+        var transformedInput = inputValue.replace(/[0-9]/g, '');
         if (transformedInput != inputValue) {
           modelCtrl.$setViewValue(transformedInput);
           modelCtrl.$render();

@@ -4,6 +4,10 @@ if ui.minifier
 - var title = "AppName";
 if ui.site
   - title = "SiteName";
+unless ui.module
+  - ui.module = {uploader: {}};
+unless ui.module.uploader
+  - ui.module.uploader = {};
 head
   meta(charset="utf8")
   meta(http-equiv="X-UA-Compatible" content="IE=edge")
@@ -11,26 +15,26 @@ head
   base(href="/")
   title=__(title)
   link(rel="stylesheet" href="/stylesheets/bootstrap.min.css")
-  if ui.datetimePicker
+  if ui.module.datetimePicker
     link(rel="stylesheet" href="/stylesheets/bootstrap-datetimepicker.min.css")
   link(rel="stylesheet" href="/stylesheets/font-awesome.min.css")
   link(rel="stylesheet" href="/stylesheets/flag-icon.min.css")
   link(rel="stylesheet" href="/stylesheets/angular-loading-bar.min.css")
-  if ui.colorPicker
+  if ui.module.colorPicker
     link(rel="stylesheet" href="/stylesheets/jquery.minicolors.min.css")
-  if ui.editor
+  if ui.module.editor
     link(rel="stylesheet" href="/stylesheets/angular-text-editor.min.css")
-  if ui.switch
+  if ui.module.switch
     link(rel="stylesheet" href="/stylesheets/angular-toggle-switch.min.css")
-  if ui.uploader.blueimp
+  if ui.module.uploader.blueimp
     link(rel="stylesheet" href="/stylesheets/blueimp-gallery.min.css")
     link(rel="stylesheet" href="/stylesheets/jquery.fileupload.min.css")
     link(rel="stylesheet" href="/stylesheets/jquery.fileupload-ui.min.css")
-  if ui.tree
+  if ui.module.tree
     link(rel="stylesheet" href="/stylesheets/angular-ui-tree.min.css")
-  if ui.multiSelect
+  if ui.module.multiSelect
     link(rel="stylesheet" href="/stylesheets/angular-isteven-multi-select.min.css")
-  if ui.rangeSlider
+  if ui.module.rangeSlider
     link(rel="stylesheet" href="/stylesheets/angular-range-slider.min.css")
   link(rel="stylesheet" href="/stylesheets/angular-dialogs.min.css")
   link(rel="stylesheet" href="/stylesheets/vulpe-animation.min.css")
@@ -42,9 +46,9 @@ head
   script(charset="utf-8" src="/javascripts/jquery/jquery.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/jquery/jquery.cookie.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/jquery/jquery.hotkeys.min.js" type="text/javascript")
-  if ui.colorPicker
+  if ui.module.colorPicker
     script(charset="utf-8" src="/javascripts/jquery/jquery.minicolors.min.js" type="text/javascript")
-  if ui.uploader.blueimp
+  if ui.module.uploader.blueimp
     script(charset="utf-8" src="/javascripts/jquery/uploader/jquery.ui.widget.js" type="text/javascript")
     script(charset="utf-8" src="/javascripts/jquery/uploader/load-image.all.min.js" type="text/javascript")
     script(charset="utf-8" src="/javascripts/jquery/uploader/canvas-to-blob.min.js" type="text/javascript")
@@ -57,7 +61,7 @@ head
     script(charset="utf-8" src="/javascripts/jquery/uploader/jquery.fileupload-video.min.js" type="text/javascript")
     script(charset="utf-8" src="/javascripts/jquery/uploader/jquery.fileupload-validate.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/bootstrap/bootstrap.min.js" type="text/javascript")
-  if ui.datetimePicker
+  if ui.module.datetimePicker
     script(charset="utf-8" src="/javascripts/bootstrap/bootstrap-datetimepicker.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/bootstrap/bootstrap-hover-dropdown.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/angular/angular.min.js" type="text/javascript")
@@ -67,26 +71,26 @@ head
   script(charset="utf-8" src="/javascripts/angular/angular-timer.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/angular/angular-i18n-node.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/angular/angular-translate.min.js" type="text/javascript")
-  if ui.uploader.flow
+  if ui.module.uploader.flow
     script(charset="utf-8" src="/javascripts/angular/angular-flow-uploader.min.js" type="text/javascript")
-  if ui.colorPicker
+  if ui.module.colorPicker
     script(charset="utf-8" src="/javascripts/angular/angular-minicolors.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/angular/angular-masks.min.js" type="text/javascript")
-  if ui.switch
+  if ui.module.switch
     script(charset="utf-8" src="/javascripts/angular/angular-toggle-switch.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/angular/angular-loading-bar.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/angular/angular-dir-pagination.min.js" type="text/javascript")
-  if ui.editor
+  if ui.module.editor
     script(charset="utf-8" src="/javascripts/angular/angular-text-editor.min.js" type="text/javascript")
     script(charset="utf-8" src="/javascripts/angular/angular-text-editor-sanitize.min.js" type="text/javascript")
-  if ui.tree
+  if ui.module.tree
     script(charset="utf-8" src="/javascripts/angular/angular-ui-tree.min.js" type="text/javascript")
-  if ui.multiSelect
+  if ui.module.multiSelect
     script(charset="utf-8" src="/javascripts/angular/angular-isteven-multi-select.min.js" type="text/javascript")
     script(charset="utf-8" src="/javascripts/angular/angular-dropdown-multiselect.min.js" type="text/javascript")
-  if ui.rangeSlider
+  if ui.module.rangeSlider
     script(charset="utf-8" src="/javascripts/angular/angular-range-slider.min.js" type="text/javascript")
-  if ui.dragDrop
+  if ui.module.dragDrop
     script(charset="utf-8" src="/javascripts/angular/angular-drag-and-drop-lists.min.js" type="text/javascript")
   if ui.recaptcha
     script(charset="utf-8" src="/javascripts/angular/angular-recaptcha.min.js" type="text/javascript")
@@ -94,7 +98,7 @@ head
   script(charset="utf-8" src="/javascripts/angular/ui-bootstrap-tpls.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/angular/ui-utils.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/angular/angular-dialogs.min.js" type="text/javascript")
-  if ui.uploader.blueimp
+  if ui.module.uploader.blueimp
     script(charset="utf-8" src="/javascripts/jquery/uploader/jquery.fileupload-angular.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/app/directives#{minifier}.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/app/filters#{minifier}.js" type="text/javascript")
@@ -102,13 +106,13 @@ head
   script(charset="utf-8" src="/javascripts/app/controllers#{minifier}.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/vulpe#{minifier}.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/app#{minifier}.js" type="text/javascript")
-  if ui.uploader.flow
+  if ui.module.uploader.flow
     script(charset="utf-8" src="/javascripts/flow.min.js" type="text/javascript")
     script(charset="utf-8" src="/javascripts/fusty-flow.min.js" type="text/javascript")
-  if ui.charts
+  if ui.module.chart
     script(charset="utf-8" src="/javascripts/highcharts/highcharts.js")
     script(charset="utf-8" src="/javascripts/highcharts/modules/exporting.js")
-  if ui.uploader.blueimp
+  if ui.module.uploader.blueimp
     script(charset="utf-8" src="/javascripts/jquery/cors/jquery.postmessage-transport.js")
     <!--[if (gte IE 8)&(lt IE 10)]>
     <script charset="utf-8" src="/javascripts/jquery/cors/jquery.xdr-transport.min.js"></script>

@@ -3,19 +3,26 @@ td(colspan=(ui.select.filter.search.colspan + 1 + ui.select.filter.status.colspa
     tr
       each headerItem in ui.select.detail
         - var style = '';
-        if headerItem.width
-         - style = 'width: ' + headerItem.width + ';';
+        if headerItem.style && typeof headerItem.style === 'string'
+          - style = headerItem.style;
+        unless headerItem.style
+          - headerItem.style = {};
+        if headerItem.style.width
+         - style = 'width: ' + headerItem.style.width + ';';
         th(style=style)=__(headerItem.label)
     tr
       each bodyItem in ui.select.detail
-        unless bodyItem.className
-          - bodyItem.className = '';
-        unless bodyItem.style
-          - bodyItem.style = '';
-        td(class=bodyItem.className style=bodyItem.style)
+        - var style = '';
+        if bodyItem.style && typeof bodyItem.style === 'string'
+          - style = bodyItem.style;
+        unless bodyItem.css
+          - bodyItem.css = {'class': ''};
+        unless bodyItem.css['class']
+          - bodyItem.css['class'] = '';
+        td(class=bodyItem.css['class'] style=style)
           if bodyItem.filter
-            |{{selectItem.#{bodyItem.name}|#{bodyItem.filter}}}
+            |{{item.#{bodyItem.name}|#{bodyItem.filter}}}
           else if bodyItem.i18n
-            |{{selectItem.#{bodyItem.name}|i18n}}
+            |{{item.#{bodyItem.name}|i18n}}
           else
-            |{{selectItem.#{bodyItem.name}}}
+            |{{item.#{bodyItem.name}}}
