@@ -14,7 +14,7 @@ module.exports = require('vulpejs')({
   database: {
     development: {
       host: 'localhost',
-      name: 'guia',
+      name: 'first-app',
       user: 'admin',
       pass: 'vulpejs'
     }

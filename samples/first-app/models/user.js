@@ -27,7 +27,7 @@ var User = vulpejs.models.schema({
     },
     roles: [{
       type: String,
-      enum: ['CUSTOMER', 'ADMIN', 'SUPER']
+      enum: ['NORMAL', 'ADMIN', 'SUPER']
     }],
     status: {
       type: String,
@@ -77,8 +77,8 @@ var UserModel = vulpejs.mongoose.model('User', User);
 UserModel.find({}, function(error, items) {
   if (items.length === 0) {
     var user = new UserModel({
-      email: 'admin@cadecangere.com.br',
-      password: 'q1w2e3r4',
+      email: 'admin@vulpe.org',
+      password: 'vulpejs',
       name: 'Super Administrador',
       roles: ['SUPER']
     });
