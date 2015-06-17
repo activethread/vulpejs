@@ -87,8 +87,8 @@ module.exports = function(options) {
     })
   }));
   exp.use(methodOverride());
-  exp.use(express.static(path.join(root.vulpejs.dir, 'ui/public')));
   exp.use(express.static(path.join(root.dir, 'public')));
+  exp.use(express.static(path.join(root.vulpejs.dir, 'ui/public')));
 
   return {
     app: exp,
