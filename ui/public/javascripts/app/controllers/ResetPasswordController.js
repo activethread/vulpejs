@@ -13,7 +13,7 @@ vulpejs.ng.app.controller('ResetPasswordController', ['$rootScope', '$scope', 'V
   };
 
   vulpejs.reset = function() {
-    if ($scope.resetPasswordForm.$valid) {
+    if ($scope.form.$valid) {
       var item = vulpejs.item;
       vulpejs.message.clean();
       vulpejs.http.post({

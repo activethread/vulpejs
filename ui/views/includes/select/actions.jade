@@ -1,10 +1,10 @@
-div(ng-class="{'btn-group':item.email !== vulpejs.userDetails.email}")
+div(ng-class="{'btn-group':item.email !== vulpejs.auth.user.email}")
   a.btn.btn-primary.btn-xs(ng-click="vulpejs.model.find(item._id)" tooltip=__('Click to edit') tooltip-append-to-body="true" tooltip-placement="left")
     i.fa.fa-pencil.fa-fw
     =__('Edit')
-  a.btn.btn-primary.btn-xs.dropdown-toggle(data-toggle="dropdown" href="#" ng-if="vulpejs.hasRoles(['SUPER','ADMIN']) && item.email !== vulpejs.userDetails.email" tooltip=__('Click to expand/collapse') tooltip-append-to-body="true" tooltip-placement="right")
+  a.btn.btn-primary.btn-xs.dropdown-toggle(data-toggle="dropdown" href="#" ng-if="vulpejs.auth.user.is(['SUPER','ADMIN']) && item.email !== vulpejs.auth.user.email" tooltip=__('Click to expand/collapse') tooltip-append-to-body="true" tooltip-placement="right")
     span.caret
-  ul.dropdown-menu(ng-if="vulpejs.hasRoles(['SUPER','ADMIN']) && item.email !== vulpejs.userDetails.email")
+  ul.dropdown-menu(ng-if="vulpejs.auth.user.is(['SUPER','ADMIN']) && item.email !== vulpejs.auth.user.email")
     li
       a(ng-click="vulpejs.model.remove(item._id)" tooltip=__('Click to delete') tooltip-placement="right" tooltip-append-to-body="true")
         i.fa.fa-trash-o.fa-fw

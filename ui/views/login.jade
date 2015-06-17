@@ -2,19 +2,19 @@ extends layouts/login
 
 block content
   .login-container(ng-controller="LoginController")
-    form.form-signin(name="form" role="form" ng-submit="vulpejs.login()" method="post" autocomplete="off" novalidate shake-that submitted="submitted")
+    form.form-signin(name="form" role="form" ng-submit="vulpejs.auth.login()" method="post" autocomplete="off" novalidate shake-that submitted="vulpejs.ui.form.submitted")
       .panel.panel-default.box-shadow
         .panel-heading
           .row
             .col-lg-12=__('Access Control')
         .panel-body
-          .form-group(ng-class="{'has-error': form.username.$invalid && submitted}")
-            input#login-username.form-control(type="email" name="username" ng-model="user.username" placeholder=__("Email") required autofocus)
-          .form-group(ng-class="{'has-error': form.password.$invalid && submitted}")
-            input#login-password.form-control(type="password" name="password" ng-model="user.password" placeholder=__("Password") required)
+          .form-group(ng-class="{'has-error': form.username.$invalid && vulpejs.ui.form.submitted}")
+            input#login-username.form-control(type="email" name="username" ng-model="vulpejs.item.username" required autofocus placeholder=__("Email"))
+          .form-group(ng-class="{'has-error': form.password.$invalid && vulpejs.ui.form.submitted}")
+            input#login-password.form-control(type="password" name="password" ng-model="vulpejs.item.password" required placeholder=__("Password"))
           label.checkbox
-            input(type="checkbox" id="rememberMe" name="rememberMe" value="true" ng-model="user.rememberMe")
+            input(type="checkbox" id="rememberMe" name="rememberMe" value="true" ng-model="vulpejs.item.rememberMe")
             =__("Remember me")
-          input(type="submit" class="btn btn-lg btn-primary btn-block" value=__('Sign In'))
-          input(type="button" class="btn btn-lg btn-default btn-block" value=__('I forgot my Password') ng-click="forgotPassword()")
+          input.btn.btn-lg.btn-primary.btn-block(type="submit" value=__('Sign In'))
+          input.btn.btn-lg.btn-default.btn-block(type="button" ng-click="vulpejs.auth.password.forgot()" value=__('I forgot my Password'))
   include includes/script

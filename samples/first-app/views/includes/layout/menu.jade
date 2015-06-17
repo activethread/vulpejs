@@ -1,0 +1,41 @@
+if ui.login
+  ul.nav.navbar-nav
+    li#home
+      a(href="/")=__('Home')
+    li#login
+      a(href="/login")=__('Login')
+  include /views/includes/layout/language
+if ui.manager
+  include /views/includes/layout/language
+  ul.nav.navbar-nav
+    li#dashboard
+      a(href="/")=__('Dashboard')
+    li#manager.dropdown(ng-cloak ng-show="vulpejs.auth.user.is(['SUPER','ADMIN'])")
+      a.dropdown-toggle(href="#" data-toggle="dropdown" data-hover="dropdown")=__('Manager')
+        b.caret
+      ul.dropdown-menu
+        li
+          a(href="/user" tooltip-placement="right" tooltip-append-to-body="true" tooltip=__('Go to Users'))=__('Users')
+  ul.nav.navbar-nav.navbar-right
+    li.dropdown
+      a.dropdown-toggle(href="#" data-toggle="dropdown" data-hover="dropdown")
+        i.fa.fa-user.fa-fw
+        =__('Welcome, %s', '{{vulpejs.auth.user.name}}')
+        b.caret
+      ul.dropdown-menu
+        li
+          a(href="/password" tooltip-placement="left" tooltip-append-to-body="true" tooltip=__('Click to Change Password'))
+            i.fa.fa-asterisk.fa-fw
+            =__('Password Change')
+        li.divider
+        li
+          a(href="" ng-click="logout()" ng-controller="LogoutController" tooltip-placement="left" tooltip-append-to-body="true" tooltip=__('Click to Logout'))
+            i.fa.fa-power-off.fa-fw
+            =__('Logout')
+if ui.site
+  include /views/includes/layout/language
+  ul.nav.navbar-nav
+    li#home.active
+      a(href="/")=__('Home')
+    li#login
+      a(href="/login")=__('Login')

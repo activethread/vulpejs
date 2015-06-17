@@ -1,38 +1,36 @@
 vulpe.ng.app.controller('LoginController', ['$rootScope', '$scope', 'VulpeJS', function($rootScope, $scope, VulpeJS) {
   var vulpejs = new VulpeJS().init($scope);
 
-  $('#custom').html('');
-
-  $scope.user = {
+  vulpejs.item = {
     username: '',
     password: '',
     rememberMe: false
   };
 
-  vulpejs.$authenticator.logoutSuccessfully();
+  vulpejs.$authenticator.logout.success();
 
   if (vulpejs.$store.get('remember')) {
-    $scope.user = vulpejs.$store.get('remember');
+    vulpejs.item = vulpejs.$store.get('remember');
   } else if (vulpejs.$cookies.remember) {
-    $scope.user = JSON.parse(vulpejs.$cookies.remember.substring(2));
-    $scope.user.rememberMe = true;
+    vulpejs.item = JSON.parse(vulpejs.$cookies.remember.substring(2));
+    vulpejs.item.rememberMe = true;
   }
 
-  vulpejs.login = function() {
+  vulpejs.auth.login = function() {
     if ($scope.form.$valid) {
       vulpejs.message.clean();
-      if ($scope.user.rememberMe) {
-        vulpejs.$store.set('remember', $scope.user);
+      if (vulpejs.item.rememberMe) {
+        vulpejs.$store.set('remember', vulpejs.item);
       } else {
         vulpejs.$store.remove('remember');
       }
       vulpejs.http.post({
         url: vulpe.ng.rootContext + '/login',
-        data: $scope.user,
+        data: vulpejs.item,
         callback: {
           success: function(data) {
             vulpejs.message.success('Successfully logged in!');
-            vulpejs.$authenticator.loginSuccessfully(data.user);
+            vulpejs.$authenticator.login.success(data.user);
             vulpejs.redirect(data.redirectTo);
           },
           error: function(data, status, header, config) {
@@ -45,18 +43,21 @@ vulpe.ng.app.controller('LoginController', ['$rootScope', '$scope', 'VulpeJS', f
         }
       });
     } else {
-      $(!$scope.user.username ? '#login-username' : '#login-password').focus();
+      $(!vulpejs.item.username ? '#login-username' : '#login-password').focus();
     }
   };
 
-  vulpejs.forgotPassword = function() {
-    if ($scope.user.username && $scope.user.username.length > 0) {
-      vulpejs.redirect(vulpe.ng.rootContext + '/forgot-password/' + $scope.user.username);
-    } else {
-      vulpejs.message.error('Please enter your e-mail password reset.');
-      $('#loginUsername').focus();
+  vulpejs.auth.password = {
+    forgot: function() {
+      if (vulpejs.item.username && vulpejs.item.username.length > 0) {
+        vulpejs.redirect(vulpe.ng.rootContext + '/forgot-password/' + vulpejs.item.username);
+      } else {
+        vulpejs.message.error('Please enter your e-mail password reset.');
+        $('#login-username').focus();
+      }
     }
   };
+
   vulpejs.on.ready(function() {
     $('#login').addClass('active');
   });

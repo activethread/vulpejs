@@ -2,7 +2,7 @@
 
 /**
  * Create History Model
- * @returns {Object} Model
+ * @return {Object} Model
  */
 module.exports = vulpejs.models.make({
   name: 'History',

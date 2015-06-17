@@ -127,29 +127,35 @@ app.factory("$store", ['$parse', '$cookieStore', function($parse, $cookieStore) 
 }]);
 
 app.factory('$authenticator', ['$rootScope', '$store', function($rootScope, $store) {
-  $rootScope.vulpejs = {
-    userDetails: {}
-  };
+  if (!$rootScope.vulpejs) {
+    $rootScope.vulpejs = {
+      auth: {
+        user: {}
+      }
+    };
+  }
   return {
-    userDetails: function() {
-      $rootScope.vulpejs.userDetails = $store.get('userDetails');
-      return $rootScope.vulpejs.userDetails;
+    user: {
+      details: function() {
+        return ($rootScope.vulpejs.auth.user = $store.get('userDetails'));
+      },
+      update: function() {
+        $store.set('userDetails', $rootScope.vulpejs.auth.user);
+      }
     },
-    loginSuccessfully: function(user) {
-      $rootScope.vulpejs.userDetails = user;
-      $store.set('userDetails', $rootScope.vulpejs.userDetails);
+    login: {
+      success: function(user) {
+        $store.set('userDetails', ($rootScope.vulpejs.auth.user = user));
+      }
     },
-    updateUserDetails: function() {
-      $store.set('userDetails', $rootScope.vulpejs.userDetails);
-    },
-    logoutSuccessfully: function() {
-      this.userIsAuthenticated = false;
-      $store.remove('userDetails');
-      $store.remove('userIsAuthenticated');
-      if (application && application.login && application.login.arrays) {
-        application.login.arrays.forEach(function(name) {
-          $store.remove(name);
-        });
+    logout: {
+      success: function() {
+        $store.remove('userDetails');
+        if (application && application.login && application.login.arrays) {
+          application.login.arrays.forEach(function(name) {
+            $store.remove(name);
+          });
+        }
       }
     }
   };
@@ -227,6 +233,9 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     $filter: $filter,
     $window: $window,
     $parse: $parse,
+    auth: {
+      user: {}
+    },
     broadcast: function(name) {
       $rootScope.$broadcast(name);
     },
@@ -348,9 +357,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
         });
       }
     },
-    context: {
-
-    },
+    context: {},
     item: {},
     itemOld: {},
     items: [],
@@ -1027,18 +1034,6 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
         }
       }
     },
-    hasRoles: function(roles) {
-      var user = $authenticator.userDetails();
-      if (user) {
-        for (var i = 0; i < roles.length; i++) {
-          var role = roles[i];
-          if (user.roles.indexOf(role) !== -1) {
-            return true;
-          }
-        }
-      }
-      return false;
-    },
     equals: function(item, property, value) {
       return item ? item[property] === value : false;
     },
@@ -1080,6 +1075,19 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     }
   };
   vulpejs.debug = $cookieStore.get('debug') || vulpejs.debug;
+  vulpejs.auth.user.is = function(roles) {
+    var user = $authenticator.user.details();
+    if (user) {
+      for (var i = 0; i < roles.length; i++) {
+        var role = roles[i];
+        if (user.roles.indexOf(role) !== -1) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
 
   if (window.location.search) {
     var search = window.location.search.substring(1);

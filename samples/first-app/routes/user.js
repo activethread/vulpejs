@@ -25,13 +25,13 @@ var router = vulpejs.routes.make({
         type: 'password',
         name: 'password',
         label: 'Password',
-        readonly: 'item.email === vulpejs.userDetails.email',
+        readonly: 'item.email === vulpejs.auth.user.email',
         required: '!item._id'
       }, {
         type: 'password',
         name: 'passwordConfirm',
         label: 'Password Confirm',
-        readonly: 'item.email ===  vulpejs.userDetails.email',
+        readonly: 'item.email === vulpejs.auth.user.email',
         required: '!item._id',
         validate: {
           expression: "'$value == item.password'",

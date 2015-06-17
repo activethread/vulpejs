@@ -1,6 +1,6 @@
 vulpe.ng.app.controller('PasswordController', ['$rootScope', '$scope', 'VulpeJS', function($rootScope, $scope, VulpeJS) {
   var vulpejs = new VulpeJS().init($scope);
-  var user = vulpejs.userDetails;
+  var user = vulpejs.auth.user;
 
   var load = function() {
     return {

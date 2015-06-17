@@ -3,7 +3,7 @@
 /**
  * Create User Model
  * @param   {Object} mongoose Mongoose
- * @returns {Object} Model
+ * @return {Object} Model
  */
 var User = vulpejs.models.schema({
   name: 'User',
