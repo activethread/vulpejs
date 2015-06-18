@@ -968,7 +968,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
         }
       },
       uploader: {
-        doRemoveAll: function() {
+        removeAll: function() {
           angular.forEach($rootScope.queue, function(file) {
             if (file.selected) {
               vulpejs.http['delete']({
@@ -987,7 +987,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
             }
           });
         },
-        event: {
+        on: {
           submit: function() {},
           add: function() {}
         },
@@ -1074,20 +1074,8 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
       vulpejs.$window.location = url;
     }
   };
-  vulpejs.debug = $cookieStore.get('debug') || vulpejs.debug;
-  vulpejs.auth.user.is = function(roles) {
-    var user = $authenticator.user.details();
-    if (user) {
-      for (var i = 0; i < roles.length; i++) {
-        var role = roles[i];
-        if (user.roles.indexOf(role) !== -1) {
-          return true;
-        }
-      }
-    }
-    return false;
-  };
 
+  vulpejs.debug = $cookieStore.get('debug') || vulpejs.debug;
 
   if (window.location.search) {
     var search = window.location.search.substring(1);
@@ -1246,6 +1234,22 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
       vulpejs.ui.tab.hotkeys();
       vulpejs.ui.focus();
     }
+    $authenticator.user.details();
+    vulpejs.auth.user.is = function(roles) {
+      if (vulpejs.auth.user) {
+        if (typeof roles === 'string') {
+          return vulpejs.auth.user.roles.indexOf(role) !== -1;
+        } else {
+          for (var i = 0; i < roles.length; i++) {
+            var role = roles[i];
+            if (vulpejs.auth.user.roles.indexOf(role) !== -1) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    };
     return $rootScope.vulpejs;
   };
   service.prototype.store = $store;

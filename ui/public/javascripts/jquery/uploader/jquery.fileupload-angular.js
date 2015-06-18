@@ -284,7 +284,7 @@
         vulpejs.dialog.confirm({
           message: 'Do you really want to delete all selected files?',
           callback: function(btn) {
-            vulpejs.ui.uploader.doRemoveAll();
+            vulpejs.ui.uploader.removeAll();
           }
         });
       };
@@ -299,7 +299,7 @@
         fileUpload.defaults
       )).on('fileuploadadd', function(e, data) {
         data.scope = $scope;
-        vulpejs.ui.uploader.event.submit();
+        vulpejs.ui.uploader.on.submit();
       }).on('fileuploadfail', function(e, data) {
         if (data.errorThrown === 'abort') {
           return;
@@ -311,7 +311,7 @@
           } catch (ignore) {}
         }
       }).on('fileuploadsubmit', function(e, data) {
-        vulpejs.ui.uploader.event.submit();
+        vulpejs.ui.uploader.on.submit();
       }).on([
         'fileuploadadd',
         'fileuploadsubmit',
