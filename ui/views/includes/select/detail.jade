@@ -1,28 +1,27 @@
 td(colspan=(ui.select.filter.search.colspan + 1 + ui.select.filter.status.colspan))
   table(style="width: 100%")
     tr
-      each headerItem in ui.select.detail
+      each item in ui.select.detail
         - var style = '';
-        if headerItem.style && typeof headerItem.style === 'string'
-          - style = headerItem.style;
-        unless headerItem.style
-          - headerItem.style = {};
-        if headerItem.style.width
-         - style = 'width: ' + headerItem.style.width + ';';
-        th(style=style)=__(headerItem.label)
+        if item.style && typeof item.style === 'string'
+          - style = item.style;
+        unless item.style
+          - item.style = {};
+        if item.style.width
+         - style = 'width: ' + item.style.width + ';';
+        th(style=style)=__(item.label)
     tr
-      each bodyItem in ui.select.detail
-        - var style = '';
-        if bodyItem.style && typeof bodyItem.style === 'string'
-          - style = bodyItem.style;
-        unless bodyItem.css
-          - bodyItem.css = {'class': ''};
-        unless bodyItem.css['class']
-          - bodyItem.css['class'] = '';
-        td(class=bodyItem.css['class'] style=style)
-          if bodyItem.filter
-            |{{item.#{bodyItem.name}|#{bodyItem.filter}}}
-          else if bodyItem.i18n
-            |{{item.#{bodyItem.name}|i18n}}
+      each item in ui.select.detail
+        unless item.style
+          - item.style = '';
+        unless item.css
+          - item.css = {'class': ''};
+        unless item.css['class']
+          - item.css['class'] = '';
+        td(class=item.css['class'] style=item.style)
+          if item.filter
+            |{{item.#{item.name}|#{item.filter}}}
+          else if item.i18n
+            |{{item.#{item.name}|i18n}}
           else
-            |{{item.#{bodyItem.name}}}
+            |{{item.#{item.name}}}

@@ -1,3 +1,10 @@
+var empty = function() {
+  return !this || this.length === 0;
+};
+
+Array.prototype.empty = empty;
+String.prototype.empty = empty;
+
 var vulpe = {
   ng: {
     rootContext: '',
@@ -204,6 +211,13 @@ var vulpe = {
     },
     protocol: function() {
       return window.location.protocol + '//';
+    },
+    isEmpty: function(value) {
+      var empty = true;
+      if (typeof value === 'string' || (typeof value === 'object' && Object.prototype.toString.call(value) === '[object Array]')) {
+        empty = value.length === 0;
+      }
+      return empty;
     },
     defaultDiacriticsRemovalap: [{
       'base': 'A',

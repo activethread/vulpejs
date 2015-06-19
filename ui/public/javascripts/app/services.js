@@ -133,19 +133,21 @@ app.factory('$authenticator', ['$rootScope', '$store', function($rootScope, $sto
         return $store.set('userDetails', user);
       } else {
         var user = $store.get('userDetails');
-        user.is = function(roles) {
-          if (typeof roles === 'string') {
-            return user.roles.indexOf(role) !== -1;
-          } else {
-            for (var i = 0; i < roles.length; i++) {
-              var role = roles[i];
-              if (user.roles.indexOf(role) !== -1) {
-                return true;
+        if (user) {
+          user.is = function(roles) {
+            if (typeof roles === 'string') {
+              return user.roles.indexOf(role) !== -1;
+            } else {
+              for (var i = 0; i < roles.length; i++) {
+                var role = roles[i];
+                if (user.roles.indexOf(role) !== -1) {
+                  return true;
+                }
               }
             }
-          }
-          return false;
-        };
+            return false;
+          };
+        }
         return user;
       }
     },
@@ -237,6 +239,25 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     $parse: $parse,
     auth: {
       user: $authenticator.user()
+    },
+    timeout: {
+      add: function(execute, timeout, name) {
+        if (name) {
+          vulpejs.timeout.items[name] = $timeout(execute, timeout);
+        } else {
+          vulpejs.timeout.items.push($timeout(execute, timeout));
+        }
+      },
+      cancel: function(name) {
+        if (name) {
+          $timeout.cancel(vulpejs.timeout.items[name]);
+        } else {
+          vulpejs.timeout.items.forEach(function(item) {
+            $timeout.cancel(item);
+          });
+        }
+      },
+      items: []
     },
     broadcast: function(name) {
       $rootScope.$broadcast(name);
@@ -1054,6 +1075,9 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
       }
       return angular.toJson(value) !== angular.toJson(valueOld);
     },
+    empty: function(value) {
+      return vulpe.utils.isEmpty(value);
+    },
     copy: function(value) {
       return angular.copy(value);
     },
@@ -1241,6 +1265,12 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
   service.prototype.store = $store;
 
   $rootScope.vulpejs = vulpejs;
+  $rootScope.$on(
+    "$destroy",
+    function(event) {
+      vulpejs.timeout.cancel();
+    }
+  );
 
   return service;
 }]);

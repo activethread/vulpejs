@@ -30,7 +30,7 @@ each item in ui.select.items
                   else
                     |{{item.#{detail.value}}}
         else
-          unless item.images
+          if !item.images && !item.switch
             if item.filter
               |{{item.#{item.name}|#{item.filter}}}
             else if item.i18n
@@ -39,11 +39,20 @@ each item in ui.select.items
               |{{item.#{item.name}}}
           if item.images
             each image in item.images
+              unless image.title
+                - image.title = '';
               img(src="/images/#{image.name}" ng-cloak ng-if=image.show title=__(image.title))
-              if item.showTitle
-                span(ng-cloak ng-if=image.show)
-                  br
-                  =__(image.title)
+          if item.switch
+            div(ng-switch="item.#{item.name}")
+              each iswitch in item.switch
+                unless iswitch.title
+                  - iswitch.title = '';
+                div(ng-cloak ng-switch-when=iswitch.when)
+                  if iswitch.image
+                    img(src="/images/#{iswitch.image}" title=__(iswitch.title))
+          if item.showTitle
+            br
+            span=__(iswitch.title)
 td
   if typeof ui.select.actions === 'string'
     |!{ui.select.htmlActions}

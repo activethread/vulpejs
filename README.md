@@ -13,7 +13,7 @@ Works on Linux (stable) & MacOSx (stable) & Windows (stable).
 Add VulpeJS dependency in your `package.json`
 ```json
 ...
-"vulpejs": "~0.0.17",
+"vulpejs": "~0.0.18",
 ...
 ```
 
@@ -148,13 +148,13 @@ module.exports = vulpejs.routes.make({
         css: {
           'class': 'text-center'
         },
-        images: [{
-          name: 'status-online.png',
-          show: "vulpejs.equals(item, 'status', 'ACTIVE')",
+        switch: [{
+          when: 'ACTIVE',
+          image: 'status-online.png',
           title: 'Active'
         }, {
-          name: 'status-offline.png',
-          show: "vulpejs.equals(item, 'status', 'INACTIVE')",
+          when: 'INACTIVE',
+          image: 'status-offline.png',
           title: 'Inactive'
         }],
         label: 'Status'
