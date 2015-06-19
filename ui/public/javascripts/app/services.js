@@ -234,7 +234,22 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     $window: $window,
     $parse: $parse,
     auth: {
-      user: {}
+      user: {},
+      is: function(roles) {
+        if (vulpejs.auth.user) {
+          if (typeof roles === 'string') {
+            return vulpejs.auth.user.roles.indexOf(role) !== -1;
+          } else {
+            for (var i = 0; i < roles.length; i++) {
+              var role = roles[i];
+              if (vulpejs.auth.user.roles.indexOf(role) !== -1) {
+                return true;
+              }
+            }
+          }
+        }
+        return false;
+      }
     },
     broadcast: function(name) {
       $rootScope.$broadcast(name);
@@ -1234,22 +1249,23 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
       vulpejs.ui.tab.hotkeys();
       vulpejs.ui.focus();
     }
-    $authenticator.user.details();
-    vulpejs.auth.user.is = function(roles) {
-      if (vulpejs.auth.user) {
-        if (typeof roles === 'string') {
-          return vulpejs.auth.user.roles.indexOf(role) !== -1;
-        } else {
-          for (var i = 0; i < roles.length; i++) {
-            var role = roles[i];
-            if (vulpejs.auth.user.roles.indexOf(role) !== -1) {
-              return true;
+    if ($authenticator.user.details()) {
+      vulpejs.auth.user.is = function(roles) {
+        if (vulpejs.auth.user) {
+          if (typeof roles === 'string') {
+            return vulpejs.auth.user.roles.indexOf(role) !== -1;
+          } else {
+            for (var i = 0; i < roles.length; i++) {
+              var role = roles[i];
+              if (vulpejs.auth.user.roles.indexOf(role) !== -1) {
+                return true;
+              }
             }
           }
         }
-      }
-      return false;
-    };
+        return false;
+      };
+    }
     return $rootScope.vulpejs;
   };
   service.prototype.store = $store;

@@ -74,7 +74,7 @@ User.pre('save', function(next) {
   }
 });
 
-var UserModel = vulpejs.mongoose.model('User', User);
+var UserModel = vulpejs.models.get('User', User);
 UserModel.find({}, function(error, items) {
   if (items.length === 0) {
     var user = new UserModel({

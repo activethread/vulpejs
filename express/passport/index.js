@@ -14,7 +14,7 @@ module.exports = function(app) {
   passport.use(new LocalStrategy({
     passReqToCallback: true
   }, function(req, username, password, done) {
-    var User = vulpejs.mongoose.model('User');
+    var User = vulpejs.models.get('User');
     User.findOne({
       email: username
     }, function(error, user) {
@@ -40,7 +40,7 @@ module.exports = function(app) {
   });
 
   passport.deserializeUser(function(id, done) {
-    var User = vulpejs.mongoose.model('User');
+    var User = vulpejs.models.get('User');
     User.findOne({
       _id: id
     }, function(error, user) {

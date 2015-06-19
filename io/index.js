@@ -1,6 +1,7 @@
 "use strict";
 
 var fs = require('fs');
+var mkdirp = require('mkdirp');
 
 module.exports = {
   read: {
@@ -17,6 +18,15 @@ module.exports = {
   write: {
     file: function(name, content) {
       fs.writeFileSync(name, content);
+    },
+    dir: function(path, callback) {
+      mkdirp(path, function(err) {
+        if (err) {
+          console.error(err);
+        } else {
+          vulpejs.utils.execute(callback);
+        }
+      });
     }
   },
   remove: {
@@ -59,6 +69,39 @@ module.exports = {
       }
 
       return contentType;
+    },
+    exists: function(path, callback) {
+      fs.exists(path, function(exists) {
+        vulpejs.utils.execute(callback, exists);
+      });
+    },
+    rename: function(name, newName, callback) {
+      fs.rename(name, newName, function(err) {
+        if (err) {
+          console.error(err);
+        } else {
+          vulpejs.utils.execute(callback);
+        }
+      });
+    },
+    append: function(path, value) {
+      fs.appendFileSync(path, value);
+    }
+  },
+  dir: {
+    exists: function(path, callback) {
+      fs.exists(path, function(exists) {
+        vulpejs.utils.execute(callback, exists);
+      });
+    },
+    make: function(path, callback) {
+      mkdirp(path, function(err) {
+        if (err) {
+          console.error(err);
+        } else {
+          vulpejs.utils.execute(callback);
+        }
+      });
     }
   }
 };

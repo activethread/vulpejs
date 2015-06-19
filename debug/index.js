@@ -1,9 +1,7 @@
 "use strict";
 
-var fs = require('fs');
 var debug = require('debug');
 var moment = require('moment');
-var mkdirp = require('mkdirp');
 var utils = require('../utils');
 var io = require('../io');
 
@@ -35,21 +33,15 @@ var isDebug = function() {
  */
 var create = function() {
   var createFile = function() {
-    fs.exists(debugFile, function(exists) {
+    io.file.exists(debugFile, function(exists) {
       if (!exists) {
-        fs.writeFile(debugFile, '');
+        io.write.file(debugFile, '');
       }
     });
   };
-  fs.exists(logsDir, function(exists) {
+  io.dir.exists(logsDir, function(exists) {
     if (!exists) {
-      mkdirp(logsDir, function(err) {
-        if (err) {
-          console.error(err);
-        } else {
-          createFile();
-        }
-      });
+      io.write.dir(logsDir, createFile);
     } else {
       createFile();
     }
@@ -62,13 +54,7 @@ var create = function() {
  * @return {}
  */
 var rename = function() {
-  fs.rename(debugFile, debugFile.split('.')[0] + '-' + moment().format('YYYYMMDDHHmmss') + '.log', function(err) {
-    if (err) {
-      console.error(err);
-    } else {
-      create();
-    }
-  });
+  io.file.rename(debugFile, debugFile.split('.')[0] + '-' + moment().format('YYYYMMDDHHmmss') + '.log', create);
 };
 
 create();
@@ -105,7 +91,7 @@ var log = function(type, value1, value2) {
     if (io.file.size(debugFile) > 1000000) {
       rename();
     }
-    fs.appendFileSync(debugFile, text);
+    io.file.append(debugFile, text);
   } else {
     if (type === 'ERROR') {
       console.error(text);

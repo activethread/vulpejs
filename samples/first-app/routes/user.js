@@ -137,7 +137,7 @@ router.get('/password', function(req, res) {
   });
 });
 router.post('/password', function(req, res) {
-  vulpejs.routes.findAndCallback(req, res, {
+  vulpejs.models.find({
     model: 'User',
     id: req.body._id,
     callback: function(item) {

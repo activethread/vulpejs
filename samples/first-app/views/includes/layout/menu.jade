@@ -33,9 +33,25 @@ if ui.manager
             i.fa.fa-power-off.fa-fw
             =__('Logout')
 if ui.site
-  include /views/includes/layout/language
-  ul.nav.navbar-nav
-    li#home.active
-      a(href="/")=__('Home')
-    li#login
-      a(href="/login")=__('Login')
+  nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
+    .navbar-header
+      button.navbar-toggle(type="button" data-toggle="collapse" data-target="#app-navbar")
+        span.sr-only=__('Toggle navigation')
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(href="/")=__(title)
+        include /views/includes/layout/release
+    #app-navbar.collapse.navbar-collapse
+      if ui.error
+        ul.nav.navbar-nav
+          li#home
+            a(href="/")=__('Go to Home')
+      include /views/includes/layout/language
+      ul.nav.navbar-nav
+        li#home.active
+          a(href="/")=__('Home')
+        li#dashboard(ng-cloak ng-if="vulpejs.auth.user")
+          a(href="/dashboard")=__('Dashboard')
+        li#login(ng-cloak ng-if="!vulpejs.auth.user")
+          a(href="/login")=__('Login')

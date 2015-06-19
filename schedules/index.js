@@ -44,5 +44,9 @@ exports.start = function(options) {
  * @return {}
  */
 exports.init = function() {
-  require(root.dir + '/schedules');
+  vulpejs.io.file.exists(root.dir + '/schedules/index.js', function(exists) {
+    if (exists) {
+      require(root.dir + '/schedules')
+    };
+  });
 };
