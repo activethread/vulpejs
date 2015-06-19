@@ -7,7 +7,7 @@ vulpe.ng.app.controller('LoginController', ['$rootScope', '$scope', 'VulpeJS', f
     rememberMe: false
   };
 
-  vulpejs.$authenticator.logout.success();
+  vulpejs.$authenticator.logout();
 
   if (vulpejs.$store.get('remember')) {
     vulpejs.item = vulpejs.$store.get('remember');
@@ -30,7 +30,7 @@ vulpe.ng.app.controller('LoginController', ['$rootScope', '$scope', 'VulpeJS', f
         callback: {
           success: function(data) {
             vulpejs.message.success('Successfully logged in!');
-            vulpejs.$authenticator.login.success(data.user);
+            vulpejs.$authenticator.login(data.user);
             vulpejs.redirect(data.redirectTo);
           },
           error: function(data, status, header, config) {

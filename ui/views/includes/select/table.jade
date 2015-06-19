@@ -27,7 +27,7 @@ thead
       unless item.style
         - item.style = {};
       if item.style.width
-        - style = 'width: ' + item.width + ';'
+        - style = 'width: ' + item.style.width + ';'
       th(style=style)=__(item.label)
 tbody
   tr.slide-down(ng-cloak ng-if="vulpejs.items.length === 0")

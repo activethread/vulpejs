@@ -127,35 +127,37 @@ app.factory("$store", ['$parse', '$cookieStore', function($parse, $cookieStore) 
 }]);
 
 app.factory('$authenticator', ['$rootScope', '$store', function($rootScope, $store) {
-  if (!$rootScope.vulpejs) {
-    $rootScope.vulpejs = {
-      auth: {
-        user: {}
-      }
-    };
-  }
   return {
-    user: {
-      details: function() {
-        return ($rootScope.vulpejs.auth.user = $store.get('userDetails'));
-      },
-      update: function() {
-        $store.set('userDetails', $rootScope.vulpejs.auth.user);
+    user: function(value) {
+      if (value) {
+        return $store.set('userDetails', user);
+      } else {
+        var user = $store.get('userDetails');
+        user.is = function(roles) {
+          if (typeof roles === 'string') {
+            return user.roles.indexOf(role) !== -1;
+          } else {
+            for (var i = 0; i < roles.length; i++) {
+              var role = roles[i];
+              if (user.roles.indexOf(role) !== -1) {
+                return true;
+              }
+            }
+          }
+          return false;
+        };
+        return user;
       }
     },
-    login: {
-      success: function(user) {
-        $store.set('userDetails', ($rootScope.vulpejs.auth.user = user));
-      }
+    login: function(user) {
+      $store.set('userDetails', user);
     },
-    logout: {
-      success: function() {
-        $store.remove('userDetails');
-        if (application && application.login && application.login.arrays) {
-          application.login.arrays.forEach(function(name) {
-            $store.remove(name);
-          });
-        }
+    logout: function() {
+      $store.remove('userDetails');
+      if (application && application.login && application.login.arrays) {
+        application.login.arrays.forEach(function(name) {
+          $store.remove(name);
+        });
       }
     }
   };
@@ -165,39 +167,39 @@ app.factory('$messages', ['$rootScope', function($rootScope) {
   return {
     type: '',
     message: '',
-    addMessage: function(type, msg) {
+    add: function(type, msg) {
       this.type = type;
       this.message = msg;
-      this.broadcastMessage();
+      this.broadcast();
     },
-    addErrorMessage: function(msg) {
+    error: function(msg) {
       this.type = 'danger';
       this.message = msg;
-      this.broadcastMessage();
+      this.broadcast();
     },
-    addInfoMessage: function(msg) {
+    info: function(msg) {
       this.type = 'info';
       this.message = msg;
-      this.broadcastMessage();
+      this.broadcast();
     },
-    addWarningMessage: function(msg) {
+    warning: function(msg) {
       this.type = 'warning';
       this.message = msg;
-      this.broadcastMessage();
+      this.broadcast();
     },
-    addSuccessMessage: function(msg) {
+    success: function(msg) {
       this.type = 'success';
       this.message = msg;
-      this.broadcastMessage();
+      this.broadcast();
     },
-    cleanAllMessages: function() {
-      this.broadcastCleanMessages();
+    clean: function() {
+      this.broadcastClean();
     },
-    broadcastMessage: function() {
-      $rootScope.$broadcast('messageBroadcast');
+    broadcast: function() {
+      $rootScope.$broadcast('vulpejs-messages');
     },
-    broadcastCleanMessages: function() {
-      $rootScope.$broadcast('cleanMessagesBroadcast');
+    broadcastClean: function() {
+      $rootScope.$broadcast('vulpejs-messages-clean');
     }
   };
 }]);
@@ -234,22 +236,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     $window: $window,
     $parse: $parse,
     auth: {
-      user: {},
-      is: function(roles) {
-        if (vulpejs.auth.user) {
-          if (typeof roles === 'string') {
-            return vulpejs.auth.user.roles.indexOf(role) !== -1;
-          } else {
-            for (var i = 0; i < roles.length; i++) {
-              var role = roles[i];
-              if (vulpejs.auth.user.roles.indexOf(role) !== -1) {
-                return true;
-              }
-            }
-          }
-        }
-        return false;
-      }
+      user: $authenticator.user()
     },
     broadcast: function(name) {
       $rootScope.$broadcast(name);
@@ -275,19 +262,19 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     },
     message: {
       success: function(msg) {
-        $messages.addSuccessMessage(msg);
+        $messages.success(msg);
       },
       error: function(msg) {
-        $messages.addErrorMessage(msg);
+        $messages.error(msg);
       },
       info: function(msg) {
-        $messages.addInfoMessage(msg);
+        $messages.info(msg);
       },
       warning: function(msg) {
-        $messages.addWarningMessage(msg);
+        $messages.warning(msg);
       },
       clean: function() {
-        $messages.cleanAllMessages();
+        $messages.clean();
       }
     },
     dialog: {
@@ -1248,23 +1235,6 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
       vulpejs.ui.hotkeys();
       vulpejs.ui.tab.hotkeys();
       vulpejs.ui.focus();
-    }
-    if ($authenticator.user.details()) {
-      vulpejs.auth.user.is = function(roles) {
-        if (vulpejs.auth.user) {
-          if (typeof roles === 'string') {
-            return vulpejs.auth.user.roles.indexOf(role) !== -1;
-          } else {
-            for (var i = 0; i < roles.length; i++) {
-              var role = roles[i];
-              if (vulpejs.auth.user.roles.indexOf(role) !== -1) {
-                return true;
-              }
-            }
-          }
-        }
-        return false;
-      };
     }
     return $rootScope.vulpejs;
   };

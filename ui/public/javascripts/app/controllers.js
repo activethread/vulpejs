@@ -11,7 +11,7 @@ app.controller('MessagesController', ['$rootScope', '$scope', '$http', '$timeout
     $scope.messages.splice(index, 1);
   };
 
-  $scope.$on('messageBroadcast', function() {
+  $scope.$on('vulpejs-messages', function() {
     $scope.messages.push({
       type: $messages.type,
       msg: i18n.__($messages.message)
@@ -21,7 +21,7 @@ app.controller('MessagesController', ['$rootScope', '$scope', '$http', '$timeout
       $scope.close($scope.messages.length - 1);
     }, 5000);
   });
-  $scope.$on('cleanMessagesBroadcast', function() {
+  $scope.$on('vulpejs-messages-clean', function() {
     $scope.messages = [];
     $timeout.cancel($scope.interval);
   });
