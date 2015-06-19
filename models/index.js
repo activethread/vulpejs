@@ -355,6 +355,7 @@ exports.find = function(options) {
   if (!options.populate) {
     options.populate = '';
   }
+  var page = options.page || 1;
   if (!options.fields) {
     options.fields = '';
   }
@@ -394,8 +395,7 @@ exports.find = function(options) {
         }
       }
     });
-  } else
-  if (options.many) {
+  } else {
     if (!options.sort) {
       options.sort = {};
     }

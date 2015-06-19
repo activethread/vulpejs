@@ -322,6 +322,7 @@ exports.find = function(req, res, options) {
     model: req.params.model,
     populate: req.params.populate,
     history: true,
+    id: req.params.id || false,
     query: req.params.query || {
       _id: req.params.id
     },
