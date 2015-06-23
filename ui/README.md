@@ -6,7 +6,7 @@
   - [Controller properties](#controller-property)
     - [Service properties](#service-properties)
     - [Controller sample](#controller-sample)
-  - [Module properties](#module-properties)
+  - [Modules properties](#modules-properties)
     - [Uploader module properties](#uploader-module-properties)
     - [Module sample](#module-sample)
   - [Main properties](#main-properties)
@@ -31,7 +31,7 @@
 Property|Type|Example|Description
 :------:|:--:|-------|-----------
 controller|Object / String|`controler: {...}` or `controller: "Code"`|UI controler
-module|Object|`module: [{...}, {...}, {...}]`|UI module dependency
+modules|Object|`module: [{...}, {...}, {...}]`|UI modules dependency
 main|Object|`main: {...}`|UI main section
 select|Object|`select: {...}`|UI Select section
 inputs|Object Array|`inputs: [{...}, {...}, {...}]`|UI inputs on simple (without main and select properties) section
@@ -72,7 +72,7 @@ controller: {
   }
 }
 ```
-### Module properties
+### Modules properties
 Property|Type|Example|Description
 :------:|:--:|-------|-----------
 uploader|Object|`uploader: {flow: true, blueimp: true}`|Uploader module
@@ -93,9 +93,9 @@ Property|Type|Example|Description
 flow|Object|`flow: {...}`|Flowjs uploader config
 blueimp|Object|`blueimp: {...}`|Blueimp Jquery uploader config
 
-#### Module sample
+#### Modules sample
 ```javascript
-module: {
+modules: {
   uploader: {
     flow: {
       emptyImageSize: '400x400'

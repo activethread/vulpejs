@@ -375,7 +375,7 @@ exports.find = function(options) {
         vulpejs.debug.error('FIND-ONE', error);
         vulpejs.utils.execute(options.callback.error, error);
       } else if (options && options.callback) {
-        if (options.history) {
+        if (item && options.history) {
           history({
             type: options.model,
             cid: item.id

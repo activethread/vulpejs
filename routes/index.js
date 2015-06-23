@@ -138,6 +138,15 @@ exports.render = function(res, name, options) {
   res.render(name, options);
 };
 
+exports.user = {
+  id: function(req) {
+    return req.session['user-id'];
+  },
+  roles: function(req) {
+    return req.session['user-roles'];
+  }
+};
+
 /**
  * Save object in database.
  * @param {Object} req     Request

@@ -3,7 +3,7 @@
 var fs = require('fs');
 var uploader = require(root.vulpejs.dir + '/uploader')({
   tmpDir: vulpejs.app.uploader.dir.tmp,
-  publicDir: vulpejs.app.uploader.dir.public || vulpejs.app.uploader.dir.files + '../',
+  publicDir: vulpejs.app.uploader.dir.public || vulpejs.app.uploader.dir.files + '/../',
   uploadDir: vulpejs.app.uploader.dir.files,
   uploadUrl: '/uploaded/files/',
   downloadUrl: '/download/files/',

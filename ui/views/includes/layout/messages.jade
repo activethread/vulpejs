@@ -1,13 +1,13 @@
 #messages.bs-component(ng-controller="MessagesController" ng-show="messages")
   alert(ng-cloak ng-repeat="message in messages" type="{{message.type}}" close="close($index)" class="slide-down" ng-hide="!messages")
     h4(ng-cloak ng-if="message.type === 'success'")
-      i.fa.fa-check.fa-fw
+      i.fa.fa-check-circle.fa-fw
       =__('Success!')
     h4(ng-cloak ng-if="message.type === 'danger'")
-      i.fa.fa-exclamation.fa-fw
+      i.fa.fa-exclamation-circle.fa-fw
       =__('Error!')
     h4(ng-cloak ng-if="message.type === 'info'")
-      i.fa.fa-info.fa-fw
+      i.fa.fa-info-circle.fa-fw
       =__('Information!')
     h4(ng-cloak ng-if="message.type === 'warning'")
       i.fa.fa-exclamation-triangle.fa-fw
