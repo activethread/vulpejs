@@ -36,7 +36,9 @@ var uploader = require(root.vulpejs.dir + '/uploader')({
  * @param  {Router} router
  * @return {} Express route
  */
-module.exports = function(router) {
+module.exports = function() {
+
+  var router = vulpejs.express.router;
 
   router.get('/upload', function(req, res) {
     uploader.get(req, res, function(obj) {

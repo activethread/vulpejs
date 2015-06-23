@@ -563,34 +563,34 @@ exports.make = function(options) {
     });
   }
   if (options.ui) {
-    if (!options.ui.module) {
-      options.ui.module = {};
+    if (!options.ui.modules) {
+      options.ui.modules = {};
     }
     var dependency = function(inputs) {
       for (var i = 0, len = inputs.length; i < len; ++i) {
         var input = inputs[i];
         if (input.type === 'color-picker') {
-          options.ui.module.colorPicker = true;
+          options.ui.modules.colorPicker = true;
           continue;
         }
         if (input.type === 'checkbox' && input.toggle) {
-          options.ui.module.switch = true;
+          options.ui.modules.switch = true;
           continue;
         }
         if (input.type === 'editor') {
-          options.ui.module.editor = true;
+          options.ui.modules.editor = true;
           continue;
         }
         if (input.type.indexOf('-uploader') !== -1) {
-          if (!options.ui.module.uploader) {
-            options.ui.module.uploader = {
+          if (!options.ui.modules.uploader) {
+            options.ui.modules.uploader = {
               flow: {}
             };
           }
           continue;
         }
         if (input.type === 'range-slider') {
-          options.ui.module.rangeSlider = true;
+          options.ui.modules.rangeSlider = true;
           continue;
         }
       }
@@ -947,6 +947,7 @@ exports.init = function(options) {
   var routes = [router];
   if (!vulpejs.app.backend) {
     routes.push(require(vulpejs.root.dir + '/routes/flow-uploader'));
+    routes.push(require(vulpejs.root.dir + '/routes/uploader'));
   }
   var routesDir = vulpejs.app.root.dir + '/routes/';
   var init = function() {

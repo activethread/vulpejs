@@ -37,7 +37,7 @@ var vulpe = {
           angular.extend(fileUploadProvider.defaults, {
             disableImageResize: options.uploader.disableImageResize || /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
             maxFileSize: options.uploader.maxFileSize || 11000000000,
-            acceptFileTypes: options.uploader.acceptFileTypes || /(\.|\/)(mp4|mov|avi|mpeg|wmv)$/i,
+            acceptFileTypes: options.uploader.acceptFileTypes || /(\.|\/)(gif|jpe?g|png)$/i,
             prependFiles: options.uploader.prependFiles || true
           });
         };
@@ -45,7 +45,7 @@ var vulpe = {
           vulpe.ng.app.config(['$httpProvider', 'fileUploadProvider', 'flowFactoryProvider',
             function($httpProvider, fileUploadProvider, flowFactoryProvider) {
               flow(flowFactoryProvider, options);
-              blueimp($httpProvider, fileUploadProvider, options)
+              blueimp($httpProvider, fileUploadProvider, options);
             }
           ]);
         } else if (options.uploader.flow) {
@@ -57,7 +57,7 @@ var vulpe = {
         } else if (options.uploader.blueimp) {
           vulpe.ng.app.config(['$httpProvider', 'fileUploadProvider',
             function($httpProvider, fileUploadProvider) {
-              blueimp($httpProvider, fileUploadProvider, options)
+              blueimp($httpProvider, fileUploadProvider, options);
             }
           ]);
         }

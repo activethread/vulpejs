@@ -1,25 +1,25 @@
-if ui.module
+if ui.modules
   - var modules = "";
-  if ui.module.editor
+  if ui.modules.editor
     - modules += ", 'textAngular'";
-  if ui.module.colorPicker
+  if ui.modules.colorPicker
     - modules += ", 'minicolors'";
-  if ui.module.switch
+  if ui.modules.switch
     - modules += ", 'toggle-switch'";
-  if ui.module.uploader
-    if ui.module.uploader.flow
+  if ui.modules.uploader
+    if ui.modules.uploader.flow
       - modules += ", 'flow'";
-    if ui.module.uploader.blueimp
+    if ui.modules.uploader.blueimp
       - modules += ", 'blueimp.fileupload'";
-  if ui.module.tree
-    - modules += ", 'ui.module.tree'";
-  if ui.module.recaptcha
+  if ui.modules.tree
+    - modules += ", 'ui.modules.tree'";
+  if ui.modules.recaptcha
     - modules += ", 'vcRecaptcha'";
-  if ui.module.multiSelect
+  if ui.modules.multiSelect
     - modules += ", 'isteven-multi-select', 'angularjs-dropdown-multiselect'"
-  if ui.module.rangeSlider
+  if ui.modules.rangeSlider
     - modules += ", 'ui-rangeSlider'"
-  if ui.module.dragDrop
+  if ui.modules.dragDrop
     - modules += ", 'dndLists'"
   if modules !== ""
     script(charset="utf-8" type="text/javascript").

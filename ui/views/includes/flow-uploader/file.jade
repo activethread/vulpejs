@@ -1,12 +1,12 @@
-unless ui.module.uploader.flow
-  - ui.module.uploader.flow = {init: ''};
-unless ui.module.uploader.flow.init
-  - ui.module.uploader.flow.init = '';
+unless ui.modules.uploader.flow
+  - ui.modules.uploader.flow = {init: ''};
+unless ui.modules.uploader.flow.init
+  - ui.modules.uploader.flow.init = '';
 if flowParams
   - flowParams = ', ' + flowParams;
 else
   - var flowParams = '';
-.well(flow-init="#{ui.module.uploader.flow.init}" flow-files-submitted="vulpejs.ui.module.uploader.flow.submit($flow, '#{ngModel}'#{flowParams})" flow-file-success="vulpejs.ui.module.uploader.flow.success($flow, $file, '#{ngModel}'#{flowParams})")
+.well(flow-init="#{ui.modules.uploader.flow.init}" flow-files-submitted="vulpejs.ui.modules.uploader.flow.submit($flow, '#{ngModel}'#{flowParams})" flow-file-success="vulpejs.ui.modules.uploader.flow.success($flow, $file, '#{ngModel}'#{flowParams})")
   div
     span.btn.btn-primary.btn-sm.slide-down(flow-btn)=__('Add File')
   div

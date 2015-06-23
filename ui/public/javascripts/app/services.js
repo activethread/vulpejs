@@ -996,9 +996,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
             if (file.selected) {
               vulpejs.http['delete']({
                 url: file.url,
-                params: {
-                  app: vulpejs.app.name
-                },
+                params: {},
                 callback: function() {
                   for (var i = 0; i < $rootScope.queue.length; i++) {
                     if ($rootScope.queue[i].name === file.name) {

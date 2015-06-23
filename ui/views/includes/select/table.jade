@@ -35,7 +35,7 @@ tbody
   if ui.select.detail
     tr.click.slide-down(dir-paginate-start="item in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse" total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
       include items
-    tr.scale-fade(dir-paginate-end ng-cloak ng-if="click && detail === item._id")
+    tr.scale-fade(dir-paginate-end ng-cloak ng-if="vulpejs.now[item._id]")
       include detail
   else
     tr.click.slide-down(dir-paginate="item in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse" total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")

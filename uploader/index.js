@@ -4,7 +4,6 @@ var io = require('../io');
 
 module.exports = function(opts) {
   var path = require('path'),
-    shell = require('shelljs'),
     fs = require('fs'),
     lwip = require('lwip'),
     _existsSync = fs.existsSync || path.existsSync,

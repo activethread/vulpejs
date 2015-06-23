@@ -61,6 +61,9 @@ if input.mask
 if input.autofocus
   - append += (append.length === 0 ? '' : '~') + 'autofocus';
 
+if (input.type === 'text' || input.type === 'typeahead') && !input.autocomplete
+  - append += (append.length === 0 ? '' : '~') + 'autocomplete^false';
+
 if input.case
   - input.case = input.case.toLowerCase();
   if input.case === 'lower'
@@ -124,13 +127,16 @@ if input.on
 else if input.items
   - append += (append.length === 0 ? '' : '~') + "ng-change^vulpejs.ui.on.change({type: 'SELECT', name: '" + input.name + "', items: '" + input.items.name + "', value: '" + input.items.value + "', label: '" + input.items.label + "'})";
 
-if input.typeahead && input.typeahead.on && input.typeahead.on.select
-  if input.typeahead.on.select.indexOf('=') !== -1
-    - var parts = input.typeahead.on.select.split('=');
-    - var onSelect = "vulpejs.ui.on.select({type: 'TYPEAHEAD', rootProperty:'" + parts[0] + "', item: $item, itemProperty: '" + parts[1] + "'})";
-    - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select^' + onSelect;
-  else
-    - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select^' + input.typeahead.on.select;
+if input.type === 'typeahead'
+  if input.query
+    - append += (append.length === 0 ? '' : '~') + 'typeahead^' + input.query;
+  if input.on && input.on.select
+    if input.on.select.indexOf('=') !== -1
+      - var parts = input.on.select.split('=');
+      - var onSelect = "vulpejs.ui.on.select({type: 'TYPEAHEAD', rootProperty:'" + parts[0] + "', item: $item, itemProperty: '" + parts[1] + "'})";
+      - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select^' + onSelect;
+    else
+      - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select^' + input.on.select;
   
 if input.toggle
   - append += (append.length === 0 ? '' : '~') + 'toggle-switch';
@@ -269,11 +275,11 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
       .input-group(append=hideAppend)
         input(type=input.type class=input.css['class'] name=input.name id=input.id append=append)
         span.input-group-addon=input.group.value
-    else if input.typeahead
-      input(type=input.type class=input.css['class'] name=input.name id=input.id typeahead=input.typeahead.query append=append ng-cloak ng-hide="#{input.readonly}")
+    else if input.type === 'typeahead'
+      input(type="text" class=input.css['class'] name=input.name id=input.id append=append)
     else if input.type === 'color-picker'
       div
-        input(type=input.type class=input.css['class'] name=input.name id=input.id minicolors append=append ng-cloak ng-hide="#{input.readonly}")
+        input(type=input.type class=input.css['class'] name=input.name id=input.id minicolors append=append)
     else
       input(type=input.type class=input.css['class'] name=input.name id=input.id append=append ng-cloak ng-hide="#{input.readonly}")
   if input.validate && input.validate.message 

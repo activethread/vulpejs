@@ -130,6 +130,7 @@ range-slider|Ranger slider Input
 image-uploader|Image upload Input
 file-uploader|Image upload Input
 star-rating|Rating Input
+typeahead|Typeahead Input
 
 ##### Generic input properties
 
@@ -153,7 +154,6 @@ on|Object|none|false|`on: {change: "vulpejs.input.change()",...}`|Add input even
 Field|Type|Default|Mandatory|Example|Description
 :---:|:--:|-------|---------|-------|-----------
 only|Object|none|false|`only: {numeric: true}`|Determine input data type (numeric, alfa)
-typeahead|Object|none|false|`typeahead: {query: "user.name for user in vulpejs.users"}`|Auto complete from array list
 mask|String / Object|none|false|`mask: "date"` or `mask: {pattern: "99/99/9999"}`|Input mask,
 capitalize|String|normal|false|`capitalize: "all"`|Input capitalize (`all`, `first`, `normal`)
 case|String|normal|false|`"case": "upper"`|Input case (`upper`, `lower`, `normal`)
@@ -178,6 +178,11 @@ rows|Number|2|false|`rows: 5`|Number of rows on Textarea
 Field|Type|Default|Mandatory|Example|Description
 :---:|:--:|-------|---------|-------|-----------
 toggle|Object|none|false|`{toggle: {on: "Yes", off: "No"}}`|Make checkbox switch toggle
+
+###### Typeahead input properties
+Field|Type|Default|Mandatory|Example|Description
+:---:|:--:|-------|---------|-------|-----------
+query|String|none|true|`query: "user.name for user in vulpejs.users"`|Auto complete from array list
 
 ##### Output types
 
