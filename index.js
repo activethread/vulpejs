@@ -77,9 +77,9 @@ module.exports = function(options) {
       },
       uploader: {
         dir: {
-          public: root.dir + '/public/uploaded/',
-          tmp: root.dir + '/public/uploaded/tmp/',
-          files: root.dir + '/public/uploaded/files/'
+          public: root.dir + '/public/uploaded',
+          tmp: root.dir + '/public/uploaded/tmp',
+          files: root.dir + '/public/uploaded/files'
         }
       },
       backend: false,

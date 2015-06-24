@@ -201,9 +201,9 @@
   // The FileUploadController initializes the fileupload widget and
   // provides scope methods to control the File Upload functionality:
   .controller('FileUploadController', [
-    '$rootScope', '$scope', '$element', '$attrs', 'fileUpload', 'VulpeJS',
-    function($rootScope, $scope, $element, $attrs, fileUpload, VulpeJS) {
-      var vulpejs = new VulpeJS().init();
+    '$rootScope', '$scope', '$element', '$attrs', 'fileUpload',
+    function($rootScope, $scope, $element, $attrs, fileUpload) {
+      var vulpejs = $rootScope.vulpejs;
       var uploadMethods = {
         progress: function() {
           return $element.fileupload('progress');

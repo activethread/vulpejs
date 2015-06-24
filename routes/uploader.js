@@ -1,9 +1,8 @@
 "use strict";
 
-var fs = require('fs');
 var uploader = require(root.vulpejs.dir + '/uploader')({
   tmpDir: vulpejs.app.uploader.dir.tmp,
-  publicDir: vulpejs.app.uploader.dir.public || vulpejs.app.uploader.dir.files + '/../',
+  publicDir: vulpejs.app.uploader.dir.public || vulpejs.app.uploader.dir.files,
   uploadDir: vulpejs.app.uploader.dir.files,
   uploadUrl: '/uploaded/files/',
   downloadUrl: '/download/files/',
@@ -39,20 +38,37 @@ var uploader = require(root.vulpejs.dir + '/uploader')({
 module.exports = function() {
 
   var router = vulpejs.express.router;
-
-  router.get('/upload', function(req, res) {
+  var create = function(dir) {
+    vulpejs.io.dir.exists(dir, function(exists) {
+      if (!exists) {
+        vulpejs.io.dir.make(dir + '/thumbnail');
+      };
+    });
+  };
+  var dir = function(req, make) {
+    if (req.params.dir) {
+      req.params.uploadDir = req.params.dir.indexOf('/') !== -1 ? req.params.dir : vulpejs.app.uploader.dir.files + '/' + req.params.dir;
+      if (make) {
+        create(req.params.uploadDir);
+      }
+    }
+  };
+  router.get('/upload/:dir?', function(req, res) {
+    dir(req, true);
     uploader.get(req, res, function(obj) {
       res.json(obj);
     });
   });
 
-  router.post('/upload', function(req, res) {
+  router.post('/upload/:dir?', function(req, res) {
+    dir(req, true);
     uploader.post(req, res, function(obj) {
       res.json(obj);
     });
   });
 
-  router.delete('/uploaded/files/:name', function(req, res) {
+  router.delete('/uploaded/files/:name/:dir?', function(req, res) {
+    dir(req);
     uploader.delete(req, res, function(obj) {
       res.json(obj);
     });

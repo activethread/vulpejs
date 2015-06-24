@@ -20,13 +20,13 @@ form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multip
       .progress.progress-striped.active(file-upload-progress="progress()")
         .progress-bar.progress-bar-success.text-center(data-ng-style="{width: num + '%'}") {{num + '%'}}
       .progress-extended &nbsp;
-  table.table.table-striped.table-bordered.table-hover.files.ng-cloak.slide-down(role="presentation" ng-cloak ng-if="queue.length > 0")
+  table.table.table-striped.table-bordered.table-hover.files.slide-down(role="presentation" ng-cloak ng-if="queue.length > 0")
     thead.fileupload-tableheader
       tr
         th.text-center(width="5%")
           input.toggle(type="checkbox" ng-click="vulpejs.ui.checkUncheckAll('queue')")
-        th(width="10.7%")=__('Preview')
-        th(width="49.3%")=__('File')
+        th(width="20%")=__('Preview')
+        th(width="40%")=__('File')
         th(width="10%")=__('Length')
         th(width="25%")=__('Actions')
     tbody

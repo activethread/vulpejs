@@ -73,6 +73,43 @@ var vulpe = {
             new VulpeJS(options.service).init($scope);
           }
         ]);
+    },
+    uploader: function() {
+      vulpe.ng.app.controller('FileDestroyController', ['$rootScope', '$scope', function($rootScope, $scope) {
+        var vulpejs = $rootScope.vulpejs;
+        var file = $scope.file,
+          state;
+        if (file.url) {
+          file.$state = function() {
+            return state;
+          };
+          file.$destroy = function() {
+            vulpejs.dialog.confirm({
+              message: 'Do you really want to delete?',
+              callback: function(btn) {
+                state = 'pending';
+                return vulpejs.http['delete']({
+                  url: file.url,
+                  params: {},
+                  callback: {
+                    success: function() {
+                      state = 'resolved';
+                      $scope.clear(file);
+                    },
+                    error: function() {
+                      state = 'rejected';
+                    }
+                  }
+                });
+              }
+            });
+          };
+        } else if (!file.$cancel && !file._index) {
+          file.$cancel = function() {
+            $scope.clear(file);
+          };
+        }
+      }]);
     }
   },
   ui: {

@@ -150,18 +150,22 @@ module.exports = function(opts) {
   FileInfo.prototype.initUrls = function(req, sss) {
     if (!this.error) {
       var that = this;
+      var dir = req.params.dir || '';
+      if (dir.length > 0) {
+        dir += '/';
+      }
       if (!sss) {
         var uploadDir = req.params.uploadDir || options.uploadDir;
         var baseUrl = (options.useSSL ? 'https:' : 'http:') + '//' + req.headers.host;
-        var url = baseUrl + options.uploadUrl + encodeURIComponent(that.name);
+        var url = baseUrl + options.uploadUrl + dir + encodeURIComponent(that.name);
         that.url = url;
         that.deleteUrl = url;
-        that.downloadUrl = baseUrl + options.downloadUrl + encodeURIComponent(that.name);
+        that.downloadUrl = baseUrl + options.downloadUrl + dir + encodeURIComponent(that.name);
         Object.keys(options.imageVersions).forEach(function(version) {
           if (_existsSync(
               uploadDir + '/' + version + '/' + that.name
             )) {
-            that[version + 'Url'] = baseUrl + options.uploadUrl + version + '/' +
+            that[version + 'Url'] = baseUrl + options.uploadUrl + dir + version + '/' +
               encodeURIComponent(that.name);
           }
         });

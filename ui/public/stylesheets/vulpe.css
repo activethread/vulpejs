@@ -22,3 +22,8 @@ ul.readonly li.filled {
   font-size: 7px;
   margin-left: 2px;
 }
+.form-control[readonly] {
+  cursor: text;
+  background-color: #eee;
+  opacity: 1;
+}
