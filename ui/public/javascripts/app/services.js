@@ -678,7 +678,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
               var value = vulpejs.item[property];
               if (typeof value === 'string' && value.length === 0) {
                 $timeout(function() {
-                  vulpejs.ui.focusTo(vulpejs.ui.name.replace(/\-/g, '') + '-' + property.replace(/\./g, '-'));
+                  vulpejs.ui.focus(vulpejs.ui.name.replace(/\-/g, '') + '-' + property.replace(/\./g, '-'));
                 }, 100);
                 break;
               }
@@ -964,7 +964,7 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
         focus: function(focus) {
           if (focus && focus.length > 0) {
             $timeout(function() {
-              vulpejs.ui.focusTo(vulpejs.ui.name.replace(/\-/g, '') + '-' + focus);
+              vulpejs.ui.focus(vulpejs.ui.name.replace(/\-/g, '') + '-' + focus);
             }, 100);
           }
         },
@@ -978,19 +978,29 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
           });
         }
       },
-      focus: nothing,
-      focusTo: function(id) {
-        $(id.indexOf('#') !== 0 ? '#' + id : id).focus();
+      focus: function(value) {
+        vulpejs.ui.get(value).focus();
       },
-      inputFocus: function(name) {
-        var token = "input[name='" + name + "']";
-        var inputs = $(token).filter(function() {
-          return this.value == "";
-        });
-        if (inputs.length > 0) {
-          $(inputs.get(0)).focus();
+      get: function(value) {
+        if (value.indexOf('#') === 0 || value.indexOf('.') === 0) {
+          return $(value)
+        }
+        var element = $('#' + value);
+        if (element.length === 0) {
+          element = $('.' + value);
+        }
+        if (element.length === 0) {
+          element = $("input[name='" + value + "']").filter(function() {
+            return this.value == "";
+          });
+        }
+        return element;
+      },
+      active: function(id, bool) {
+        if (bool !== 'undefined' && !bool) {
+          vulpejs.ui.get(id).removeClass('active');
         } else {
-          $(token).focus();
+          vulpejs.ui.get(id).addClass('active');
         }
       },
       checkUncheckAll: function(items) {
@@ -1170,15 +1180,19 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
         vulpejs.model.populate = options.populate;
       }
       if (options.focus) {
-        vulpejs.ui.focus = function() {
-          if (angular.isFunction(options.focus)) {
-            options.focus(vulpejs);
+        vulpejs.ui.focus = function(value) {
+          if (value) {
+            vulpejs.ui.get(value).focus();
           } else {
-            var prefix = '#' + options.name.replace(/\-/g, '') + '-';
-            if (angular.isObject(options.focus)) {
-              $(prefix + (vulpejs.item._id ? options.focus.edit : options.focus.create)).focus();
+            if (angular.isFunction(options.focus)) {
+              options.focus(vulpejs);
             } else {
-              $(prefix + options.focus).focus();
+              var prefix = '#' + options.name.replace(/\-/g, '') + '-';
+              if (angular.isObject(options.focus)) {
+                $(prefix + (vulpejs.item._id ? options.focus.edit : options.focus.create)).focus();
+              } else {
+                $(prefix + options.focus).focus();
+              }
             }
           }
         };
@@ -1196,9 +1210,6 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
       }
       vulpejs.model.item = options.model || {};
       if (options.actions) {
-        if (options.actions.focus) {
-          vulpejs.ui.focus = options.actions.focus;
-        }
         vulpejs.model.validate = options.actions.validate || nothing;
         vulpejs.model.createBefore = options.actions.createBefore || nothing;
         vulpejs.model.createAfter = options.actions.createAfter || nothing;

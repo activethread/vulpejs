@@ -256,6 +256,19 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
     unless input.readonly
       - input.readonly = 'false';
     div(star-rating max=input.max readonly="#{input.readonly}" on-select=input.on.select append=append)
+  else if input.type === 'rating'
+    br
+    unless input.max
+      - input.max = 5;
+    unless input.on
+      - input.on = {hover: '', leave: ''};
+    unless input.on.hover
+      - input.on.hover = '';
+    unless input.on.leave
+      - input.on.leave = '';
+    unless input.readonly
+      - input.readonly = 'false';
+    rating(max=input.max readonly="#{input.readonly}" on-hover=input.on.hover on-leave=input.on.leave append=append)
   else if input.type === 'range-slider'
     unless input.preventValues
       - input.preventValues = true;

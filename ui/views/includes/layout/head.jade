@@ -8,6 +8,7 @@ unless ui.modules
   - ui.modules = {uploader: {}};
 unless ui.modules.uploader
   - ui.modules.uploader = {};
+- var localex = i18n.getLocale();
 head
   meta(charset="utf8")
   meta(http-equiv="X-UA-Compatible" content="IE=edge")
@@ -109,6 +110,7 @@ head
   script(charset="utf-8" src="/javascripts/angular/angular-dialogs.min.js" type="text/javascript")
   if ui.modules.uploader.blueimp
     script(charset="utf-8" src="/javascripts/jquery/uploader/jquery.fileupload-angular.min.js" type="text/javascript")
+  script(charset="utf-8" src="/javascripts/angular/i18n/angular-locale_#{locale}.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/app/directives#{minifier}.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/app/filters#{minifier}.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/app/services#{minifier}.js" type="text/javascript")

@@ -99,7 +99,7 @@ exports.save = function(options) {
           var content = JSON.stringify(oldItem);
           var history = new History({
             type: options.model,
-            cid: oldItem.id,
+            cid: oldItem._id,
             content: content,
             user: item.user
           });
@@ -200,13 +200,20 @@ exports.remove = function(options) {
     });
   };
   var execute = function() {
-    Model.remove(query, function(error, item) {
-      callback(item, error);
+    Model.findOne(query, function(error, item) {
       if (error) {
         vulpejs.debug.error(error);
         vulpejs.utils.execute(options.callback.error);
       } else {
-        vulpejs.utils.execute(options.callback.success, item);
+        Model.remove(query, function(err, obj) {
+          callback(item, err);
+          if (err) {
+            vulpejs.debug.error(err);
+            vulpejs.utils.execute(options.callback.error);
+          } else {
+            vulpejs.utils.execute(options.callback.success, item);
+          }
+        });
       }
     });
   }
@@ -378,7 +385,7 @@ exports.find = function(options) {
         if (item && options.history) {
           history({
             type: options.model,
-            cid: item.id
+            cid: item._id
           }, page, function(error, history) {
             if (error) {
               vulpejs.debug.error('FIND-ONE-HISTORY', error);
