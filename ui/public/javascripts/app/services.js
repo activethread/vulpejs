@@ -304,8 +304,27 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     i18n: function(text) {
       return i18n.__(text);
     },
-    now: [],
-    ever: [],
+    now: {
+      date: new Date(),
+      year: new Date().getFullYear(),
+      month: new Date().getMonth(),
+      day: new Date().getDate(),
+      dayOfWeek: new Date().getDay(),
+      formatted: {
+        date: function(pattern) {
+          moment().format(pattern || 'DD/MM/YYYY')
+        },
+        time: function(pattern) {
+          moment().format(pattern || 'HH:MM:SS')
+        },
+        datetime: function(pattern) {
+          moment().format(pattern || 'DD/MM/YYYY HH:MM:SS')
+        }
+      }
+    },
+    ever: {
+      user: $authenticator.user()
+    },
     store: function(name, value) {
       return value ? $store.set(name, value) : $store.get(name);
     },
@@ -1279,7 +1298,11 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
         };
       });
     }
-    vulpejs.ever = vulpejs.store('vulpejsEver') || [];
+    if (vulpejs.store('vulpejsEver')) {
+      vulpejs.ever = vulpejs.store('vulpejsEver');
+    } else {
+      vulpejs.store('vulpejsEver', vulpejs.ever);
+    }
     vulpejs.watch('vulpejs.ever', function() {
       vulpejs.store('vulpejsEver', vulpejs.ever);
     });
