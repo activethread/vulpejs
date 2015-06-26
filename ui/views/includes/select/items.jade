@@ -42,6 +42,9 @@ each item in ui.select.items
               unless image.title
                 - image.title = '';
               img(src="/images/#{image.name}" ng-cloak ng-if=image.show title=__(image.title))
+              if item.showTitle
+                br
+                span=__(image.title)
           if item.switch
             div(ng-switch="item.#{item.name}")
               each iswitch in item.switch
@@ -50,9 +53,9 @@ each item in ui.select.items
                 div(ng-cloak ng-switch-when=iswitch.when)
                   if iswitch.image
                     img(src="/images/#{iswitch.image}" title=__(iswitch.title))
-          if item.showTitle
-            br
-            span=__(iswitch.title)
+                if item.showTitle
+                  br
+                  span=__(iswitch.title)
 td
   if typeof ui.select.actions === 'string'
     |!{ui.select.htmlActions}
