@@ -240,42 +240,6 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
     auth: {
       user: $authenticator.user()
     },
-    set: function(options) {
-      if (!options.item) {
-        options.item = vulpejs.now;
-      }
-      options.properties.forEach(function(property) {
-        options.item[property] = options.value;
-      });
-    },
-    off: function(options) {
-      if (angular.isArray(options)) {
-        options.forEach(function(property) {
-          vulpejs.now[property] = false;
-        });
-      } else {
-        if (!options.item) {
-          options.item = vulpejs.now;
-        }
-        options.properties.forEach(function(property) {
-          options.item[property] = false;
-        });
-      }
-    },
-    on: function(options) {
-      if (angular.isArray(options)) {
-        options.forEach(function(property) {
-          vulpejs.now[property] = true;
-        });
-      } else {
-        if (!options.item) {
-          options.item = vulpejs.now;
-        }
-        options.properties.forEach(function(property) {
-          options.item[property] = true;
-        });
-      }
-    },
     timeout: {
       add: function(execute, timeout, name) {
         if (name) {
@@ -765,6 +729,42 @@ app.factory('VulpeJS', ['$rootScope', '$parse', '$http', '$authenticator', '$mes
       properties: []
     },
     act: {
+      set: function(options) {
+        if (!options.item) {
+          options.item = vulpejs.now;
+        }
+        options.properties.forEach(function(property) {
+          options.item[property] = options.value;
+        });
+      },
+      off: function(options) {
+        if (angular.isArray(options)) {
+          options.forEach(function(property) {
+            vulpejs.now[property] = false;
+          });
+        } else {
+          if (!options.item) {
+            options.item = vulpejs.now;
+          }
+          options.properties.forEach(function(property) {
+            options.item[property] = false;
+          });
+        }
+      },
+      on: function(options) {
+        if (angular.isArray(options)) {
+          options.forEach(function(property) {
+            vulpejs.now[property] = true;
+          });
+        } else {
+          if (!options.item) {
+            options.item = vulpejs.now;
+          }
+          options.properties.forEach(function(property) {
+            options.item[property] = true;
+          });
+        }
+      },
       clear: {
         history: function() {
           vulpejs.itemHistory.data = [];
