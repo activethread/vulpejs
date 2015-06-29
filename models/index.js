@@ -2,7 +2,8 @@
 
 exports.plugins = {
   paginate: require('mongoose-paginate'),
-  autoIncrement: require('mongoose-auto-increment')
+  autoIncrement: require('mongoose-auto-increment'),
+  deepPopulate: require('mongoose-deep-populate')
 };
 
 /**
@@ -39,6 +40,7 @@ exports.schema = function(options) {
   var Model = new Schema(options.schema);
 
   Model.plugin(exports.plugins.paginate);
+  Model.plugin(exports.plugins.deepPopulate);
 
   return Model;
 };
@@ -296,6 +298,7 @@ exports.paginate = function(options) {
   var populate = options.populate || '';
   var sort = options.sort || {};
   var query = options.query || {};
+  var fields = options.fields || {};
   var page = options.page || 1;
   if (page === 0) {
     page = 1;
@@ -310,21 +313,24 @@ exports.paginate = function(options) {
       user: options.userId
     });
   };
-  Model.paginate(query, page, vulpejs.app.pagination.items, function(error, pageCount, items, itemCount) {
+  Model.paginate(query, {
+    populate: populate,
+    sortBy: sort,
+    page: page,
+    columns: fields,
+    limite: vulpejs.app.pagination.items,
+  }, function(error, items, pageCount, itemCount) {
     callback(items, error);
     if (error) {
       vulpejs.debug.error('PAGE-ITEMS', error);
       vulpejs.utils.execute(options.callback.error);
     } else {
       vulpejs.utils.execute(options.callback.success, {
-        pageCount: pageCount,
         items: items,
+        pageCount: pageCount,
         itemCount: itemCount
       });
     }
-  }, {
-    populate: populate,
-    sortBy: sort
   });
 };
 

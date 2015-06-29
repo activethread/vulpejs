@@ -34,7 +34,7 @@ vulpe.ng.app.controller('LoginController', ['$rootScope', '$scope', 'VulpeJS', f
             vulpejs.redirect(data.redirectTo);
           },
           error: function(data, status, header, config) {
-            if (status === 403) {
+            if (status === 401 || status === 403) {
               vulpejs.message.error('Informed credential is invalid.');
             } else {
               vulpejs.message.error('An error occurred in the execution.');
