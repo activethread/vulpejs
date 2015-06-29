@@ -1,9 +1,10 @@
 "use strict";
 
 exports.plugins = {
-  paginate: require('mongoose-paginate'),
+  //paginate: require('mongoose-paginate'),
   autoIncrement: require('mongoose-auto-increment'),
-  deepPopulate: require('mongoose-deep-populate')
+  deepPopulate: require('mongoose-deep-populate'),
+  paginate: require('../mongoose/paginate')
 };
 
 /**
@@ -95,7 +96,10 @@ exports.save = function(options) {
         _id: item._id
       }, function(error, oldItem) {
         if (error) {
-          vulpejs.debug.error('ITEM-FIND', error);
+          vulpejs.debug.error('ITEM-FIND', {
+            error: error,
+            options: options
+          });
           vulpejs.utils.execute(options.callback.error);
         } else {
           var content = JSON.stringify(oldItem);
@@ -120,7 +124,10 @@ exports.save = function(options) {
             oldItem.save(function(error, obj) {
               callback(obj, error);
               if (error) {
-                vulpejs.debug.error('ITEM-UPDATE', error);
+                vulpejs.debug.error('ITEM-UPDATE', {
+                  error: error,
+                  options: options
+                });
                 vulpejs.utils.execute(options.callback.error);
               } else {
                 vulpejs.utils.execute(options.callback.success, obj);
@@ -130,7 +137,10 @@ exports.save = function(options) {
           if (options.history) {
             history.save(function(error, obj) {
               if (error) {
-                vulpejs.debug.error('HISTORY-SAVE', error);
+                vulpejs.debug.error('HISTORY-SAVE', {
+                  error: error,
+                  options: options
+                });
                 vulpejs.utils.execute(options.callback.error);
               } else {
                 save();
@@ -145,7 +155,10 @@ exports.save = function(options) {
       item.save(function(error, obj) {
         callback(obj, error);
         if (error) {
-          vulpejs.debug.error('ITEM-SAVE', error);
+          vulpejs.debug.error('ITEM-SAVE', {
+            error: error,
+            options: options
+          });
           vulpejs.utils.execute(options.callback.error);
         } else {
           vulpejs.utils.execute(options.callback.success, obj);
@@ -167,7 +180,10 @@ exports.save = function(options) {
     });
     Model.count(query).exec(function(error, total) {
       if (error) {
-        vulpejs.debug.error('VALIDATE-SAVE-ITEM', error);
+        vulpejs.debug.error('VALIDATE-SAVE-ITEM', {
+          error: error,
+          options: options
+        });
         vulpejs.utils.execute(options.callback.error);
       } else {
         if (total > 0) {
@@ -243,7 +259,10 @@ exports.remove = function(options) {
     // }
     exports.get(options.validate.exists.dependency).count(validateQuery).exec(function(error, total) {
       if (error) {
-        vulpejs.debug.error('VALIDATE-REMOVE-ITEM', error);
+        vulpejs.debug.error('VALIDATE-REMOVE-ITEM', {
+          error: error,
+          options: options
+        });
         vulpejs.utils.execute(options.callback.error);
       } else {
         if (total > 0) {
@@ -279,10 +298,19 @@ exports.list = function(options) {
       user: options.userId
     });
   };
-  Model.find(query).populate(populate).sort(sort).exec(function(error, items) {
+  var find = Model.find(query);
+  if (populate.indexOf('.') !== -1) {
+    find.deepPopulate(populate);
+  } else {
+    find.populate(populate);
+  }
+  find.sort(sort).exec(function(error, items) {
     callback(items, error);
     if (error) {
-      vulpejs.debug.error('LIST-ITEMS', error);
+      vulpejs.debug.error('LIST-ITEMS', {
+        error: error,
+        options: options
+      });
       vulpejs.utils.execute(options.callback.error);
     } else {
       vulpejs.utils.execute(options.callback.success, items);
@@ -318,11 +346,14 @@ exports.paginate = function(options) {
     sortBy: sort,
     page: page,
     columns: fields,
-    limite: vulpejs.app.pagination.items,
+    limit: vulpejs.app.pagination.items,
   }, function(error, items, pageCount, itemCount) {
     callback(items, error);
     if (error) {
-      vulpejs.debug.error('PAGE-ITEMS', error);
+      vulpejs.debug.error('PAGE-ITEMS', {
+        error: error,
+        options: options
+      });
       vulpejs.utils.execute(options.callback.error);
     } else {
       vulpejs.utils.execute(options.callback.success, {
@@ -342,7 +373,10 @@ exports.paginate = function(options) {
  */
 var history = function(query, page, callback) {
   var History = exports.get('History');
-  History.paginate(query, page, vulpejs.app.pagination.history, function(error, pageCount, items, itemCount) {
+  History.paginate(query, {
+    page: page,
+    limit: vulpejs.app.pagination.history
+  }, function(error, items, pageCount, itemCount) {
     if (error) {
       vulpejs.debug.error('HISTORY', error);
     } else {
@@ -383,9 +417,18 @@ exports.find = function(options) {
     options.query = {};
   }
   if (options.one) {
-    Model.findOne(options.query).populate(options.populate).select(options.fields).exec(function(error, item) {
+    var query = Model.findOne(options.query);
+    if (options.populate.indexOf('.') !== -1) {
+      query.deepPopulate(options.populate);
+    } else {
+      query.populate(options.populate);
+    }
+    query.select(options.fields).exec(function(error, item) {
       if (error) {
-        vulpejs.debug.error('FIND-ONE', error);
+        vulpejs.debug.error('FIND-ONE', {
+          error: error,
+          options: options
+        });
         vulpejs.utils.execute(options.callback.error, error);
       } else if (options && options.callback) {
         if (item && options.history) {
@@ -394,7 +437,10 @@ exports.find = function(options) {
             cid: item._id
           }, page, function(error, history) {
             if (error) {
-              vulpejs.debug.error('FIND-ONE-HISTORY', error);
+              vulpejs.debug.error('FIND-ONE-HISTORY', {
+                error: error,
+                options: options
+              });
               vulpejs.utils.execute(options.callback.error, error);
             } else {
               vulpejs.utils.execute(options.callback.success || options.callback, {
@@ -412,7 +458,13 @@ exports.find = function(options) {
     if (!options.sort) {
       options.sort = {};
     }
-    Model.find(options.query).populate(options.populate).sort(options.sort).select(options.fields).exec(function(error, items) {
+    var query = Model.find(options.query)
+    if (options.populate.indexOf('.') !== -1) {
+      query.deepPopulate(options.populate);
+    } else {
+      query.populate(options.populate);
+    }
+    query.sort(options.sort).select(options.fields).exec(function(error, items) {
       if (error) {
         vulpejs.debug.error('FIND-MANY', error);
         vulpejs.utils.execute(options.callback.error, error);
