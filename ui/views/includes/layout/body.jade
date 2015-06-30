@@ -1,8 +1,9 @@
 if ui.layout.header
-  include ../../../../../../views/includes/layout/header
-
+  #header
+    include ../../../../../../views/includes/layout/header
 if ui.layout.menu
-  include ../../../../../../views/includes/layout/menu
+  #menu
+    include ../../../../../../views/includes/layout/menu
 else
   nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
     .navbar-header
@@ -22,7 +23,8 @@ else
         include ../../../../../../views/includes/layout/menu
 
 if ui.layout.custom
-  include ../../../../../../views/includes/layout/custom
+  #custom
+    include ../../../../../../views/includes/layout/custom
 
 if ui.layout.messages
   #messages.bs-component(ng-controller="MessagesController" ng-show="messages")
@@ -46,10 +48,12 @@ if ui.layout.container
     include ../../../../../../views/includes/layout/container
 
 if ui.layout.content
-  block content
+  #content
+    block content
 
 if ui.layout.footer
-  include ../../../../../../views/includes/layout/footer
+  #footer
+    include ../../../../../../views/includes/layout/footer
 
 script(charset="utf-8" type="text/javascript").
   vulpe.ui.inputs();
