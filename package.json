@@ -1,6 +1,6 @@
 {
   "name": "vulpejs",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "dependencies": {
     "debug": "~2.2.0",
     "request": "~2.58.0",

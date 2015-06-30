@@ -1,8 +1,2 @@
-- ui.site = true;
-doctype html
-html(ng-app="app" i18n-locale=i18n.getLocale())
-  include ../includes/layout/head
-  body
-    include ../includes/layout/menu
-    block content
-    include ../includes/layout/footer
+- ui.layout = {header:true, menu:true, content:true, footer:true};
+include default

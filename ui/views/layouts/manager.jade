@@ -1,10 +1,2 @@
-- ui.manager = true;
-doctype html
-html(ng-app="app" i18n-locale=i18n.getLocale())
-  include ../includes/layout/head
-  body
-    include ../includes/layout/menu
-    include ../includes/layout/custom
-    include ../includes/layout/messages
-    include ../includes/layout/container
-    include ../includes/layout/footer
+- ui.layout = {header:true, custom:true, messages:true, container:true, footer:true};
+include default

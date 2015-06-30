@@ -1,8 +1,2 @@
-- ui.error = true;
-doctype html
-html
-  include ../includes/layout/head
-  body
-   include ../includes/layout/menu
-   block content
-   include ../includes/layout/footer
+- ui.layout = {header:true, custom:true, messages:true, content:true, footer:true};
+include default
