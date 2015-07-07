@@ -1,0 +1,19 @@
+extends layouts/auth
+
+block content
+  .container(ng-controller="AuthController")
+    .panel.panel-default.box-shadow
+      .panel-heading
+        .row
+          .col-lg-12=__('Successfully logged in!')
+      .panel-body
+        .row
+          .col-lg-12
+            h5=__('Wait, redirecting...')
+    #auth-user.hide=JSON.stringify(user)
+    #auth-redirect.hide=redirectTo
+    if params
+      #auth-params.hide=JSON.stringify(params)
+    if query
+      #auth-query.hide=JSON.stringify(query)
+  script(charset="utf-8" src='/javascripts/app/controllers/AuthController' + minifier + '.js' type='text/javascript')
