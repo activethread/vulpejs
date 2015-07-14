@@ -15,8 +15,11 @@ module.exports = require('vulpejs')({
     development: {
       host: 'localhost',
       name: 'first-app',
-      user: 'admin',
-      pass: 'vulpejs'
+      auth: {
+        source: 'admin',
+        user: 'admin',
+        pass: 'vulpejs'
+      }
     }
   },
   session: {
@@ -25,8 +28,11 @@ module.exports = require('vulpejs')({
         host: 'localhost',
         db: 'express',
         collection: 'session',
-        user: 'admin',
-        pass: 'vulpejs'
+        auth: {
+          source: 'admin',
+          user: 'admin',
+          pass: 'vulpejs'
+        }
       }
     }
   },
