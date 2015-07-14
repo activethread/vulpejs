@@ -80,7 +80,7 @@ UserModel.find({}, function(error, items) {
     var user = new UserModel({
       email: 'admin@vulpe.org',
       password: 'vulpejs',
-      name: 'Super Administrador',
+      name: 'Super Administrator',
       roles: ['SUPER']
     });
     user.save(function(error, user) {});

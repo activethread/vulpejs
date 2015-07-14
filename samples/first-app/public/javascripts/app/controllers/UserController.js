@@ -3,8 +3,8 @@ vulpe.ng.app.controller('UserController', ['$rootScope', '$scope', 'VulpeJS', fu
     name: 'user',
     predicate: 'name',
     focus: {
-      create: 'name',
-      edit: 'email'
+      create: 'email',
+      edit: 'name'
     },
     messages: {
       validate: {

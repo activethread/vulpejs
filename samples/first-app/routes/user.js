@@ -13,7 +13,7 @@ var router = vulpejs.routes.make({
         type: 'email',
         name: 'email',
         label: 'Email',
-        readonly: 'item._id',
+        readonly: 'vulpejs.item._id',
         required: true
       }, {
         type: 'text',
@@ -25,17 +25,17 @@ var router = vulpejs.routes.make({
         type: 'password',
         name: 'password',
         label: 'Password',
-        readonly: 'item.email === vulpejs.auth.user.email',
-        required: '!item._id'
+        readonly: 'vulpejs.item.email === vulpejs.auth.user.email',
+        required: '!vulpejs.item._id'
       }, {
         type: 'password',
         name: 'passwordConfirm',
         label: 'Password Confirm',
-        readonly: 'item.email === vulpejs.auth.user.email',
-        required: '!item._id',
+        readonly: 'vulpejs.item.email === vulpejs.auth.user.email',
+        required: '!vulpejs.item._id',
         validate: {
-          expression: "'$value == item.password'",
-          watch: "'item.password'",
+          expression: "'$value == vulpejs.item.password'",
+          watch: "'vulpejs.item.password'",
           message: 'Password do not match'
         }
       }]
@@ -80,11 +80,11 @@ var router = vulpejs.routes.make({
         },
         images: [{
           name: 'status-online.png',
-          show: "vulpejs.vulpejs.equals(item, 'status', 'ACTIVE')",
+          show: "vulpejs.equals(item, 'status', 'ACTIVE')",
           title: 'Active'
         }, {
           name: 'status-offline.png',
-          show: "vulpejs.vulpejs.equals(item, 'status', 'INACTIVE')",
+          show: "vulpejs.equals(item, 'status', 'INACTIVE')",
           title: 'Inactive'
         }],
         label: 'Status',
@@ -129,7 +129,7 @@ router.get('/password', function(req, res) {
         name: 'passwordConfirm',
         label: 'Password Confirm',
         required: true,
-        validate: "'$value == item.password'",
+        validate: "'$value == vulpejs.item.password'",
         validateWatch: "'vulpejs.item.password'",
         validateMessage: 'Password do not match'
       }]
