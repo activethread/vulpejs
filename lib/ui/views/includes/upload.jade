@@ -19,7 +19,7 @@ form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multip
     .col-lg-12.fade(ng-class="{in: active()}")
       .progress.progress-striped.active(file-upload-progress="progress()")
         .progress-bar.progress-bar-success.text-center(data-ng-style="{width: num + '%'}") {{num + '%'}}
-      .progress-extended &nbsp;
+      .progress-extended.text-space-right
   table.table.table-striped.table-bordered.table-hover.files.slide-down(role="presentation" ng-cloak ng-if="queue.length > 0")
     thead.fileupload-tableheader
       tr
