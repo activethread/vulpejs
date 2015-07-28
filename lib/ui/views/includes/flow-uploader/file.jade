@@ -6,17 +6,17 @@ if flowParams
   - flowParams = ', ' + flowParams;
 else
   - var flowParams = '';
-.well(flow-init="#{ui.modules.uploader.flow.init}" flow-files-submitted="vulpejs.ui.modules.uploader.flow.submit($flow, '#{ngModel}'#{flowParams})" flow-file-success="vulpejs.ui.modules.uploader.flow.success($flow, $file, '#{ngModel}'#{flowParams})")
+.well(flow-init="#{ui.modules.uploader.flow.init}" flow-files-submitted="vulpejs.ui.uploader.flow.submit($flow, '#{ngModel}'#{flowParams})" flow-file-success="vulpejs.ui.uploader.flow.success($flow, $file, '#{ngModel}'#{flowParams})")
   div
     span.btn.btn-primary.btn-sm.slide-down(flow-btn)=__('Add File')
   div
     .transfer-box(ng-repeat="file in $flow.files")
       |{{file.relativePath}} ({{file.size}}bytes)
-      div(class="progress progress-striped" ng-class="{active: file.isUploading()}")
-        div(class="progress-bar" role="progressbar" aria-valuenow="{{file.progress() * 100}}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: (file.progress() * 100) + '%'}")
+      .progress.progress-striped(ng-class="{active: file.isUploading()}")
+        .progress-bar(role="progressbar" aria-valuenow="{{file.progress() * 100}}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: (file.progress() * 100) + '%'}")
           span(class="sr-only")=__('%s Complete', '{{file.progress()}}%')
       .btn-group
-        a(class="btn btn-xs btn-warning" ng-click="file.pause()" ng-show="!file.paused && file.isUploading()")=__('Pause')
-        a(class="btn btn-xs btn-warning" ng-click="file.resume()" ng-show="file.paused")=__('Resume')
-        a(class="btn btn-xs btn-danger" ng-click="file.cancel()")=__('Cancel')
-        a(class="btn btn-xs btn-info" ng-click="file.retry()" ng-show="file.error")=__('Retry')
+        a.btn.btn-xs.btn-warning(ng-click="file.pause()" ng-cloak ng-if="!file.paused && file.isUploading()")=__('Pause')
+        a.btn.btn-xs.btn-warning(ng-click="file.resume()" ng-cloak ng-if="file.paused")=__('Resume')
+        a.btn.btn-xs.btn-danger(ng-click="file.cancel()")=__('Cancel')
+        a.btn.btn-xs.btn-info(ng-click="file.retry()" ng-cloak ng-if="file.error")=__('Retry')

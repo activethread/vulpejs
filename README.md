@@ -13,7 +13,7 @@ Works on Linux (stable) & MacOSx (stable) & Windows (stable).
 Add VulpeJS dependency in your `package.json`
 ```json
 ...
-"vulpejs": "~0.1.5",
+"vulpejs": "~0.1.6",
 ...
 ```
 
