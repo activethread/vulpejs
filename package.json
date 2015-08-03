@@ -1,6 +1,6 @@
 {
   "name": "vulpejs",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "dependencies": {
     "debug": "~2.2.0",
     "request": "~2.60.0",
@@ -17,9 +17,6 @@
     "serve-favicon": "~2.3.0",
     "jade": "~1.11.0",
     "mongoose": "~4.1.0",
-    "mongoose-paginate": "~4.0.0",
-    "mongoose-deep-populate": "~1.1.0",
-    "mongoose-auto-increment": "~4.0.0",
     "connect-mongo": "~0.8.2",
     "connect-multiparty": "~2.0.0",
     "i18n": "~0.5.0",
@@ -33,6 +30,7 @@
     "dustjs-linkedin": "~2.7.2",
     "xml2js": "~0.4.9",
     "shelljs": "~0.5.1",
+    "extend": "~3.0.0",
     "moment": "~2.10.6",
     "moment-timezone": "~0.4.0",
     "cron": "~1.0.9",
