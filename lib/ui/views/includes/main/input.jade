@@ -42,10 +42,6 @@ unless input.validate.watch
 unless input.validate.message
   - input.validate.message = '';
 
-if input.type !== 'show' && input.type !== 'timer'
-  unless input.css['class']
-    - input.css['class'] = 'form-control';
-
 - var append = '';
 - var divAppend = '';
 - var showAppend = '';
@@ -53,10 +49,7 @@ if input.type !== 'show' && input.type !== 'timer'
 - var divClass = 'form-group col-lg-12';
 
 if input.mask
-  if typeof input.mask === 'string'
-    - append += (append.length === 0 ? '' : '~') + input.mask;
-  else
-    - append += (append.length === 0 ? '' : '~') + 'ui-mask^' + input.mask.pattern;
+  - append += (append.length === 0 ? '' : '~') + (typeof input.mask === 'string' ? input.mask : 'ui-mask^' + input.mask.pattern);
 
 if input.autofocus
   - append += (append.length === 0 ? '' : '~') + 'autofocus';
@@ -83,10 +76,7 @@ if input.only
   - append += (append.length === 0 ? '' : '~') + 'only-' + input.only;
 
 if input.required
-  if typeof input.required === 'string'
-    - append += (append.length === 0 ? '' : '~') + 'ng-required^' + input.required;
-  else
-    - append += (append.length === 0 ? '' : '~') + 'required';
+  - append += (append.length === 0 ? '' : '~') + (typeof input.required === 'string' ? 'ng-required^' + input.required : 'required');
  
 if input.type === 'textarea'
   unless input.rows
@@ -165,9 +155,10 @@ if input.readonly
   - divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && vulpejs.ui.form.submitted, 'col-lg-3': " + input.readonly + "}";
 
 if input.type === 'show' || input.type === 'timer'
+  if input.css['class'] === 'form-control'
+    - input.css['class'] = '';
   - divNgClass = '';
-  if input.css['class']
-    - divClass = input.css['class'];
+  - divClass = input.css['class'] ? input.css['class'] : 'col-lg-12';
 
 div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
   label.control-label(for=input.id)=label
@@ -183,11 +174,11 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
     text-angular(name=input.name id=input.id append=append)
   else if input.type === 'image-uploader'
     div(id=input.id class=input.css['class'])
-     - var emptyImage = ngModel;
-     include ../flow-uploader/image
+      - var emptyImage = ngModel;
+      include ../flow-uploader/image
   else if input.type === 'file-uploader'
     div(id=input.id)
-     include ../flow-uploader/file
+      include ../flow-uploader/file
   else if input.type === 'select'
     if input.multi
       unless input.maxHeight

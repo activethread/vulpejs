@@ -1,23 +1,24 @@
 div(ng-class="{'btn-group':item.email !== vulpejs.auth.user.email}")
-  a.btn.btn-primary.btn-xs(ng-click="vulpejs.model.find(item._id)" tooltip=__('Click to edit') tooltip-append-to-body="true" tooltip-placement="left")
-    i.fa.fa-pencil.fa-fw
-    =__('Edit')
-  a.btn.btn-primary.btn-xs.dropdown-toggle(data-toggle="dropdown" href="#" ng-if="vulpejs.auth.user.is(['SUPER','ADMIN']) && item.email !== vulpejs.auth.user.email" tooltip=__('Click to expand/collapse') tooltip-append-to-body="true" tooltip-placement="right")
-    span.caret
-  ul.dropdown-menu(ng-if="vulpejs.auth.user.is(['SUPER','ADMIN']) && item.email !== vulpejs.auth.user.email")
+  a.btn.btn-primary.btn-sm.dropdown-toggle(data-toggle="dropdown" href="#" ng-if="vulpejs.auth.user.is(['SUPER','ADMIN']) && item.email !== vulpejs.auth.user.email" tooltip-append-to-body="true" tooltip-placement="right" tooltip=__('Click to expand/collapse'))
+    span.glyphicon.glyphicon-option-vertical
+  ul.dropdown-menu.dropdown-menu-right.bullet.pull-right(ng-if="vulpejs.auth.user.is(['SUPER','ADMIN']) && item.email !== vulpejs.auth.user.email")
     li
-      a(ng-click="vulpejs.model.remove(item._id)" tooltip=__('Click to delete') tooltip-placement="right" tooltip-append-to-body="true")
+      a(ng-click="vulpejs.model.find(item._id)" tooltip-append-to-body="true" tooltip-placement="left" tooltip=__('Click to edit'))
+        i.fa.fa-pencil.fa-fw
+        =__('Edit')
+    li
+      a(ng-click="vulpejs.model.remove(item._id)" tooltip-placement="left" tooltip-append-to-body="true" tooltip=__('Click to delete'))
         i.fa.fa-trash-o.fa-fw
         =__('Delete')
     li
-      a(ng-click="vulpejs.model.clone(item)" tooltip=__('Click to clone') tooltip-placement="right" tooltip-append-to-body="true")
+      a(ng-click="vulpejs.model.clone(item)" tooltip-placement="left" tooltip-append-to-body="true" tooltip=__('Click to clone'))
         i.fa.fa-magic.fa-fw
         =__('Clone')
     li(ng-if="vulpejs.equals(item, 'status', 'ACTIVE')")
-      a(ng-click="vulpejs.model.status(item._id, 'INACTIVE')" tooltip=__('Click to deactivate') tooltip-placement="right" tooltip-append-to-body="true")
+      a(ng-click="vulpejs.model.status(item._id, 'INACTIVE')" tooltip-placement="left" tooltip-append-to-body="true" tooltip=__('Click to deactivate'))
         i.fa.fa-ban.fa-fw
         =__('Deactivate')
     li(ng-if="vulpejs.equals(item, 'status', 'INACTIVE')")
-      a(ng-click="vulpejs.model.status(item._id, 'ACTIVE')" tooltip=__('Click to activate') tooltip-placement="right" tooltip-append-to-body="true")
+      a(ng-click="vulpejs.model.status(item._id, 'ACTIVE')" tooltip-placement="left" tooltip-append-to-body="true" tooltip=__('Click to activate'))
         i.fa.fa-check-circle-o.fa-fw
         =__('Activate')
