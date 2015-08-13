@@ -1,5 +1,5 @@
 div(ng-class="{'btn-group':item.email !== vulpejs.auth.user.email}")
-  a.btn.btn-primary.btn-sm.dropdown-toggle(data-toggle="dropdown" href="#" ng-if="vulpejs.auth.user.is(['SUPER','ADMIN']) && item.email !== vulpejs.auth.user.email" tooltip-append-to-body="true" tooltip-placement="right" tooltip=__('Click to expand/collapse'))
+  a.btn.btn-primary.btn-sm.dropdown-toggle(data-toggle="dropdown" href="#" ng-if="vulpejs.auth.user.is(['SUPER','ADMIN']) && item.email !== vulpejs.auth.user.email" tooltip-append-to-body="true" tooltip-placement="left" tooltip=__('Click to expand/collapse'))
     i.fa.fa-ellipsis-v.fa-fw
   ul.dropdown-menu.dropdown-menu-right.bullet.pull-right(ng-if="vulpejs.auth.user.is(['SUPER','ADMIN']) && item.email !== vulpejs.auth.user.email")
     li
