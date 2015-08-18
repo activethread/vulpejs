@@ -18,8 +18,7 @@ each item in ui.select.items
               - detail.css['class'] = 'col-lg-3';
             div(class=detail.css['class'])
               if detail.label
-                label=__(detail.label)
-                |&nbsp;
+                label.text-space-right=__(detail.label)
               if detail.value
                 br
                 span
@@ -28,7 +27,7 @@ each item in ui.select.items
                   else if detail.i18n
                     |{{item.#{detail.value}|i18n}}
                   else
-                    |{{item.#{detail.value}}}
+                    span(ng-bind-html="item.#{detail.value}")
         else
           if !item.images && !item.switch
             if item.filter
