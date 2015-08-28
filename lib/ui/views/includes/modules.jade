@@ -21,6 +21,8 @@ if ui.modules
     - modules += ", 'ui-rangeSlider'"
   if ui.modules.dragDrop
     - modules += ", 'dndLists'"
+  if ui.modules.chart
+    - modules += ", 'chart.js'"
   if modules !== ""
     script(charset="utf-8" type="text/javascript").
       vulpe.ng.app = angular.module('app', ['app.controllers'#{modules}]);

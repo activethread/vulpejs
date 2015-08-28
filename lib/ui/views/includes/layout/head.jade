@@ -35,6 +35,8 @@ head
     link(rel="stylesheet" href="/stylesheets/jquery.fileupload-ui.min.css")
   if ui.modules.tree
     link(rel="stylesheet" href="/stylesheets/angular-ui-tree.min.css")
+  if ui.modules.chart
+    link(rel="stylesheet" href="/stylesheets/angular-chart.min.css")
   if ui.modules.multiSelect
     link(rel="stylesheet" href="/stylesheets/angular-isteven-multi-select.min.css")
   if ui.modules.rangeSlider
@@ -94,6 +96,9 @@ head
     script(charset="utf-8" src="/javascripts/angular/angular-toggle-switch.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/angular/angular-loading-bar.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/angular/angular-dir-pagination.min.js" type="text/javascript")
+  if ui.modules.chart
+    script(charset="utf-8" src="/javascripts/charts/chart.min.js")
+    script(charset="utf-8" src="/javascripts/angular/angular-chart.min.js" type="text/javascript")
   if ui.modules.editor
     script(charset="utf-8" src="/javascripts/angular/angular-text-editor.min.js" type="text/javascript")
     script(charset="utf-8" src="/javascripts/angular/angular-text-editor-rangy.min.js" type="text/javascript")
