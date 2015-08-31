@@ -1,9 +1,14 @@
 #main-default-actions.row(data-spy="affix" data-offset-top="90")
   .col-lg-12
     .btn-group.pull-right
-      a.btn.btn-default(ng-click="vulpejs.model.cancel(); vulpejs.ui.form.submitted = false" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Click to go back'))
-        i.fa.fa-chevron-left.fa-fw
-        span.hidden-xs.hidden-sm.hidden-md=__('Back')
+      if ui.uriback
+        a.btn.btn-default(href=ui.uriback tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Click to go back'))
+          i.fa.fa-chevron-left.fa-fw
+          span.hidden-xs.hidden-sm.hidden-md=__('Back')
+      else
+        a.btn.btn-default(ng-click="vulpejs.model.cancel(); vulpejs.ui.form.submitted = false" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Click to go back'))
+          i.fa.fa-chevron-left.fa-fw
+          span.hidden-xs.hidden-sm.hidden-md=__('Back')
       a#new-action-button.btn.btn-default(ng-click="vulpejs.model.create(); vulpejs.ui.form.submitted = false" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Click to add new'))
         i.fa.fa-plus.fa-fw
         span.hidden-xs.hidden-sm.hidden-md=__('New')
