@@ -1,6 +1,6 @@
 {
   "name": "vulpejs",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "dependencies": {
     "debug": "~2.2.0",
     "request": "~2.64.0",
@@ -34,7 +34,6 @@
     "moment": "~2.10.6",
     "moment-timezone": "~0.4.0",
     "cron": "~1.0.9",
-    "blueimp-file-upload-expressjs": "~0.4.4",
     "mkdirp": "~0.5.1",
     "uglify-js": "~2.4.24",
     "js-obfuscator": "~0.1.0",
