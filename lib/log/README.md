@@ -1,0 +1,1 @@
+# VulpeJS - Log Module

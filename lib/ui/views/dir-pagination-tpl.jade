@@ -1,4 +1,4 @@
-ul(class="pagination slide-down" ng-if="1 < pages.length")
+ul.pagination.slide-down(ng-if="1 < pages.length")
   li(ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == 1 }")
     a(href="" ng-click="setCurrent(1)" tooltip=__('Go to first page') tooltip-append-to-body="true" tooltip-enable="pagination.current > 1") &laquo;
   li(ng-if="directionLinks" ng-class="{ disabled : pagination.current == 1 }")
@@ -9,3 +9,11 @@ ul(class="pagination slide-down" ng-if="1 < pages.length")
     a(href="" ng-click="setCurrent(pagination.current + 1)" tooltip=__('Go to next page') tooltip-append-to-body="true" tooltip-enable="pagination.current < pagination.last") &rsaquo;
   li(ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == pagination.last }")
     a(href="" ng-click="setCurrent(pagination.last)" tooltip=__('Go to last page') tooltip-append-to-body="true" tooltip-enable="pagination.current < pagination.last") &raquo;
+  li.slide-down.disabled(ng-if="pages.length === 9")
+    span ...
+  li.slide-down(ng-if="pages.length === 9")
+    .input-group.goto
+      input.form-control(type="text" name="current" ng-model="pagination.current" only-numeric)
+      span.input-group-addon
+        a(href="" ng-click="setCurrent(pagination.current)" tooltip=__('Go to page %s', '{{pagination.current}}') tooltip-append-to-body="true")
+          =__('Go')
