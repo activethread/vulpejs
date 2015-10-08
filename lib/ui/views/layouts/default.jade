@@ -1,4 +1,6 @@
 doctype html
+unless i18n
+  - var i18n = {getLocale:function(){return 'pt';}};
 html(ng-app="app" i18n-locale=i18n.getLocale())
   include ../includes/layout/head
   body

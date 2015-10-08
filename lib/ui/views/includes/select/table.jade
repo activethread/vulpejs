@@ -11,9 +11,12 @@ thead
         |!{ui.select.htmlFilter}
     else
       td(colspan=(ui.select.filter.search.colspan + 1))
-        input(type="text" name="search" class="form-control" placeholder=__('Search') ng-model="search")
+        .col-lg-12.input-group
+          input#search-list(type="text" name="search" class="form-control" placeholder=__('Search') ng-model="search")
+          span.input-group-addon
+            i.fa.fa-search.fa-fw
       td(colspan=ui.select.filter.status.colspan)
-        select(name="status" class="form-control" ng-model="vulpejs.filter.status" ng-change="vulpejs.model.list()")
+        select#status-list(name="status" class="form-control" ng-model="vulpejs.filter.status" ng-change="vulpejs.model.list()")
           option(value='')=__('Select a Status')
           if ui.select.filter.status.items
             each item in ui.select.filter.status.items
@@ -40,7 +43,3 @@ tbody
   else
     tr.click.slide-down(dir-paginate="item in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse" total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
       include items
-//- tfoot(ng-cloak ng-if="vulpejs.ui.pagination.totalPages > 1")
-//-   tr
-//-     td(colspan="99")
-//-       include paginate
