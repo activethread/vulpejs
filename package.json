@@ -1,16 +1,16 @@
 {
   "name": "vulpejs",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "dependencies": {
     "debug": "~2.2.0",
-    "request": "~2.64.0",
+    "request": "~2.65.0",
     "express": "~4.13.3",
     "express-session": "~1.11.3",
     "session-file-store": "~0.0.18",
     "body-parser": "~1.14.1",
     "compression": "~1.6.0",
     "cookie-parser": "~1.4.0",
-    "cookie-session": "~1.2.0",
+    "cookie-session": "~2.0.0-alpha.1",
     "errorhandler": "~1.4.2",
     "method-override": "~2.3.5",
     "morgan": "~1.6.1",
@@ -35,7 +35,7 @@
     "moment-timezone": "~0.4.0",
     "cron": "~1.0.9",
     "mkdirp": "~0.5.1",
-    "uglify-js": "~2.4.24",
+    "uglify-js": "~2.5.0",
     "js-obfuscator": "~0.1.0",
     "password-generator": "~2.0.1"
   },
