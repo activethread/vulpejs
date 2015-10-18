@@ -1,4 +1,4 @@
-ul.pagination.slide-down(ng-if="1 < pages.length")
+ul.pagination.slide-down(ng-if="1 < pages.length || !autoHide")
   li(ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == 1 }")
     a(href="" ng-click="setCurrent(1)" tooltip=__('Go to first page') tooltip-append-to-body="true" tooltip-enable="pagination.current > 1") &laquo;
   li(ng-if="directionLinks" ng-class="{ disabled : pagination.current == 1 }")
