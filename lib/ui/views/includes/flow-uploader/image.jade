@@ -13,6 +13,9 @@ else
   - var emptyImage = 'https://www.placehold.it/'  + ui.modules.uploader.flow.emptyImageSize + '/EFEFEF/AAAAAA&text=' + __('Empty')
   img.thumbnail.slide-down(src=emptyImage ng-cloak ng-if="$flow.files.length === 0 && !#{ngModel}")
   img.thumbnail.slide-down(ng-cloak ng-if="$flow.files.length" flow-img="$flow.files[0]")
+  //- .progress.progress-striped(ng-class="{active: $file.isUploading()}")
+    .progress-bar(role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" ng-style="{width: ($file.progress() * 100) + '%'}" style="width: 100%;")
+      span.sr-only 1% Complete
   div
     .btn-group
       span.btn.btn-primary.btn-sm.slide-down(ng-cloak ng-hide="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}")=__('Select image')
@@ -20,4 +23,7 @@ else
     .btn-group
       span.btn.btn-primary.btn-sm.slide-down(ng-cloak ng-if="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}")=__('Change')
       span.btn.btn-danger.btn-sm.slide-down(ng-cloak ng-if="$flow.files.length" ng-click="vulpejs.ui.uploader.flow.cancel($flow, '#{ngModel}')")=__('Cancel')
+    i.fa.fa-check.fa-fw.slide-down(ng-cloak ng-if="$flow.files[0].uploaded")
+    i.fa.fa-refresh.fa-spin.fa-fw.slide-down(ng-cloak ng-if="$flow.status === 'UPLOADING'")
+
   p=__('Only image files allowed.')
