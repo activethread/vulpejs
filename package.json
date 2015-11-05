@@ -38,7 +38,8 @@
     "uglify-js": "~2.5.0",
     "js-obfuscator": "~0.1.0",
     "password-generator": "~2.0.1",
-    "cors": "~2.7.1"
+    "cors": "~2.7.1",
+    "cluster2": "~0.4.26"
   },
   "description": "VulpeJS is a Open-Source Full-Stack solution to Node.js applications",
   "main": "./lib/vulpe.js",
