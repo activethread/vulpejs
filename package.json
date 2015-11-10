@@ -1,6 +1,6 @@
 {
   "name": "vulpejs",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "dependencies": {
     "debug": "~2.2.0",
     "request": "~2.65.0",
@@ -25,7 +25,7 @@
     "passport-jwt": "~1.2.1",
     "jsonwebtoken": "~5.4.0",
     "async": "~1.5.0",
-    "nodemailer": "~1.8.0",
+    "nodemailer": "~1.9.0",
     "nodemailer-smtp-transport": "~1.0.3",
     "dustjs-linkedin": "~2.7.2",
     "xml2js": "~0.4.11",
@@ -38,8 +38,7 @@
     "uglify-js": "~2.5.0",
     "js-obfuscator": "~0.1.0",
     "password-generator": "~2.0.1",
-    "cors": "~2.7.1",
-    "cluster2": "~0.4.26"
+    "cors": "~2.7.1"
   },
   "description": "VulpeJS is a Open-Source Full-Stack solution to Node.js applications",
   "main": "./lib/vulpe.js",
