@@ -105,6 +105,10 @@ if input.validate
   if input.validate.watch
     - append += (append.length === 0 ? '' : '~') + 'ui-validate-watch^' + input.validate.watch;
 
+if input.ng
+  if input.ng.pattern
+    - append += (append.length === 0 ? '' : '~') + 'ng-pattern^' + input.ng.pattern;
+
 if input.on
   if input.on.blur
     - append += (append.length === 0 ? '' : '~') + 'ng-blur^' + input.on.blur;
@@ -153,6 +157,7 @@ if !input.mask || !input.mask.pattern
 
 if input.readonly
   - divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && vulpejs.ui.form.submitted, 'col-lg-3': " + input.readonly + "}";
+
 
 if input.type === 'show' || input.type === 'timer'
   if input.css['class'] === 'form-control'

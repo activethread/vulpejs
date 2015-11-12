@@ -53,14 +53,14 @@ form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multip
           .btn-group(ng-cloak ng-show="!file.$destroy")
             button.btn.btn-primary.btn-sm.start(type="button" ng-click="file.$submit()" ng-hide="!file.$submit || vulpejs.upload.options.autoUpload" ng-disabled="file.$state() == 'pending' || file.$state() == 'rejected'")
               i.fa.fa-upload.fa-fw
-              =__('Start')
+              span.hidden-xs.hidden-sm.hidden-md=__('Start')
             button.btn.btn-warning.btn-sm.cancel(type="button" ng-click="file.$cancel()" ng-hide="!file.$cancel")
               i.fa.fa-ban.fa-fw
-              =__('Cancel')
+              span.hidden-xs.hidden-sm.hidden-md=__('Cancel')
           div(ng-cloak ng-hide="!file.$destroy")
             button.btn.btn-danger.btn-sm.destroy(type="button" ng-controller="FileDestroyController" ng-click="file.$destroy()")
               i.fa.fa-trash-o.fa-fw
-              =__('Delete')
+              span.hidden-xs.hidden-sm.hidden-md=__('Delete')
 #blueimp-gallery.blueimp-gallery.blueimp-gallery-controls(data-filter=":even")
   .slides
   .title

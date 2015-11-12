@@ -1,11 +1,13 @@
 - var tooltip = ui.select.detail ? __('Click to expand/collapse') : '';
 td.text-center
   |{{$index + 1}}
+unless ui.select.pk
+  - ui.select.pk = '_id';
 each item in ui.select.items
   if item.name || item.details
     - var click = "vulpejs.now[item._id]=!vulpejs.now[item._id];";
     unless ui.select.detail
-      - click = "vulpejs.model.find(item._id);";
+      - click = "vulpejs.model.find(item." + ui.select.pk + ");";
     unless item.css
       - item.css = {};
     td(class=item.css['class'] ng-click=click)

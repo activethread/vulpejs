@@ -12,11 +12,11 @@ thead
     else
       td(colspan=(ui.select.filter.search.colspan + 1))
         .col-lg-12.input-group
-          input#search-list(type="text" name="search" class="form-control" placeholder=__('Search') ng-model="search")
+          input#search-list.form-control(type="text" name="search" placeholder=__('Search') ng-model="search")
           span.input-group-addon
             i.fa.fa-search.fa-fw
       td(colspan=ui.select.filter.status.colspan)
-        select#status-list(name="status" class="form-control" ng-model="vulpejs.filter.status" ng-change="vulpejs.model.list()")
+        select#status-list.form-control(name="status" ng-model="vulpejs.model.filter.status" ng-change="vulpejs.model.list()")
           option(value='')=__('Select a Status')
           if ui.select.filter.status.items
             each item in ui.select.filter.status.items
