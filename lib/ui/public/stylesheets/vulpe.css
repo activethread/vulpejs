@@ -13,7 +13,7 @@ ul.rating li {
   cursor: pointer;
 }
 ul.rating li.filled {
-  color: #fd0; //#21568b
+  color: #fd0;
 }
 ul.readonly li.filled {
   color: #666;
@@ -38,7 +38,7 @@ label {
   font-size: 7px;
   margin-left: 2px;
 }
-.form-control[readonly] {
+input.form-control[readonly], select.form-control[readonly], textarea.form-control[readonly] {
   cursor: text;
   background-color: #eee;
   opacity: 1;
@@ -81,7 +81,7 @@ label {
   cursor: pointer;
 }
 .pagination {
-  margin: 0px;
+  margin: 0;
 }
 .message-block {
   margin-bottom: 10px;
@@ -122,7 +122,7 @@ fieldset .form-group select {
 }
 .panel {
   margin-top: 20px;
-  border-radius: 0px;
+  border-radius: 0;
   border-top: solid 10px #666;
 }
 .panel-heading {
@@ -141,7 +141,7 @@ ul.nav.nav-tabs li a {
   -moz-box-shadow: none !important;
   border-top: solid thin #ddd;
   border-right: solid thin #ddd;
-  border-radius: 0px !important;
+  border-radius: 0 !important;
 }
 ul.nav.nav-tabs li:first-child a {
   border-left: solid thin #ddd;
@@ -161,7 +161,7 @@ ul.nav.nav-tabs li.active:first-child a, ul.nav.nav-tabs li:first-child a:hover 
     border: solid thin #666;
   }
   ul.nav.nav-tabs {
-    border-bottom: 0px;
+    border-bottom: 0;
     border-left: solid thick #666;
   }
 }

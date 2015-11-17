@@ -13,7 +13,7 @@ block content
           .form-group(ng-class="{'has-error': form.password.$invalid && vulpejs.ui.form.submitted}")
             input#login-password.form-control(type="password" name="password" ng-model="vulpejs.item.password" required placeholder=__("Password"))
           label.checkbox
-            input(type="checkbox" id="rememberMe" name="rememberMe" value="true" ng-model="vulpejs.item.rememberMe")
+            input#remember-me.remember-me(type="checkbox" name="rememberMe" value="true" ng-model="vulpejs.item.rememberMe")
             =__("Remember me")
           input.btn.btn-lg.btn-primary.btn-block(type="submit" value=__('Sign In'))
           input.btn.btn-lg.btn-default.btn-block(type="button" ng-click="vulpejs.auth.password.forgot()" value=__('I forgot my Password'))

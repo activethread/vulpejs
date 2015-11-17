@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var router = vulpejs.routes.make({
   name: 'user',

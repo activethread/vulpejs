@@ -9,9 +9,9 @@
 .form-signin .checkbox {
   font-weight: normal;
 }
-.form-signin #rememberMe {
+.form-signin .remember-me {
   position: relative;
-  margin-left: 0px;
+  margin-left: 0;
   margin-right: 5px;
   top: 2px;
 }
@@ -25,7 +25,7 @@
   box-sizing: border-box;
 }
 .form-signin .form-group {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 .form-signin .form-control:focus {
   z-index: 2;

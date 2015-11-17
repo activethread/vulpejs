@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Create User Model
@@ -15,7 +15,7 @@ var User = vulpejs.models.schema({
         unique: true
       }
     },
-    hashed_password: String,
+    hashedPassword: String,
     salt: String,
     name: {
       type: String,
@@ -49,13 +49,13 @@ User.virtual('id').get(function() {
 User.virtual('password').set(function(password) {
   this._password = password;
   this.salt = this.makeSalt();
-  this.hashed_password = this.encryptPassword(password);
+  this.hashedPassword = this.encryptPassword(password);
 }).get(function() {
   return this._password;
 });
 
 User.method('authenticate', function(plainText) {
-  return this.encryptPassword(plainText) === this.hashed_password;
+  return this.encryptPassword(plainText) === this.hashedPassword;
 });
 
 User.method('makeSalt', function() {

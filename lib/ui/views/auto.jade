@@ -9,9 +9,9 @@ block content
       unless ui.submit
         - ui.submit='submit()'
       form(name="form" role="form" ng-submit=ui.submit submitted="vulpejs.ui.form.submitted" novalidate shake-that)
-        div.panel.panel-default.box-shadow
-          div.panel-heading=__(ui.title)
-          div.panel-body.slide-down
+        .panel.panel-default.box-shadow
+          .panel-heading=__(ui.title)
+          .panel-body.slide-down
             if ui.actions
               |!{ui.htmlActions}
             else
