@@ -44,7 +44,7 @@ module.exports = require('vulpejs')({
     mongo: {
       development: {
         host: 'localhost',
-        db: 'first-app-express-development',
+        name: 'first-app-express-development',
         collection: 'session',
         auth: {
           source: 'admin',
@@ -54,7 +54,7 @@ module.exports = require('vulpejs')({
       },
       test: {
         host: 'localhost',
-        db: 'first-app-express-test',
+        name: 'first-app-express-test',
         collection: 'session',
         auth: {
           source: 'admin',
@@ -64,7 +64,7 @@ module.exports = require('vulpejs')({
       },
       development: {
         host: 'localhost',
-        db: 'first-app-express',
+        name: 'first-app-express',
         collection: 'session',
         auth: {
           source: 'admin',
@@ -92,6 +92,11 @@ module.exports = require('vulpejs')({
     development: true,
     test: true,
     production: false
+  },
+  cluster: {
+    development: false,
+    test: false,
+    production: true
   },
   version: '0.0.1',
   release: 'BETA',
