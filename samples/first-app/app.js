@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = require('vulpejs')({
+  name: 'first-app',
   routes: {
     load: {
       first: ['index']
