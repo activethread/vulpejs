@@ -1,7 +1,8 @@
 'use strict';
 
 /**
- * Create History Model
+ * History Model
+ * 
  * @return {Object} Model
  */
 module.exports = vulpejs.models.make({

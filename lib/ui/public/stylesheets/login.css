@@ -40,6 +40,9 @@
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+.form-signin input[type="checkbox"] {
+  margin-left: 0;
+}
 .login-container {
   width: 400px;
   margin: 50px auto;

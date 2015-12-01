@@ -9,7 +9,7 @@ if ui.manager
   include /views/includes/layout/language
   ul.nav.navbar-nav
     li#dashboard
-      a(href="/")=__('Dashboard')
+      a(href="/" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Go to Dashboard'))=__('Dashboard')
     li#manager.dropdown(ng-cloak ng-show="vulpejs.auth.user.is(['SUPER','ADMIN'])")
       a.dropdown-toggle(href="#" data-toggle="dropdown" data-hover="dropdown")=__('Manager')
         b.caret
@@ -49,9 +49,7 @@ if ui.site
             a(href="/")=__('Go to Home')
       include /views/includes/layout/language
       ul.nav.navbar-nav
-        li#home.active
-          a(href="/")=__('Home')
-        li#dashboard(ng-cloak ng-if="vulpejs.auth.user")
-          a(href="/dashboard")=__('Dashboard')
+        li#dashboard.active(ng-cloak ng-if="vulpejs.auth.user")
+          a(href="/" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Go to Dashboard'))=__('Dashboard')
         li#login(ng-cloak ng-if="!vulpejs.auth.user")
-          a(href="/login")=__('Login')
+          a(href="/login" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Go to Login'))=__('Login')

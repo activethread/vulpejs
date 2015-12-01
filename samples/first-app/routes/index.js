@@ -5,9 +5,9 @@ var router = vulpejs.express.router;
 router.all('*', vulpejs.routes.auth.check);
 
 router.get('/', function(req, res) {
-  vulpejs.routes.render(res, 'index', {
+  vulpejs.routes.render(res, 'dashboard', {
     ui: {
-      controller: 'Index'
+      controller: 'Dashboard'
     }
   });
 });

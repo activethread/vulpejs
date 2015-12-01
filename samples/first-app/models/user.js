@@ -1,7 +1,8 @@
 'use strict';
 
 /**
- * Create User Model
+ * User Model
+ *
  * @param   {Object} mongoose Mongoose
  * @return {Object} Model
  */
@@ -67,7 +68,7 @@ User.method('encryptPassword', function(password) {
 });
 
 User.pre('save', function(next) {
-  if (!vulpejs.models.validatePresenceOf(this.password)) {
+  if (!this._id && !vulpejs.models.validatePresenceOf(this.password)) {
     next(new Error(vulpejs.i18n.__('Invalid password')));
   } else {
     next();
