@@ -78,5 +78,19 @@
   "Confirmation": "Confirmação",
   "The changed data will be lost. Do you really want to continue?": "Os dados alterados serão perdidos. Deseja realmente continuar?",
   "No": "Não",
-  "Yes": "Sim"
+  "Yes": "Sim",
+  "Incorrect username.": "Nome de usuário incorreto.",
+  "An error occurred in the execution.": "Ocorreu um erro na execução.",
+  "Status": "Status",
+  "Actions": "Ações",
+  "Go": "Ir",
+  "Do you really want to delete?": "Deseja realmente excluir?",
+  "Record successfully deleted!": "Registro excluído com sucesso!",
+  "Description": "Descrição",
+  "Acronym": "Sigla",
+  "Code": "Código",
+  "Type": "Tipo",
+  "Select a type": "Selecione um tipo",
+  "Date": "Data",
+  "Value": "Valor"
 }

@@ -75,6 +75,9 @@ if input.only
   - input.only = input.only.toLowerCase();
   - append += (append.length === 0 ? '' : '~') + 'only-' + input.only;
 
+if input.currency
+  - append += (append.length === 0 ? '' : '~') + 'currency';
+
 if input.required
   - append += (append.length === 0 ? '' : '~') + (typeof input.required === 'string' ? 'ng-required^' + input.required : 'required');
  
