@@ -1,4 +1,4 @@
-![VulpeJS](https://github.com/lordfelipe/vulpejs/raw/master/images/vulpejs.png)
+[![VulpeJS](https://github.com/lordfelipe/vulpejs/raw/master/images/vulpejs.png)](http://activethread.github.io/vulpejs/)
 # VulpeJS
 
 Open-Source Full-Stack solution to Node.js applications with `Express.js`, `Jade`, `AngularJS` and `MongoDB`.
@@ -9,11 +9,20 @@ Works on Linux (stable) & MacOSx (stable) & Windows (stable).
 
 [![NPM](https://nodei.co/npm/vulpejs.png?downloads=true&downloadRank=true)](https://nodei.co/npm/vulpejs/)
 
+## Examples
+
+### VulpeJS Heroku Apptest Example.
+
+- Download/Fork - https://github.com/activethread/vulpejs-heroku-apptest
+- Access Apptest - http://vulpejs-heroku-apptest.herokuapp.com/
+  * Username: admin@vulpe.org
+  * Password: vulpejs
+
 ## Install
 Add VulpeJS dependency in your `package.json`
 ```json
 ...
-"vulpejs": "~0.1.33",
+"vulpejs": "~0.1.34",
 ...
 ```
 

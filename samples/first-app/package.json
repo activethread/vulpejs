@@ -6,6 +6,6 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "vulpejs": "~0.1.33"
+    "vulpejs": "~0.1.34"
   }
 }
