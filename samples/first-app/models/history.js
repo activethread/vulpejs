@@ -2,7 +2,7 @@
 
 /**
  * History Model
- * 
+ *
  * @return {Object} Model
  */
 module.exports = vulpejs.models.make({
@@ -10,23 +10,23 @@ module.exports = vulpejs.models.make({
   schema: {
     type: {
       type: String,
-      required: true
+      required: true,
     },
     cid: {
       type: String,
-      required: true
+      required: true,
     },
     content: {
       type: String,
-      required: true
+      required: true,
     },
     modified: {
       type: Date,
-      'default': Date.now
+      'default': Date.now,
     },
     user: {
       type: vulpejs.mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    }
-  }
+      ref: 'User',
+    },
+  },
 });

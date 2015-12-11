@@ -13,34 +13,34 @@ var User = vulpejs.models.schema({
       type: String,
       validate: [vulpejs.models.validatePresenceOf, vulpejs.i18n.__('Email is required')],
       index: {
-        unique: true
-      }
+        unique: true,
+      },
     },
     hashedPassword: String,
     salt: String,
     name: {
       type: String,
-      required: true
+      required: true,
     },
     date: {
       type: Date,
-      'default': Date.now
+      'default': Date.now,
     },
     roles: [{
       type: String,
-      enum: ['NORMAL', 'ADMIN', 'SUPER']
-    }],
+      enum: ['NORMAL', 'ADMIN', 'SUPER'],
+    }, ],
     status: {
       type: String,
       required: true,
       'default': 'ACTIVE',
-      enum: ['ACTIVE', 'INACTIVE', 'SUSPENDED']
+      enum: ['ACTIVE', 'INACTIVE', 'SUSPENDED'],
     },
     modified: {
       type: Date,
-      'default': Date.now
-    }
-  }
+      'default': Date.now,
+    },
+  },
 });
 
 User.virtual('id').get(function() {
@@ -82,7 +82,7 @@ UserModel.find({}, function(error, items) {
       email: 'admin@vulpe.org',
       password: 'vulpejs',
       name: 'Super Administrator',
-      roles: ['SUPER']
+      roles: ['SUPER'],
     });
     user.save(function(error, user) {});
   }

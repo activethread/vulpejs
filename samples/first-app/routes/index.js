@@ -7,8 +7,8 @@ router.all('*', vulpejs.routes.auth.check);
 router.get('/', function(req, res) {
   vulpejs.routes.render(res, 'dashboard', {
     ui: {
-      controller: 'Dashboard'
-    }
+      controller: 'Dashboard',
+    },
   });
 });
 

@@ -3,7 +3,7 @@
 var router = vulpejs.routes.make({
   name: 'user',
   save: {
-    data: ['name', 'email']
+    data: ['name', 'email'],
   },
   ui: {
     controller: 'User',
@@ -14,19 +14,19 @@ var router = vulpejs.routes.make({
         name: 'email',
         label: 'Email',
         readonly: 'vulpejs.item._id',
-        required: true
+        required: true,
       }, {
         type: 'text',
         name: 'name',
         label: 'Name',
         capitalize: 'all',
-        required: true
+        required: true,
       }, {
         type: 'password',
         name: 'password',
         label: 'Password',
         readonly: 'vulpejs.item.email === vulpejs.auth.user.email',
-        required: '!vulpejs.item._id'
+        required: '!vulpejs.item._id',
       }, {
         type: 'password',
         name: 'passwordConfirm',
@@ -34,72 +34,72 @@ var router = vulpejs.routes.make({
         readonly: 'vulpejs.item.email === vulpejs.auth.user.email',
         required: '!vulpejs.item._id',
         validate: {
-          expression: "'$value == vulpejs.item.password'",
-          watch: "'vulpejs.item.password'",
-          message: 'Password do not match'
-        }
-      }]
+          expression: '""$value == vulpejs.item.password"',
+          watch: '"vulpejs.item.password"',
+          message: 'Password do not match',
+        },
+      }, ],
     },
     select: {
       title: 'User List',
       filter: {
         search: {
-          colspan: 1
+          colspan: 1,
         },
         status: {
           colspan: 2,
           items: [{
             value: 'ACTIVE',
-            label: 'Active'
+            label: 'Active',
           }, {
             value: 'INACTIVE',
-            label: 'Inactive'
+            label: 'Inactive',
           }, {
             value: 'SUSPENDED',
-            label: 'Suspended'
-          }]
-        }
+            label: 'Suspended',
+          }, ],
+        },
       },
       detail: [{
         name: 'email',
         label: 'Email',
         style: {
-          width: '40%'
-        }
-      }],
+          width: '40%',
+        },
+      }, ],
       items: [{
         name: 'name',
         label: 'Name',
         style: {
-          width: '65%'
-        }
+          width: '65%',
+        },
       }, {
         name: 'status',
         css: {
-          class: 'text-center'
+          class: 'text-center',
         },
         images: [{
           name: 'status-online.png',
           show: "vulpejs.equals(item, 'status', 'ACTIVE')",
-          title: 'Active'
+          title: 'Active',
         }, {
           name: 'status-offline.png',
           show: "vulpejs.equals(item, 'status', 'INACTIVE')",
-          title: 'Inactive'
-        }],
+          title: 'Inactive',
+        }, ],
         label: 'Status',
         style: {
-          width: '10%'
-        }
+          width: '10%',
+        },
       }, {
         label: 'Actions',
         style: {
-          width: '25%'
-        }
-      }],
-      actions: []
-    }
-  }
+          width: '25%',
+        },
+      }, ],
+      actions: [],
+    },
+  },
 });
 
 router.get('/password', function(req, res) {
@@ -112,28 +112,28 @@ router.get('/password', function(req, res) {
         type: 'email',
         name: 'email',
         label: 'Email',
-        readonly: 'vulpejs.item._id'
+        readonly: 'vulpejs.item._id',
       }, {
         type: 'text',
         name: 'name',
         label: 'Name',
         readonly: 'vulpejs.item._id',
-        capitalize: 'all'
+        capitalize: 'all',
       }, {
         type: 'password',
         name: 'password',
         label: 'Password',
-        required: true
+        required: true,
       }, {
         type: 'password',
         name: 'passwordConfirm',
         label: 'Password Confirm',
         required: true,
-        validate: "'$value == vulpejs.item.password'",
-        validateWatch: "'vulpejs.item.password'",
-        validateMessage: 'Password do not match'
-      }]
-    }
+        validate: '"$value == vulpejs.item.password"',
+        validateWatch: '"vulpejs.item.password"',
+        validateMessage: 'Password do not match',
+      }, ],
+    },
   });
 });
 router.post('/password', function(req, res) {
@@ -144,7 +144,7 @@ router.post('/password', function(req, res) {
       item.password = req.body.password;
       item.save();
       res.status(201).end();
-    }
+    },
   });
 });
 

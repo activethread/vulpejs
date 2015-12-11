@@ -4,13 +4,13 @@ module.exports = require('vulpejs')({
   name: 'first-app',
   routes: {
     load: {
-      first: ['index']
-    }
+      first: ['index'],
+    },
   },
   models: {
     load: {
-      first: ['user', 'history']
-    }
+      first: ['user', 'history'],
+    },
   },
   database: {
     development: {
@@ -19,8 +19,8 @@ module.exports = require('vulpejs')({
       auth: {
         source: 'admin',
         user: 'admin',
-        pass: 'vulpejs'
-      }
+        pass: 'vulpejs',
+      },
     },
     test: {
       host: 'localhost',
@@ -28,8 +28,8 @@ module.exports = require('vulpejs')({
       auth: {
         source: 'admin',
         user: 'admin',
-        pass: 'vulpejs'
-      }
+        pass: 'vulpejs',
+      },
     },
     production: {
       host: 'localhost',
@@ -37,9 +37,9 @@ module.exports = require('vulpejs')({
       auth: {
         source: 'admin',
         user: 'admin',
-        pass: 'vulpejs'
-      }
-    }
+        pass: 'vulpejs',
+      },
+    },
   },
   session: {
     mongo: {
@@ -50,8 +50,8 @@ module.exports = require('vulpejs')({
         auth: {
           source: 'admin',
           user: 'admin',
-          pass: 'vulpejs'
-        }
+          pass: 'vulpejs',
+        },
       },
       test: {
         host: 'localhost',
@@ -60,8 +60,8 @@ module.exports = require('vulpejs')({
         auth: {
           source: 'admin',
           user: 'admin',
-          pass: 'vulpejs'
-        }
+          pass: 'vulpejs',
+        },
       },
       development: {
         host: 'localhost',
@@ -70,36 +70,36 @@ module.exports = require('vulpejs')({
         auth: {
           source: 'admin',
           user: 'admin',
-          pass: 'vulpejs'
-        }
-      }
-    }
+          pass: 'vulpejs',
+        },
+      },
+    },
   },
   security: {
     routes: [{
       uri: '/**',
-      roles: ['SUPER', 'ADMIN']
-    }],
+      roles: ['SUPER', 'ADMIN'],
+    }, ],
     login: {
-      skip: []
-    }
+      skip: [],
+    },
   },
   minifier: {
     development: false,
     test: false,
-    production: true
+    production: true,
   },
   debug: {
     development: true,
     test: true,
-    production: false
+    production: false,
   },
   cluster: {
     development: false,
     test: false,
-    production: true
+    production: true,
   },
   version: '0.0.1',
   release: 'BETA',
-  env: 'development'
+  env: 'development',
 });

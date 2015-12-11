@@ -1,11 +1,11 @@
-[![VulpeJS](https://github.com/lordfelipe/vulpejs/raw/master/images/vulpejs.png)](http://activethread.github.io/vulpejs/)
+[![VulpeJS](https://github.com/activethread/vulpejs/raw/master/images/vulpejs.png)](http://activethread.github.io/vulpejs/)
 # VulpeJS
 
 Open-Source Full-Stack solution to Node.js applications with `Express.js`, `Jade`, `AngularJS` and `MongoDB`.
 
 Works on Linux (stable) & MacOSx (stable) & Windows (stable).
 
-[![NPM version](https://badge.fury.io/js/vulpejs.svg)](http://badge.fury.io/js/vulpejs) [![Gitter](https://badges.gitter.im/lordfelipe/vulpejs.svg)](https://gitter.im/lordfelipe/vulpejs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://api.travis-ci.org/lordfelipe/vulpejs.svg?branch=master)](https://travis-ci.org/lordfelipe/vulpejs) [![Inline docs](http://inch-ci.org/github/lordfelipe/vulpejs.svg?branch=master)](http://inch-ci.org/github/lordfelipe/vulpejs) [![Dependency Status](https://david-dm.org/lordfelipe/vulpejs.svg)](https://david-dm.org/lordfelipe/vulpejs)
+[![NPM version](https://badge.fury.io/js/vulpejs.svg)](http://badge.fury.io/js/vulpejs) [![Gitter](https://badges.gitter.im/activethread/vulpejs.svg)](https://gitter.im/activethread/vulpejs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://api.travis-ci.org/activethread/vulpejs.svg?branch=master)](https://travis-ci.org/activethread/vulpejs) [![Inline docs](http://inch-ci.org/github/activethread/vulpejs.svg?branch=master)](http://inch-ci.org/github/activethread/vulpejs) [![Dependency Status](https://david-dm.org/activethread/vulpejs.svg)](https://david-dm.org/activethread/vulpejs)
 
 [![NPM](https://nodei.co/npm/vulpejs.png?downloads=true&downloadRank=true)](https://nodei.co/npm/vulpejs/)
 
@@ -48,27 +48,27 @@ Add Model `models/city.js`
     schema: {
       name: {
         type: String,
-        required: true
+        required: true,
       },
       acronym: {
         type: String,
-        required: true
+        required: true,
       },
       status: {
         type: String,
         required: true,
         'default': 'ACTIVE',
-        enum: ['ACTIVE', 'INACTIVE']
+        enum: ['ACTIVE', 'INACTIVE'],
       },
       modified: {
         type: Date,
-        'default': Date.now
+        'default': Date.now,
       },
       user: {
         type: vulpejs.mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      }
-    }
+        ref: 'User',
+      },
+    },
   });
 ```
 Add Route `routes/city.js`
@@ -83,7 +83,7 @@ module.exports = vulpejs.routes.make({
   name: 'city',
   plural: 'cities',
   save: {
-    data: ['name', 'acronym']
+    data: ['name', 'acronym'],
   },
   ui: {
     controller: {
@@ -94,15 +94,15 @@ module.exports = vulpejs.routes.make({
         focus: 'name',
         messages: {
           validate: {
-            exists: 'City already exists.'
-          }
+            exists: 'City already exists.',
+          },
         },
         model: {
           name: '',
           acronym: '',
-          status: 'ACTIVE'
-        }
-      }
+          status: 'ACTIVE',
+        },
+      },
     },
     main: {
       title: 'City',
@@ -111,71 +111,71 @@ module.exports = vulpejs.routes.make({
         name: 'name',
         label: 'Name',
         capitalize: 'first',
-        required: true
+        required: true,
       }, {
         type: 'text',
         name: 'acronym',
         label: 'Acronym',
         case: 'upper',
-        required: true
-      }]
+        required: true,
+      }, ],
     },
     select: {
       title: 'City List',
       filter: {
         search: {
-          colspan: 2
+          colspan: 2,
         },
         status: {
           colspan: 2,
           items: [{
             value: 'ACTIVE',
-            label: 'Active'
+            label: 'Active',
           }, {
             value: 'INACTIVE',
-            label: 'Inactive'
-          }]
-        }
+            label: 'Inactive',
+          }, ],
+        },
       },
       items: [{
         name: 'name',
         label: 'Name',
         style: {
-          width: '55%'
-        }
+          width: '55%',
+        },
       }, {
         name: 'acronym',
         label: 'Acronym',
         style: {
-          width: '10%'
-        }
+          width: '10%',
+        },
       }, {
         name: 'status',
         style: {
-          width: '10%'
+          width: '10%',
         },
         css: {
-          'class': 'text-center'
+          'class': 'text-center',
         },
         switch: [{
           when: 'ACTIVE',
           image: 'status-online.png',
-          title: 'Active'
+          title: 'Active',
         }, {
           when: 'INACTIVE',
           image: 'status-offline.png',
-          title: 'Inactive'
-        }],
-        label: 'Status'
+          title: 'Inactive',
+        }, ],
+        label: 'Status',
       }, {
         label: 'Actions',
         style: {
-          width: '25%'
-        }
-      }],
-      actions: []
-    }
-  }
+          width: '25%',
+        },
+      }, ],
+      actions: [],
+    },
+  },
 });
 ```
 Run it:
