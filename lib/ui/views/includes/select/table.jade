@@ -12,7 +12,10 @@ thead
     else
       td(colspan=(ui.select.filter.search.colspan + 1))
         .col-lg-12.input-group
-          input#search-list.form-control(type="text" name="search" placeholder=__('Search') ng-model="search")
+          if ui.select.filter.fields
+            input#search-list.form-control(type="text" name="search" placeholder=__('Search') ng-model="vulpejs.model.filter.search" ng-keypress="vulpejs.model.list()")
+          else 
+            input#search-list.form-control(type="text" name="search" placeholder=__('Search') ng-model="search")
           span.input-group-addon
             i.fa.fa-search.fa-fw
       td(colspan=ui.select.filter.status.colspan)
@@ -35,11 +38,14 @@ thead
 tbody
   tr.slide-down(ng-cloak ng-if="vulpejs.items.length === 0")
     td(colspan=(typeof ui.select.filter === 'string' ? 99 : ui.select.filter.search.colspan + 1 + ui.select.filter.status.colspan))=__('Empty')
+  - var query = 'item in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse';
+  if ui.select.filter.fields 
+    - query = 'item in vulpejs.items | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse';
   if ui.select.detail
-    tr.click.slide-down(dir-paginate-start="item in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse" total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
+    tr.click.slide-down(dir-paginate-start=query total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
       include items
     tr.scale-fade(dir-paginate-end ng-cloak ng-if="vulpejs.now[item._id]")
       include detail
   else
-    tr.click.slide-down(dir-paginate="item in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse" total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
+    tr.click.slide-down(dir-paginate=query total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
       include items
