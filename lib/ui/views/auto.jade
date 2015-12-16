@@ -7,7 +7,7 @@ block content
       #item-id.hide=ui.item.id + (ui.item.populate ? ':true' : '')
     if ui.inputs
       unless ui.submit
-        - ui.submit='submit()'
+        - ui.submit='submit()';
       form(name="form" role="form" ng-submit=ui.submit submitted="vulpejs.ui.form.submitted" novalidate shake-that)
         .panel.panel-default.box-shadow
           .panel-heading=__(ui.title)
@@ -21,7 +21,7 @@ block content
 
     if ui.main
       unless ui.main.submit
-        - ui.main.submit='vulpejs.model.save()'
+        - ui.main.submit='vulpejs.model.save()';
       unless ui.main.form
         - ui.main.form={enctype:'application/x-www-form-urlencoded'};
       form(name="mainForm" role="form" enctype=ui.main.form.enctype ng-submit=ui.main.submit submitted="vulpejs.ui.form.submitted" novalidate shake-that)
@@ -52,18 +52,21 @@ block content
                     include includes/main/input
 
     if ui.select
-      .panel.panel-default(ng-class="{'box-shadow':!vulpejs.ui.showing}")
-        .panel-heading
-          .row
-            .col-lg-6=__(ui.select.title)
-            .col-lg-6
-              if ui.select.viewActions
-                |!{ui.select.htmlViewActions}
-              else
-                include includes/select/view-actions
-        .panel-body.slide-down(ng-hide="vulpejs.ui.showing")
-          .row
-            .col-lg-12
-              table.table.table-striped.table-bordered.table-hover
-                include includes/select/table
-              include includes/select/paginate
+      unless ui.select.submit
+        - ui.select.submit='vulpejs.model.search.doit()';
+      form(name="selectForm" role="form" ng-submit=ui.select.submit submitted="vulpejs.ui.form.submitted" novalidate shake-that)
+        .panel.panel-default(ng-class="{'box-shadow':!vulpejs.ui.showing}")
+          .panel-heading
+            .row
+              .col-lg-6=__(ui.select.title)
+              .col-lg-6
+                if ui.select.viewActions
+                  |!{ui.select.htmlViewActions}
+                else
+                  include includes/select/view-actions
+          .panel-body.slide-down(ng-hide="vulpejs.ui.showing")
+            .row
+              .col-lg-12
+                table.table.table-striped.table-bordered.table-hover
+                  include includes/select/table
+                include includes/select/paginate
