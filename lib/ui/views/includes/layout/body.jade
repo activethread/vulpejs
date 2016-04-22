@@ -44,11 +44,11 @@ if ui.layout.messages
       p {{message.msg}}
 
 if ui.layout.container
-  #content.row.slide-down
+  #content.row.slide-down(ui-view)
     include ../../../../../../../views/includes/layout/container
 
 if ui.layout.content
-  #content
+  #content(ui-view)
     block content
 
 if ui.layout.footer
@@ -56,6 +56,6 @@ if ui.layout.footer
     include ../../../../../../../views/includes/layout/footer
 
 script(charset="utf-8" type="text/javascript").
-  vulpe.ui.inputs();
+  vulpe.ui.elements();
 if ui.controller
   include ../script

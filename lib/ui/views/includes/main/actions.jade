@@ -1,21 +1,21 @@
 #main-default-actions.row(data-spy="affix" data-offset-top="90")
-  .col-lg-12
+  .col-sm-12.col-md-12.col-lg-12
     .btn-group.pull-right
       if ui.uriback
         a.btn.btn-default(href=ui.uriback tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Click to go back'))
           i.fa.fa-chevron-left.fa-fw
           span.hidden-xs.hidden-sm.hidden-md=__('Back')
       else
-        a.btn.btn-default(ng-click="vulpejs.model.cancel(); vulpejs.ui.form.submitted = false" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Click to go back'))
+        a.btn.btn-default(ng-click="vulpejs.model.cancel(); vulpejs.ui.form.main.submitted = false" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Click to go back'))
           i.fa.fa-chevron-left.fa-fw
           span.hidden-xs.hidden-sm.hidden-md=__('Back')
-      a#new-action-button.btn.btn-default(ng-click="vulpejs.model.create(); vulpejs.ui.form.submitted = false" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Click to add new'))
+      a#new-action-button.btn.btn-default(ng-click="vulpejs.model.create(); vulpejs.ui.form.main.submitted = false" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Click to add new'))
         i.fa.fa-plus.fa-fw
         span.hidden-xs.hidden-sm.hidden-md=__('New')
-      a#delete-action-button.btn.btn-default(ng-click="vulpejs.model.remove(vulpejs.item._id); vulpejs.ui.form.submitted = false" ng-clock ng-if="vulpejs.item._id" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Click to delete'))
+      a#delete-action-button.btn.btn-default(ng-click="vulpejs.model.remove(vulpejs.item._id); vulpejs.ui.form.main.submitted = false" ng-clock ng-if="vulpejs.item._id" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Click to delete'))
         i.fa.fa-trash-o.fa-fw
         span.hidden-xs.hidden-sm.hidden-md=__('Delete')
-      a#clone-action-button.btn.btn-default(ng-click="vulpejs.model.clone(vulpejs.item); vulpejs.ui.form.submitted = false" ng-clock ng-if="vulpejs.item._id" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Click to clone'))
+      a#clone-action-button.btn.btn-default(ng-click="vulpejs.model.clone(vulpejs.item); vulpejs.ui.form.main.submitted = false" ng-clock ng-if="vulpejs.item._id" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Click to clone'))
         i.fa.fa-magic.fa-fw
         span.hidden-xs.hidden-sm.hidden-md=__('Clone')
       button.btn.btn-default(type="submit" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Click to save'))

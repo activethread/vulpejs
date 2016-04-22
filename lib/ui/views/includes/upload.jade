@@ -1,6 +1,6 @@
 form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multipart/form-data" file-upload="vulpejs.ui.uploader.options" ng-class="{'fileupload-processing': processing() || vulpejs.ui.uploader.loadingFiles}")
   .row.fileupload-buttonbar
-    .col-lg-12
+    .col-sm-12.col-md-12.col-lg-12
       .btn-group
         span.btn.btn-success.fileinput-button(ng-class="{disabled: disabled}")
           i.fa.fa-plus.fa-fw
@@ -16,7 +16,7 @@ form#fileupload(name="uploadForm" action="/upload" method="post" enctype="multip
           i.fa.fa-trash-o.fa-fw
           span=__('Delete')
   .row.fileupload-progressbar
-    .col-lg-12.fade(ng-class="{in: active()}")
+    .col-sm-12.col-md-12.col-lg-12.fade(ng-class="{in: active()}")
       .progress.progress-striped.active(file-upload-progress="progress()")
         .progress-bar.progress-bar-success.text-center(data-ng-style="{width: num + '%'}") {{num + '%'}}
       .progress-extended.text-space-right

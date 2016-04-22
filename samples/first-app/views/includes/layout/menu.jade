@@ -20,7 +20,7 @@ if ui.manager
     li.dropdown
       a.dropdown-toggle(href="#" data-toggle="dropdown" data-hover="dropdown")
         i.fa.fa-user.fa-fw
-        =__('Welcome, %s', '{{vulpejs.auth.user.name}}')
+        span.hidden-xs.hidden-sm.hidden-md=__('Welcome, %s', '{{vulpejs.auth.user.name}}')
         b.caret
       ul.dropdown-menu
         li

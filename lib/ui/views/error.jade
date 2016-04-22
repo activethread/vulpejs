@@ -3,7 +3,7 @@ extends layouts/error
 block content
   div(ng-controller="#{ui.controller}Controller")
     .row
-      .col-lg-12.text-center
+      .col-sm-12.col-md-12.col-lg-12.text-center
         h1=__('Opss!')
         if error.status === 400
           h2=__('Bad Request.')

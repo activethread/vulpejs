@@ -2,15 +2,15 @@ extends layouts/login
 
 block content
   .login-container(ng-controller="LoginController")
-    form.form-signin(name="form" role="form" ng-submit="vulpejs.auth.login()" method="post" autocomplete="off" novalidate shake-that submitted="vulpejs.ui.form.submitted")
+    form.form-signin(name="form" role="form" ng-submit="vulpejs.auth.login()" method="post" autocomplete="off" novalidate shake-that submitted="vulpejs.ui.form.main.submitted")
       .panel.panel-default.box-shadow
         .panel-heading
           .row
-            .col-lg-12=__('Access Control')
+            .col-sm-12.col-md-12.col-lg-12=__('Access Control')
         .panel-body
-          .form-group(ng-class="{'has-error': form.username.$invalid && vulpejs.ui.form.submitted}")
+          .form-group(ng-class="{'has-error': form.username.$invalid && vulpejs.ui.form.main.submitted}")
             input#login-username.form-control(type="email" name="username" ng-model="vulpejs.item.username" required autofocus placeholder=__("Email"))
-          .form-group(ng-class="{'has-error': form.password.$invalid && vulpejs.ui.form.submitted}")
+          .form-group(ng-class="{'has-error': form.password.$invalid && vulpejs.ui.form.main.submitted}")
             input#login-password.form-control(type="password" name="password" ng-model="vulpejs.item.password" required placeholder=__("Password"))
           label.checkbox
             input#remember-me.remember-me(type="checkbox" name="rememberMe" value="true" ng-model="vulpejs.item.rememberMe")

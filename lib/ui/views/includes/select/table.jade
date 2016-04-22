@@ -12,7 +12,7 @@ thead
         |!{ui.select.htmlFilter}
     else
       td(colspan=(ui.select.filter.search.colspan + 1))
-        .col-lg-12.input-group
+        .col-sm-12.col-md-12.col-lg-12.input-group
           if ui.select.filter.fields
             input#search-list.form-control(type="text" name="search" placeholder=__('Search') ng-model="vulpejs.model.filter.search")
             span.input-group-btn

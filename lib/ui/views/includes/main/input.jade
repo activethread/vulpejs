@@ -2,7 +2,7 @@
 - var formName = 'mainForm';
 - var itemName = 'vulpejs.item';
 unless input.css
-  - input.css = {'class':'form-group col-lg-12'};
+  - input.css = {'class':'form-group col-sm-12 col-md-12 col-lg-12'};
 if ui.main
   if ui.main.form && ui.main.form.name
     - formName = ui.main.form.name;
@@ -46,7 +46,7 @@ unless input.validate.message
 - var divAppend = '';
 - var showAppend = '';
 - var hideAppend = '';
-- var divClass = 'form-group col-lg-12';
+- var divClass = 'form-group col-sm-12 col-md-12 col-lg-12';
 
 if input.mask
   - append += (append.length === 0 ? '' : '~') + (typeof input.mask === 'string' ? input.mask : 'ui-mask^' + input.mask.pattern);
@@ -80,7 +80,7 @@ if input.currency
 
 if input.required
   - append += (append.length === 0 ? '' : '~') + (typeof input.required === 'string' ? 'ng-required^' + input.required : 'required');
- 
+
 if input.type === 'textarea'
   unless input.rows
     - input.rows = 2;
@@ -134,7 +134,7 @@ if input.type === 'typeahead'
       - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select^' + onSelect;
     else
       - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select^' + input.on.select;
-  
+
 if input.toggle
   - append += (append.length === 0 ? '' : '~') + 'toggle-switch';
   - append += (append.length === 0 ? '' : '~') + 'model^' + ngModel;
@@ -156,10 +156,10 @@ else
 if !input.mask || !input.mask.pattern
   - append += (append.length === 0 ? '' : '~') + 'placeholder^' + label;
 
-- var divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && vulpejs.ui.form.submitted}";
+- var divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && vulpejs.ui.form.main.submitted}";
 
 if input.readonly
-  - divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && vulpejs.ui.form.submitted, 'col-lg-3': " + input.readonly + "}";
+  - divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && vulpejs.ui.form.main.submitted, 'col-lg-3': " + input.readonly + "}";
 
 
 if input.type === 'show' || input.type === 'timer'
