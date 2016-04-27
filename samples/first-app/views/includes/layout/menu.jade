@@ -1,21 +1,21 @@
 if ui.login
   ul.nav.navbar-nav
     li#home
-      a(href="/")=__('Home')
+      a(ui-shref="")=__('Home')
     li#login
-      a(href="/login")=__('Login')
+      a(ui-shref="login")=__('Login')
   include /views/includes/layout/language
 if ui.manager
   include /views/includes/layout/language
   ul.nav.navbar-nav
     li#dashboard
-      a(href="/" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Go to Dashboard'))=__('Dashboard')
+      a(ui-shref="" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Go to Dashboard'))=__('Dashboard')
     li#manager.dropdown(ng-cloak ng-show="vulpejs.auth.user.is(['SUPER','ADMIN'])")
       a.dropdown-toggle(href="#" data-toggle="dropdown" data-hover="dropdown")=__('Manager')
         b.caret
       ul.dropdown-menu
         li
-          a(href="/user" tooltip-placement="right" tooltip-append-to-body="true" tooltip=__('Go to Users'))=__('Users')
+          a(ui-shref="user" tooltip-placement="right" tooltip-append-to-body="true" tooltip=__('Go to Users'))=__('Users')
   ul.nav.navbar-nav.navbar-right
     li.dropdown
       a.dropdown-toggle(href="#" data-toggle="dropdown" data-hover="dropdown")
@@ -24,7 +24,7 @@ if ui.manager
         b.caret
       ul.dropdown-menu
         li
-          a(href="/password" tooltip-placement="left" tooltip-append-to-body="true" tooltip=__('Click to Change Password'))
+          a(ui-shref="password" tooltip-placement="left" tooltip-append-to-body="true" tooltip=__('Click to Change Password'))
             i.fa.fa-asterisk.fa-fw
             =__('Password Change')
         li.divider
@@ -40,16 +40,16 @@ if ui.site
         span.icon-bar
         span.icon-bar
         span.icon-bar
-      a.navbar-brand(href="/")=__(title)
+      a.navbar-brand(ui-shref="")=__(title)
         include /views/includes/layout/release
     #app-navbar.collapse.navbar-collapse
       if ui.error
         ul.nav.navbar-nav
           li#home
-            a(href="/")=__('Go to Home')
+            a(ui-shref="")=__('Go to Home')
       include /views/includes/layout/language
       ul.nav.navbar-nav
         li#dashboard.active(ng-cloak ng-if="vulpejs.auth.user")
-          a(href="/" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Go to Dashboard'))=__('Dashboard')
+          a(ui-shref="" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Go to Dashboard'))=__('Dashboard')
         li#login(ng-cloak ng-if="!vulpejs.auth.user")
-          a(href="/login" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Go to Login'))=__('Login')
+          a(ui-shref="login" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Go to Login'))=__('Login')

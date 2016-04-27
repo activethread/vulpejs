@@ -1,5 +1,5 @@
 - var controllerName = ui.controller.name ? ui.controller.name : ui.controller;
-- var formName = 'mainForm';
+- var formName = 'main';
 - var itemName = 'vulpejs.item';
 unless input.css
   - input.css = {'class':'form-group col-sm-12 col-md-12 col-lg-12'};
@@ -42,125 +42,128 @@ unless input.validate.watch
 unless input.validate.message
   - input.validate.message = '';
 
-- var append = '';
-- var divAppend = '';
-- var showAppend = '';
-- var hideAppend = '';
+- var attributes = {};
+- var divAttributes = {};
+- var showAttributes = {};
+- var hideAttributes = {};
 - var divClass = 'form-group col-sm-12 col-md-12 col-lg-12';
 
 if input.mask
-  - append += (append.length === 0 ? '' : '~') + (typeof input.mask === 'string' ? input.mask : 'ui-mask^' + input.mask.pattern);
+  - attributes['ui-mask'] = typeof input.mask === 'string' ? input.mask : 'ui-mask^' + input.mask.pattern;
 
 if input.autofocus
-  - append += (append.length === 0 ? '' : '~') + 'autofocus';
+  - attributes['autofocus'] = '';
 
 if (input.type === 'text' || input.type === 'typeahead') && !input.autocomplete
-  - append += (append.length === 0 ? '' : '~') + 'autocomplete^false';
+  - attributes['autocomplete'] = 'false';
 
 if input.case
   - input.case = input.case.toLowerCase();
   if input.case === 'lower'
-    - append += (append.length === 0 ? '' : '~') + 'lowercase';
+    - attributes['lowercase'] = '';
   if input.case === 'upper'
-    - append += (append.length === 0 ? '' : '~') + 'uppercase';
+    - attributes['uppercase'] = '';
 
 if input.capitalize
   - input.capitalize = input.capitalize.toLowerCase();
   if input.capitalize === 'all'
-    - append += (append.length === 0 ? '' : '~') + 'capitalize';
+    - attributes['capitalize'] = '';
   if input.capitalize === 'first'
-    - append += (append.length === 0 ? '' : '~') + 'capitalize-first';
+    - attributes['capitalize-first'] = '';
 
 if input.only
   - input.only = input.only.toLowerCase();
-  - append += (append.length === 0 ? '' : '~') + 'only-' + input.only;
+  - attributes['only-' + input.only] = '';
 
 if input.currency
-  - append += (append.length === 0 ? '' : '~') + 'currency';
+  - attributes['currency'] = '';
 
 if input.required
-  - append += (append.length === 0 ? '' : '~') + (typeof input.required === 'string' ? 'ng-required^' + input.required : 'required');
+  if typeof input.required === 'string'
+    - attributes['ng-required'] = input.required;
+  else
+    - attributes['required'] = '';
 
 if input.type === 'textarea'
   unless input.rows
     - input.rows = 2;
-  - append += (append.length === 0 ? '' : '~') + 'rows^' + input.rows;
+  - attributes['rows'] = input.rows;
 
 if input.show
-  - divAppend += (divAppend.length === 0 ? '' : '~') + 'ng-if^' + input.show;
+  - divAttributes['ng-if'] = input.show;
   - divClass += ' slide-down';
 
 if input.hide
-  - divAppend += (divAppend.length === 0 ? '' : '~') + 'ng-hide^' + input.hide;
+  - divAttributes['ng-hide'] = input.hide;
   - divClass += ' slide-down';
 
 if input.readonly
-  - hideAppend += (append.length === 0 ? '' : '~') + 'ng-cloak';
-  - hideAppend += (append.length === 0 ? '' : '~') + 'ng-hide^' + input.readonly;
-  - showAppend += (append.length === 0 ? '' : '~') + 'ng-cloak';
-  - showAppend += (append.length === 0 ? '' : '~') + 'ng-show^' + input.readonly;
+  - hideAttributes['ng-cloak'] = '';
+  - hideAttributes['ng-hide'] = input.readonly;
+  - showAttributes['ng-cloak'] = '';
+  - showAttributes['ng-show'] = input.readonly;
   if input.type !== 'star-rating'
-    - append += (append.length === 0 ? '' : '~') + 'ng-hide^' + input.readonly;
+    - attributes['ng-cloak'] = '';
+    - attributes['ng-hide'] = input.readonly;
 
 if input.validate
   if input.validate.expression
-    - append += (append.length === 0 ? '' : '~') + 'ui-validate^' + input.validate.expression;
+    - attributes['ui-validate'] = input.validate.expression;
   if input.validate.watch
-    - append += (append.length === 0 ? '' : '~') + 'ui-validate-watch^' + input.validate.watch;
+    - attributes['ui-validate-watch'] = input.validate.watch;
 
 if input.ng
   if input.ng.pattern
-    - append += (append.length === 0 ? '' : '~') + 'ng-pattern^' + input.ng.pattern;
+    - attributes['ng-pattern'] = input.ng.pattern;
 
 if input.on
   if input.on.blur
-    - append += (append.length === 0 ? '' : '~') + 'ng-blur^' + input.on.blur;
+    - attributes['ng-blur'] = input.on.blur;
   if input.on.change
-    - append += (append.length === 0 ? '' : '~') + 'ng-change^' + input.on.change;
+    - attributes['ng-change'] = input.on.change;
   if input.on.focus
-    - append += (append.length === 0 ? '' : '~') + 'ng-focus^' + input.on.focus;
+    - attributes['ng-focus'] = input.on.focus;
   if input.on.click
-    - append += (append.length === 0 ? '' : '~') + 'ng-click^' + input.on.click;
+    - attributes['ng-click'] = input.on.click;
 else if input.items
-  - append += (append.length === 0 ? '' : '~') + "ng-change^vulpejs.ui.on.change({type: 'SELECT', name: '" + input.name + "', items: '" + input.items.name + "', value: '" + input.items.value + "', label: '" + input.items.label + "'})";
+  - attributes['ng-change'] = "vulpejs.ui.on.change({type: 'SELECT', name: '" + input.name + "', items: '" + input.items.name + "', value: '" + input.items.value + "', label: '" + input.items.label + "'})";
 
 if input.type === 'typeahead'
   if input.query
-    - append += (append.length === 0 ? '' : '~') + 'typeahead^' + input.query;
+    - attributes['typeahead'] = input.query;
   if input.on && input.on.select
     if input.on.select.indexOf('=') !== -1
       - var parts = input.on.select.split('=');
       - var onSelect = "vulpejs.ui.on.select({type: 'TYPEAHEAD', rootProperty:'" + parts[0] + "', item: $item, itemProperty: '" + parts[1] + "'})";
-      - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select^' + onSelect;
+      - attributes['typeahead-on-select'] = onSelect;
     else
-      - append += (append.length === 0 ? '' : '~') + 'typeahead-on-select^' + input.on.select;
+      - attributes['typeahead-on-select'] = input.on.select;
 
 if input.toggle
-  - append += (append.length === 0 ? '' : '~') + 'toggle-switch';
-  - append += (append.length === 0 ? '' : '~') + 'model^' + ngModel;
+  - attributes['toggle-switch'] = '';
+  - attributes['model'] = ngModel;
   if input.toggle.on
-    - append += (append.length === 0 ? '' : '~') + 'on-label^' + __(input.toggle.on);
+    - attributes['on-label'] = __(input.toggle.on);
   if input.toggle.off
-    - append += (append.length === 0 ? '' : '~') + 'off-label^' + __(input.toggle.off);
+    - attributes['off-label'] = __(input.toggle.off);
   if input.toggle.knob
-    - append += (append.length === 0 ? '' : '~') + 'knob-label^' + __(input.toggle.knob);
+    - attributes['knob-label'] = __(input.toggle.knob);
   if input.css['class'] === 'form-control'
     - input.css['class'] = '';
 else
-  - append += (append.length === 0 ? '' : '~') + 'ng-model^' + ngModel;
+  - attributes['ng-model'] =  ngModel;
   if input.type === 'checkbox' || input.type === 'group'
     - input.css['class'] = '';
 
 - var label = __(input.label)
 
 if !input.mask || !input.mask.pattern
-  - append += (append.length === 0 ? '' : '~') + 'placeholder^' + label;
+  - attributes['placeholder'] = label;
 
-- var divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && vulpejs.ui.form.main.submitted}";
+- var divNgClass = "{'has-error': vulpejs.ui.form." + formName + "." + input.name + ".$invalid && vulpejs.ui.form." + formName + ".submitted}";
 
 if input.readonly
-  - divNgClass = "{'has-error': " + formName + "." + input.name + ".$invalid && vulpejs.ui.form.main.submitted, 'col-lg-3': " + input.readonly + "}";
-
+  - divNgClass = "{'has-error': vulpejs.ui.form." + formName + "." + input.name + ".$invalid && vulpejs.ui.form." + formName + ".submitted, 'col-lg-3': " + input.readonly + "}";
 
 if input.type === 'show' || input.type === 'timer'
   if input.css['class'] === 'form-control'
@@ -168,7 +171,7 @@ if input.type === 'show' || input.type === 'timer'
   - divNgClass = '';
 - divClass = input.css['class'] ? input.css['class'] : 'col-lg-12';
 
-div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
+div(class="#{divClass}" ng-class="#{divNgClass}")&attributes(divAttributes)
   label.control-label(for=input.id)=label
   if input.type === 'checkbox' || input.type === 'group'
     br
@@ -177,9 +180,9 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
       br
       span {{#{ngModel}}}
     else
-      textarea.form-control(name=input.name id=input.id append=append)
+      textarea.form-control(name=input.name id=input.id)&attributes(attributes)
   else if input.type === 'editor'
-    text-angular(name=input.name id=input.id append=append)
+    text-angular(name=input.name id=input.id)&attributes(attributes)
   else if input.type === 'image-uploader'
     div(id=input.id)
       - var emptyImage = ngModel;
@@ -194,7 +197,7 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
       br
       div(isteven-multi-select input-model=input.multi.items output-model=ngModel button-label=input.multi.label.button item-label=input.multi.label.item tick-property=input.multi.tickProperty translation="multiSelectTranslation" max-height=input.maxHeight)
     else
-      select.form-control(name=input.name id=input.id append=append)
+      select.form-control(name=input.name id=input.id)&attributes(attributes)
         if input.options
           each option in input.options
             option(value=option.value)=__(option.label)
@@ -205,7 +208,7 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
   else if input.type === 'group'
     each option in input.options
       - var model = "vulpejs.group['" + input.name + option.value + "']";
-      div(toggle-switch name=input.name model=model id=input.id ng-click="vulpejs.ui.on.toggle.#{input.name}(#{model}, #{option.value});" knob-label=__(option.knob) on-label=__('Yes') off-label=__('No') append=append)
+      div(toggle-switch name=input.name model=model id=input.id ng-click="vulpejs.ui.on.toggle.#{input.name}(#{model}, #{option.value});" knob-label=__(option.knob) on-label=__('Yes') off-label=__('No'))&attributes(attributes)
       br
   else if input.type === 'show'
     unless input.config
@@ -254,7 +257,7 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
       - input.on.select = '';
     unless input.readonly
       - input.readonly = 'false';
-    div(star-rating max=input.max readonly="#{input.readonly}" on-select=input.on.select append=append)
+    div(star-rating max=input.max readonly="#{input.readonly}" on-select=input.on.select)&attributes(attributes)
   else if input.type === 'rating'
     br
     unless input.max
@@ -267,7 +270,7 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
       - input.on.leave = '';
     unless input.readonly
       - input.readonly = 'false';
-    rating(max=input.max readonly="#{input.readonly}" on-hover=input.on.hover on-leave=input.on.leave append=append)
+    rating(max=input.max readonly="#{input.readonly}" on-hover=input.on.hover on-leave=input.on.leave)&attributes(attributes)
   else if input.type === 'range-slider'
     unless input.preventValues
       - input.preventValues = true;
@@ -281,25 +284,25 @@ div(class="#{divClass}" ng-class="#{divNgClass}" append=divAppend)
     unless input.showValues
       - input.showValues = true;
     br
-    div(range-slider show-values=input.showValues step=input.step filter=input.filter prevent-equal-min-max=input.preventValues min=input.min max=input.max model-min="#{ngModel}.min" model-max="#{ngModel}.max" append=append)
+    div(range-slider show-values=input.showValues step=input.step filter=input.filter prevent-equal-min-max=input.preventValues min=input.min max=input.max model-min="#{ngModel}.min" model-max="#{ngModel}.max")&attributes(attributes)
   else
     if input.group
-      .input-group(append=hideAppend)
-        input.form-control(type=input.type name=input.name id=input.id append=append)
+      .input-group&attributes(hideAttributes)
+        input.form-control(type=input.type name=input.name id=input.id)&attributes(attributes)
         span.input-group-addon=input.group.value
     else if input.type === 'typeahead'
-      input.form-control(type="text" name=input.name id=input.id append=append)
+      input.form-control(type="text" name=input.name id=input.id)&attributes(attributes)
     else if input.type === 'color-picker'
       div
-        input.form-control(type=input.type name=input.name id=input.id minicolors append=append)
+        input.form-control(type=input.type name=input.name id=input.id minicolors)&attributes(attributes)
     else if input.type === 'checkbox'
-      input(type=input.type name=input.name id=input.id append=append ng-cloak ng-hide="#{input.readonly}")
+      input(type=input.type name=input.name id=input.id)&attributes(attributes)
     else
-      input.form-control(type=input.type name=input.name id=input.id append=append ng-cloak ng-hide="#{input.readonly}")
+      input.form-control(type=input.type name=input.name id=input.id)&attributes(attributes)
   if input.validate && input.validate.message 
     span(class="label label-danger" ng-cloak ng-if="#{formName}.#{input.name}.$error.validator")=__(input.validate.message)
   if input.readonly && input.type !== 'star-rating'
-    div(append=showAppend)
+    div&attributes(showAttributes)
       if input.items
         span {{#{ngModel}.#{input.items.label}}}
       else
