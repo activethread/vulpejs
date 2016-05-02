@@ -75,8 +75,8 @@ if input.only
   - input.only = input.only.toLowerCase();
   - attributes['only-' + input.only] = '';
 
-if input.currency
-  - attributes['currency'] = '';
+if input.currency || input.money
+  - attributes['money'] = '';
 
 if input.required
   if typeof input.required === 'string'
