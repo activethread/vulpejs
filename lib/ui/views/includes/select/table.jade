@@ -55,3 +55,21 @@ tbody
   else
     tr.click.slide-down(dir-paginate=query total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")
       include items
+if ui.select.footer
+  tfoot
+    tr
+      each item in ui.select.footer
+        unless item.colspan
+          - item.colspan = '';
+        unless item.css
+          - item.css = {class: ''}
+        td(colspan=item.colspan class=item.css.class)
+          if item.label
+            =__(item.label)
+          if item.property
+            if item.filter
+              |{{vulpejs.#{item.property}|#{item.filter}}}
+            else if item.i18n
+              |{{vulpejs.#{item.property}|i18n}}
+            else
+              |{{vulpejs.#{item.property}}}

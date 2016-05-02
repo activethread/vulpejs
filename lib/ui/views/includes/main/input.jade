@@ -49,7 +49,7 @@ unless input.validate.message
 - var divClass = 'form-group col-sm-12 col-md-12 col-lg-12';
 
 if input.mask
-  - attributes['ui-mask'] = typeof input.mask === 'string' ? input.mask : 'ui-mask^' + input.mask.pattern;
+  - attributes['ui-mask'] = typeof input.mask === 'string' ? input.mask : input.mask.pattern;
 
 if input.autofocus
   - attributes['autofocus'] = '';
