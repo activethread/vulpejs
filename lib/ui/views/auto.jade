@@ -22,7 +22,7 @@ block content
         - ui.main.submit='vulpejs.model.save()';
       unless ui.main.form
         - ui.main.form={enctype:'application/x-www-form-urlencoded'};
-      form(name="mainForm" role="form" enctype=ui.main.form.enctype ng-submit=ui.main.submit submitted="vulpejs.ui.form.main.submitted" novalidate shake-that ng-init="vulpejs.ui.forms.main={}")
+      form(name="mainForm" role="form" enctype=ui.main.form.enctype ng-submit=ui.main.submit submitted="vulpejs.ui.form.main.submitted" novalidate shake-that ng-init="vulpejs.ui.forms.main={}" ng-cloak ng-show="vulpejs.ui.showing")
         .panel.panel-default(ng-class="{'box-shadow':vulpejs.ui.showing}")
           .panel-heading
             .row
@@ -52,7 +52,7 @@ block content
     if ui.select
       unless ui.select.submit
         - ui.select.submit='vulpejs.model.search.doit()';
-      form(name="itemsForm" role="form" ng-submit=ui.select.submit submitted="vulpejs.ui.form.items.submitted" novalidate shake-that ng-init="vulpejs.ui.forms.items={}")
+      form(name="itemsForm" role="form" ng-submit=ui.select.submit submitted="vulpejs.ui.form.items.submitted" novalidate shake-that ng-init="vulpejs.ui.forms.items={}" ng-cloak ng-show="!vulpejs.ui.showing")
         .panel.panel-default(ng-class="{'box-shadow':!vulpejs.ui.showing}")
           .panel-heading
             .row

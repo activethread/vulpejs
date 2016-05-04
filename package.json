@@ -45,7 +45,8 @@
     "gulp-uglify": "~1.5.3",
     "gulp-clean-css": "~2.0.6",
     "gulp-sourcemaps": "~2.0.0-alpha",
-    "del": "~2.2.0"
+    "del": "~2.2.0",
+    "nodemon": "~1.9.2"
   },
   "description": "VulpeJS is a Open-Source Full-Stack solution to Node.js applications",
   "main": "./lib/vulpe.js",
