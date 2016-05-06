@@ -62,7 +62,7 @@ td.text-center
   if typeof ui.select.actions === 'string'
     |!{ui.select.htmlActions}
   else
-    include actions
+    include item-actions
       each action in ui.select.actions
         unless action.css
           - action.css = {'class': ''};

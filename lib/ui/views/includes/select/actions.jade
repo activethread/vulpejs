@@ -1,24 +1,7 @@
-div(ng-class="{'btn-group':item.email !== vulpejs.auth.user.email}")
-  a.btn.btn-primary.btn-sm.dropdown-toggle(data-toggle="dropdown" href="#" ng-if="vulpejs.auth.user.is(['SUPER','ADMIN']) && item.email !== vulpejs.auth.user.email" tooltip-append-to-body="true" tooltip-placement="left" tooltip=__('Click to expand/collapse'))
-    i.fa.fa-ellipsis-v.fa-fw
-  ul.dropdown-menu.dropdown-menu-right.bullet.pull-right(ng-if="vulpejs.auth.user.is(['SUPER','ADMIN']) && item.email !== vulpejs.auth.user.email")
-    li
-      a(ng-click="vulpejs.model.find(item._id)" tooltip-append-to-body="true" tooltip-placement="left" tooltip=__('Click to edit'))
-        i.fa.fa-pencil.fa-fw
-        span=__('Edit')
-    li
-      a(ng-click="vulpejs.model.remove(item._id)" tooltip-placement="left" tooltip-append-to-body="true" tooltip=__('Click to delete'))
-        i.fa.fa-trash-o.fa-fw
-        span=__('Delete')
-    li
-      a(ng-click="vulpejs.model.clone(item)" tooltip-placement="left" tooltip-append-to-body="true" tooltip=__('Click to clone'))
-        i.fa.fa-magic.fa-fw
-        span=__('Clone')
-    li(ng-if="vulpejs.equals(item, 'status', 'ACTIVE')")
-      a(ng-click="vulpejs.model.status(item._id, 'INACTIVE')" tooltip-placement="left" tooltip-append-to-body="true" tooltip=__('Click to deactivate'))
-        i.fa.fa-ban.fa-fw
-        span=__('Deactivate')
-    li(ng-if="vulpejs.equals(item, 'status', 'INACTIVE')")
-      a(ng-click="vulpejs.model.status(item._id, 'ACTIVE')" tooltip-placement="left" tooltip-append-to-body="true" tooltip=__('Click to activate'))
-        i.fa.fa-check-circle-o.fa-fw
-        span=__('Activate')
+#select-default-actions.row(data-spy="affix" data-offset-top="90")
+  .col-sm-12.col-md-12.col-lg-12
+    .btn-group.pull-right
+      a#new-action-button.btn.btn-default(ng-click="vulpejs.model.create(); vulpejs.ui.form.main.submitted = false" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip=__('Click to add new'))
+        i.fa.fa-plus.fa-fw
+        span.hidden-xs.hidden-sm.hidden-md=__('New')
+hr

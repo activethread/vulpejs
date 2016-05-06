@@ -4,6 +4,11 @@ var router = vulpejs.routes.make({
   name: 'user',
   save: {
     data: ['name', 'email'],
+    validate: {
+      exists: {
+        properties: ['email'],
+      },
+    },
   },
   ui: {
     controller: 'User',

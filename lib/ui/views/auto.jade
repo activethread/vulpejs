@@ -23,13 +23,11 @@ block content
       unless ui.main.form
         - ui.main.form={enctype:'application/x-www-form-urlencoded'};
       form(name="mainForm" role="form" enctype=ui.main.form.enctype ng-submit=ui.main.submit submitted="vulpejs.ui.form.main.submitted" novalidate shake-that ng-init="vulpejs.ui.forms.main={}" ng-cloak ng-show="vulpejs.ui.showing")
-        .panel.panel-default(ng-class="{'box-shadow':vulpejs.ui.showing}")
+        .panel.panel-default.box-shadow
           .panel-heading
             .row
-              .col-lg-6=__(ui.main.title)
-              .col-lg-6
-                include includes/main/view-actions
-          .panel-body.slide-down(ng-cloak ng-show="vulpejs.ui.showing")
+              .col-lg-12=__(ui.main.title)
+          .panel-body
             .row
               .col-sm-12.col-md-12.col-lg-12
                 if ui.main.actions
@@ -53,18 +51,14 @@ block content
       unless ui.select.submit
         - ui.select.submit='vulpejs.model.search.doit()';
       form(name="itemsForm" role="form" ng-submit=ui.select.submit submitted="vulpejs.ui.form.items.submitted" novalidate shake-that ng-init="vulpejs.ui.forms.items={}" ng-cloak ng-show="!vulpejs.ui.showing")
-        .panel.panel-default(ng-class="{'box-shadow':!vulpejs.ui.showing}")
+        .panel.panel-default.box-shadow
           .panel-heading
             .row
-              .col-lg-6=__(ui.select.title)
-              .col-lg-6
-                if ui.select.viewActions
-                  |!{ui.select.htmlViewActions}
-                else
-                  include includes/select/view-actions
-          .panel-body.slide-down(ng-hide="vulpejs.ui.showing")
+              .col-lg-12=__(ui.select.title)
+          .panel-body
             .row
               .col-sm-12.col-md-12.col-lg-12
+                include includes/select/actions
                 table.table.table-striped.table-bordered.table-hover
                   include includes/select/table
                 include includes/select/paginate
