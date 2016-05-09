@@ -186,10 +186,10 @@ div(class="#{divClass}" ng-class="#{divNgClass}")&attributes(divAttributes)
   else if input.type === 'image-uploader'
     div(id=input.id)
       - var emptyImage = ngModel;
-      include ../flow-uploader/image
+      include flow-uploader/image
   else if input.type === 'file-uploader'
     div(id=input.id)
-      include ../flow-uploader/file
+      include flow-uploader/file
   else if input.type === 'select'
     if input.multi
       unless input.maxHeight

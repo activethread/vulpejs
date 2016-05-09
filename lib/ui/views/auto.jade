@@ -15,7 +15,7 @@ block content
             else
               include includes/main/simple-actions
             each input in ui.inputs
-              include includes/main/input
+              include includes/input
 
     if ui.main
       unless ui.main.submit
@@ -42,10 +42,10 @@ block content
                         - select = "vulpejs.ui.tab.focus('" + tab.focus + "')";
                       tab(heading=__(tab.title) select=select)
                         each input in tab.inputs
-                          include includes/main/input
+                          include includes/input
                 else
                   each input in ui.main.inputs
-                    include includes/main/input
+                    include includes/input
 
     if ui.select
       unless ui.select.submit

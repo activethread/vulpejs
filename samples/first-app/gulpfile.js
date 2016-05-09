@@ -31,7 +31,7 @@ gulp.task('scripts-external', ['clean-external-script'], function() {
 
 gulp.task('scripts-internal', ['clean-internal-script'], function() {
   return gulp.src(paths.scripts)
-    // .pipe(uglify())
+    .pipe(uglify())
     .pipe(concat('all-internal.min.js'))
     .pipe(gulp.dest('public/javascripts/'));
 });

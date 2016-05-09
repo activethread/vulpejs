@@ -1,6 +1,6 @@
-vulpe.ng.app.controller('UserController', ['$rootScope', '$scope', 'VulpeJS', function($rootScope, $scope, VulpeJS) {
-  var vulpejs = new VulpeJS({
-    name: 'user',
+vulpe.ng.controller({
+  name: 'User',
+  service: {
     predicate: 'name',
     focus: {
       create: 'email',
@@ -28,5 +28,5 @@ vulpe.ng.app.controller('UserController', ['$rootScope', '$scope', 'VulpeJS', fu
         vulpejs.item.passwordConfirm = '';
       }
     }
-  }).init($scope);
-}]);
+  }
+});
