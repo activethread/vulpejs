@@ -8,18 +8,18 @@ if flowParams
   - flowParams = ', ' + flowParams;
 else
   - var flowParams = '';
-.well(flow-init="#{ui.modules.uploader.flow.init}" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]" flow-files-submitted="vulpejs.ui.uploader.flow.submit($flow, '#{ngModel}'#{flowParams})" flow-file-success="vulpejs.ui.uploader.flow.success($flow, $file, '#{ngModel}'#{flowParams})")
-  img.thumbnail.slide-down(ng-src="{{#{ngModel}}}" ng-cloak ng-if="$flow.files.length === 0 && #{ngModel}")
+.well(flow-init=ui.modules.uploader.flow.init flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]" flow-files-submitted=`vulpejs.ui.uploader.flow.submit($flow, '${ngModel}'${flowParams})` flow-file-success=`vulpejs.ui.uploader.flow.success($flow, $file, '${ngModel}'${flowParams})`)
+  img.thumbnail.slide-down(ng-src=`{{${ngModel}}}` ng-cloak ng-if=`$flow.files.length === 0 && ${ngModel}`)
   - var emptyImage = 'https://www.placehold.it/'  + ui.modules.uploader.flow.emptyImageSize + '/EFEFEF/AAAAAA&text=' + __('Empty')
-  img.thumbnail.slide-down(src=emptyImage ng-cloak ng-if="$flow.files.length === 0 && !#{ngModel}")
+  img.thumbnail.slide-down(src=emptyImage ng-cloak ng-if=`$flow.files.length === 0 && !${ngModel}`)
   img.thumbnail.slide-down(ng-cloak ng-if="$flow.files.length" flow-img="$flow.files[0]")
   div
     .btn-group
       span.btn.btn-primary.btn-sm.slide-down(ng-cloak ng-hide="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}")=__('Select')
-      span.btn.btn-danger.btn-sm.slide-down( ng-cloak ng-if="$flow.files.length === 0 && #{ngModel}" ng-click="vulpejs.ui.uploader.flow.remove($flow, '#{ngModel}')")=__('Remove')
+      span.btn.btn-danger.btn-sm.slide-down( ng-cloak ng-if=`$flow.files.length === 0 && ${ngModel}` ng-click=`vulpejs.ui.uploader.flow.remove($flow, '${ngModel}')`)=__('Remove')
     .btn-group
       span.btn.btn-primary.btn-sm.slide-down(ng-cloak ng-if="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}")=__('Change')
-      span.btn.btn-danger.btn-sm.slide-down(ng-cloak ng-if="$flow.files.length" ng-click="vulpejs.ui.uploader.flow.cancel($flow, '#{ngModel}')")=__('Cancel')
+      span.btn.btn-danger.btn-sm.slide-down(ng-cloak ng-if="$flow.files.length" ng-click=`vulpejs.ui.uploader.flow.cancel($flow, '${ngModel}')`)=__('Cancel')
     i.fa.fa-check.fa-fw.slide-down(ng-cloak ng-if="$flow.files[0].uploaded")
     i.fa.fa-refresh.fa-spin.fa-fw.slide-down(ng-cloak ng-if="$flow.status === 'UPLOADING'")
   p=__('Only image files allowed.')

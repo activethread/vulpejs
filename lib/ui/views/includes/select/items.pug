@@ -29,7 +29,7 @@ each item in ui.select.items
                   else if detail.i18n
                     |{{item.#{detail.value}|i18n}}
                   else
-                    span(ng-bind-html="item.#{detail.value}")
+                    span(ng-bind-html=`item.${detail.value}`)
         else
           if !item.images && !item.switch
             if item.filter
@@ -42,19 +42,19 @@ each item in ui.select.items
             each image in item.images
               unless image.title
                 - image.title = '';
-              img(src="/images/#{image.name}" ng-cloak ng-if=image.show title=__(image.title))
+              img(src=`/images/${image.name}` ng-cloak ng-if=image.show title=__(image.title))
               if item.showTitle
                 span(ng-cloak ng-if=image.show)
                   br
                   span=__(image.title)
           if item.switch
-            div(ng-switch="item.#{item.name}")
+            div(ng-switch=`item.${item.name}`)
               each iswitch in item.switch
                 unless iswitch.title
                   - iswitch.title = '';
                 div(ng-cloak ng-switch-when=iswitch.when)
                   if iswitch.image
-                    img(src="/images/#{iswitch.image}" title=__(iswitch.title))
+                    img(src=`/images/${iswitch.image}` title=__(iswitch.title))
                   if item.showTitle
                     br
                     span=__(iswitch.title)
@@ -78,5 +78,5 @@ td.text-center
             unless action.link.href
               - action.link.href = ''
             a(href=action.link.href ng-click=action.link.click)
-              i(class="fa #{action.link.icon} fa-fw")
+              i(class=`fa ${action.link.icon} fa-fw`)
               =__(action.link.label)

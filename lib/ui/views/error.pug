@@ -1,7 +1,7 @@
 extends layouts/error
 
-block content
-  div(ng-controller="#{ui.controller}Controller")
+block contents
+  div(ng-controller=`${ui.controller}Controller`)
     .row
       .col-sm-12.col-md-12.col-lg-12.text-center
         h1=__('Opss!')

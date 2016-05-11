@@ -19,7 +19,7 @@ head
   include ../../../../../../../views/includes/stylesheets
   script(charset="utf-8" src="/javascripts/all-external.min.js" type="text/javascript")
   script(charset="utf-8" src="/javascripts/all-internal.min.js" type="text/javascript")
-  script(charset="utf-8" src="/javascripts/all-auto#{minifier}.js" type="text/javascript")
+  script(charset="utf-8" src=`/javascripts/all-auto${minifier}.js` type="text/javascript")
   if ui.modules.recaptcha
     script(charset="utf-8" src="http://www.google.com/recaptcha/api.js?render=explicit&onload=vcRecaptchaApiLoaded" async defer)
   include ../../../../../../../views/includes/javascripts

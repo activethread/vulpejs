@@ -8,7 +8,7 @@ if ui.main
     - formName = ui.main.form.name;
   if ui.main.item && ui.main.item.name
     - itemName = ui.main.item.name;
-else 
+else
   if ui.form && ui.form.name
     - formName = ui.form.name;
   if ui.item && ui.item.name
@@ -171,7 +171,7 @@ if input.type === 'show' || input.type === 'timer'
   - divNgClass = '';
 - divClass = input.css['class'] ? input.css['class'] : 'col-lg-12';
 
-div(class="#{divClass}" ng-class="#{divNgClass}")&attributes(divAttributes)
+div(class=divClass ng-class=divNgClass)&attributes(divAttributes)
   label.control-label(for=input.id)=label
   if input.type === 'checkbox' || input.type === 'group'
     br
@@ -204,11 +204,11 @@ div(class="#{divClass}" ng-class="#{divNgClass}")&attributes(divAttributes)
         if input.items
           unless input.items.filter
             - input.items.filter = '';
-          option(ng-repeat='option in vulpejs.#{input.items.name}#{input.items.filter}' value="{{option.#{input.items.value}}}") {{option.#{input.items.label}}}
+          option(ng-repeat=`option in vulpejs.${input.items.name}${input.items.filter}` value=`{{option.${input.items.value}}}`) {{option.#{input.items.label}}}
   else if input.type === 'group'
     each option in input.options
       - var model = "vulpejs.group['" + input.name + option.value + "']";
-      div(toggle-switch name=input.name model=model id=input.id ng-click="vulpejs.ui.on.toggle.#{input.name}(#{model}, #{option.value});" knob-label=__(option.knob) on-label=__('Yes') off-label=__('No'))&attributes(attributes)
+      div(toggle-switch name=input.name model=model id=input.id ng-click=`vulpejs.ui.on.toggle.${input.name}(${model}, ${option.value});` knob-label=__(option.knob) on-label=__('Yes') off-label=__('No'))&attributes(attributes)
       br
   else if input.type === 'show'
     unless input.config
@@ -218,16 +218,16 @@ div(class="#{divClass}" ng-class="#{divNgClass}")&attributes(divAttributes)
       else if input.filter
         |{{#{ngModel}|#{input.filter}}}
       else
-        span(ng-bind-html="#{ngModel}")
+        span(ng-bind-html=ngModel)
     if input.config
       .well
         div
           if input.config.type === 'TEMPLATE'
-            div(ng-repeat="show in #{ngModel}")
+            div(ng-repeat=`show in ${ngModel}`)
               span !{input.config.template}
           else if input.config.type === 'ARRAY'
             unless input.config.separator
-            div(ng-repeat="show in #{ngModel}")
+            div(ng-repeat=`show in ${ngModel}`)
               div
                 each property in input.config.properties
                   - var label = __(property.label);
@@ -244,7 +244,7 @@ div(class="#{divClass}" ng-class="#{divNgClass}")&attributes(divAttributes)
     unless input.format
       - input.format = '{{days}}d {{hhours}}h {{mminutes}}m {{sseconds}}s'
     if input.startTime
-      timer(interval="1000" start-time="#{ngModel}") #{input.format}
+      timer(interval="1000" start-time=ngModel) #{input.format}
     else
       timer(interval="1000") #{input.format}
   else if input.type === 'star-rating'
@@ -257,7 +257,7 @@ div(class="#{divClass}" ng-class="#{divNgClass}")&attributes(divAttributes)
       - input.on.select = '';
     unless input.readonly
       - input.readonly = 'false';
-    div(star-rating max=input.max readonly="#{input.readonly}" on-select=input.on.select)&attributes(attributes)
+    div(star-rating max=input.max readonly=input.readonly on-select=input.on.select)&attributes(attributes)
   else if input.type === 'rating'
     br
     unless input.max
@@ -270,7 +270,7 @@ div(class="#{divClass}" ng-class="#{divNgClass}")&attributes(divAttributes)
       - input.on.leave = '';
     unless input.readonly
       - input.readonly = 'false';
-    rating(max=input.max readonly="#{input.readonly}" on-hover=input.on.hover on-leave=input.on.leave)&attributes(attributes)
+    rating(max=input.max readonly=input.readonly on-hover=input.on.hover on-leave=input.on.leave)&attributes(attributes)
   else if input.type === 'range-slider'
     unless input.preventValues
       - input.preventValues = true;
@@ -284,7 +284,7 @@ div(class="#{divClass}" ng-class="#{divNgClass}")&attributes(divAttributes)
     unless input.showValues
       - input.showValues = true;
     br
-    div(range-slider show-values=input.showValues step=input.step filter=input.filter prevent-equal-min-max=input.preventValues min=input.min max=input.max model-min="#{ngModel}.min" model-max="#{ngModel}.max")&attributes(attributes)
+    div(range-slider show-values=input.showValues step=input.step filter=input.filter prevent-equal-min-max=input.preventValues min=input.min max=input.max model-min=`${ngModel}.min` model-max=`${ngModel}.max`)&attributes(attributes)
   else
     if input.group
       .input-group&attributes(hideAttributes)
@@ -299,8 +299,8 @@ div(class="#{divClass}" ng-class="#{divNgClass}")&attributes(divAttributes)
       input(type=input.type name=input.name id=input.id)&attributes(attributes)
     else
       input.form-control(type=input.type name=input.name id=input.id)&attributes(attributes)
-  if input.validate && input.validate.message 
-    span(class="label label-danger" ng-cloak ng-if="#{formName}.#{input.name}.$error.validator")=__(input.validate.message)
+  if input.validate && input.validate.message
+    span(class="label label-danger" ng-cloak ng-if=`${formName}.${input.name}.$error.validator`)=__(input.validate.message)
   if input.readonly && input.type !== 'star-rating'
     div&attributes(showAttributes)
       if input.items

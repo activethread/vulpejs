@@ -1,6 +1,6 @@
 extends layouts/login
 
-block content
+block contents
   .login-container(ng-controller="LoginController")
     form.form-signin(name="form" role="form" ng-submit="vulpejs.auth.login()" method="post" autocomplete="off" novalidate shake-that submitted="vulpejs.ui.form.main.submitted")
       .panel.panel-default.box-shadow
