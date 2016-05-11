@@ -63,7 +63,7 @@ module.exports = require('vulpejs')({
           pass: 'vulpejs',
         },
       },
-      development: {
+      production: {
         host: 'localhost',
         name: 'first-app-express',
         collection: 'session',
