@@ -130,7 +130,7 @@ var router = vulpejs.routes.make({
       }, {
         label: 'Actions',
         style: {
-          width: '25%',
+          width: '10%',
         },
       }, ],
       actions: [],

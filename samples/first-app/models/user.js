@@ -70,9 +70,9 @@ User.method('encryptPassword', function(password) {
 User.pre('save', function(next) {
   if (!this._id && !vulpejs.models.validatePresenceOf(this.password)) {
     next(new Error(vulpejs.i18n.__('Invalid password')));
-  } else {
-    next();
+    return;
   }
+  next();
 });
 
 var UserModel = vulpejs.models.set('User', User);

@@ -168,3 +168,6 @@ ul.nav.nav-tabs li.active:first-child a, ul.nav.nav-tabs li:first-child a:hover 
 .inline-block {
   display: inline-block;
 }
+.line-number {
+  width: 1%;
+}

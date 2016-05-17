@@ -20,7 +20,7 @@ thead
                 i.fa.fa-search.fa-fw
               a.btn.btn-primary.slide-down(ng-click="vulpejs.model.search.cancel()" ng-cloak ng-if="vulpejs.model.filter.search" tooltip=__('Click to cancel') tooltip-append-to-body="true")
                 i.fa.fa-times.fa-fw
-          else 
+          else
             input#search-list.form-control(type="text" name="search" placeholder=__('Search') ng-model="search")
             span.input-group-addon
               i.fa.fa-search.fa-fw
@@ -31,7 +31,7 @@ thead
             each item in ui.select.filter.status.items
               option(value=item.value)=__(item.label)
   tr
-    th=__('#')
+    th.line-number=__('#')
     each item in ui.select.items
       - var style = '';
       if item.style && typeof item.style === 'string'
@@ -45,7 +45,7 @@ tbody
   tr.slide-down(ng-cloak ng-if="vulpejs.items.length === 0")
     td(colspan=(typeof ui.select.filter === 'string' ? 99 : ui.select.filter.search.colspan + 1 + ui.select.filter.status.colspan))=__('Empty')
   - var query = 'item in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse';
-  if ui.select.filter.fields 
+  if ui.select.filter.fields
     - query = 'item in vulpejs.items | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse';
   if ui.select.detail
     tr.click.slide-down(dir-paginate-start=query total-items="vulpejs.ui.pagination.totalItems" pagination-id="items")

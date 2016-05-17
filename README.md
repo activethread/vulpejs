@@ -22,7 +22,7 @@ Works on Linux (stable) & MacOSx (stable) & Windows (stable).
 Add VulpeJS dependency in your `package.json`
 ```json
 ...
-"vulpejs": "~0.1.35",
+"vulpejs": "~0.1.36",
 ...
 ```
 
@@ -170,7 +170,7 @@ module.exports = vulpejs.routes.make({
       }, {
         label: 'Actions',
         style: {
-          width: '25%',
+          width: '10%',
         },
       }, ],
       actions: [],

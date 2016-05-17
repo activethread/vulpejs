@@ -302,7 +302,7 @@ select: {
   items: [{
     label: 'Code',
     style: {
-      width: '25%'
+      width: '10%'
     },
     name: 'code'
   }, {
@@ -332,7 +332,7 @@ select: {
   }, {
     label: 'Actions',
     style: {
-      width: '25%'
+      width: '10%'
     }
   }],
   actions: []
