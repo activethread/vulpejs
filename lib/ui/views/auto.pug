@@ -1,64 +1,65 @@
 block contents
   - var controller = ui.controller.name ? ui.controller.name + 'Controller' : ui.controller + 'Controller';
-  div(ng-controller=controller)
-    if ui.item
-      #item-id.hide=ui.item.id + (ui.item.populate ? ':true' : '')
-    if ui.inputs
-      unless ui.submit
-        - ui.submit='submit()';
-      form(name="mainForm" role="form" ng-submit=ui.submit submitted="vulpejs.ui.form.main.submitted" novalidate shake-that ng-init="vulpejs.ui.forms.main={}")
-        .panel.panel-default.box-shadow
-          .panel-heading=__(ui.title)
-          .panel-body.slide-down
-            if ui.actions
-              |!{ui.htmlActions}
-            else
-              include includes/main/simple-actions
-            each input in ui.inputs
-              include includes/input
+  .col-sm-12.col-md-12.col-lg-12
+    div(ng-controller=controller)
+      if ui.item
+        #item-id.hide=ui.item.id + (ui.item.populate ? ':true' : '')
+      if ui.inputs
+        unless ui.submit
+          - ui.submit='submit()';
+        form(name="mainForm" role="form" ng-submit=ui.submit submitted="vulpejs.ui.form.main.submitted" novalidate shake-that ng-init="vulpejs.ui.forms.main={}")
+          .panel.panel-default.box-shadow
+            .panel-heading=__(ui.title)
+            .panel-body.slide-down
+              if ui.actions
+                |!{ui.htmlActions}
+              else
+                include includes/main/simple-actions
+              each input in ui.inputs
+                include includes/input
 
-    if ui.main
-      unless ui.main.submit
-        - ui.main.submit='vulpejs.model.save()';
-      unless ui.main.form
-        - ui.main.form={enctype:'application/x-www-form-urlencoded'};
-      form(name="mainForm" role="form" enctype=ui.main.form.enctype ng-submit=ui.main.submit submitted="vulpejs.ui.form.main.submitted" novalidate shake-that ng-init="vulpejs.ui.forms.main={}" ng-cloak ng-show="vulpejs.ui.showing")
-        .panel.panel-default.box-shadow
-          .panel-heading
-            .row
-              .col-lg-12=__(ui.main.title)
-          .panel-body
-            .row
-              .col-sm-12.col-md-12.col-lg-12
-                if ui.main.actions
-                  |!{ui.main.htmlActions}
-                else
-                  include includes/main/actions
-                if ui.main.tabs
-                  tabset
-                    each tab in ui.main.tabs
-                      - var select = "";
-                      unless tab.focus
-                        - select = "vulpejs.ui.tab.focus('" + tab.focus + "')";
-                      tab(heading=__(tab.title) select=select)
-                        each input in tab.inputs
-                          include includes/input
-                else
-                  each input in ui.main.inputs
-                    include includes/input
+      if ui.main
+        unless ui.main.submit
+          - ui.main.submit='vulpejs.model.save()';
+        unless ui.main.form
+          - ui.main.form={enctype:'application/x-www-form-urlencoded'};
+        form(name="mainForm" role="form" enctype=ui.main.form.enctype ng-submit=ui.main.submit submitted="vulpejs.ui.form.main.submitted" novalidate shake-that ng-init="vulpejs.ui.forms.main={}" ng-cloak ng-show="vulpejs.ui.showing")
+          .panel.panel-default.box-shadow
+            .panel-heading
+              .row
+                .col-lg-12=__(ui.main.title)
+            .panel-body
+              .row
+                .col-sm-12.col-md-12.col-lg-12
+                  if ui.main.actions
+                    |!{ui.main.htmlActions}
+                  else
+                    include includes/main/actions
+                  if ui.main.tabs
+                    tabset
+                      each tab in ui.main.tabs
+                        - var select = "";
+                        unless tab.focus
+                          - select = "vulpejs.ui.tab.focus('" + tab.focus + "')";
+                        tab(heading=__(tab.title) select=select)
+                          each input in tab.inputs
+                            include includes/input
+                  else
+                    each input in ui.main.inputs
+                      include includes/input
 
-    if ui.select
-      unless ui.select.submit
-        - ui.select.submit='vulpejs.model.search.doit()';
-      form(name="itemsForm" role="form" ng-submit=ui.select.submit submitted="vulpejs.ui.form.items.submitted" novalidate shake-that ng-init="vulpejs.ui.forms.items={}" ng-cloak ng-show="!vulpejs.ui.showing")
-        .panel.panel-default.box-shadow
-          .panel-heading
-            .row
-              .col-lg-12=__(ui.select.title)
-          .panel-body
-            .row
-              .col-sm-12.col-md-12.col-lg-12
-                include includes/select/actions
-                table.table.table-striped.table-bordered.table-hover
-                  include includes/select/table
-                include includes/select/paginate
+      if ui.select
+        unless ui.select.submit
+          - ui.select.submit='vulpejs.model.search.doit()';
+        form(name="itemsForm" role="form" ng-submit=ui.select.submit submitted="vulpejs.ui.form.items.submitted" novalidate shake-that ng-init="vulpejs.ui.forms.items={}" ng-cloak ng-show="!vulpejs.ui.showing")
+          .panel.panel-default.box-shadow
+            .panel-heading
+              .row
+                .col-lg-12=__(ui.select.title)
+            .panel-body
+              .row
+                .col-sm-12.col-md-12.col-lg-12
+                  include includes/select/actions
+                  table.table.table-striped.table-bordered.table-hover
+                    include includes/select/table
+                  include includes/select/paginate
