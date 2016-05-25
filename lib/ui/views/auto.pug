@@ -6,7 +6,7 @@ block contents
         #item-id.hide=ui.item.id + (ui.item.populate ? ':true' : '')
       if ui.inputs
         unless ui.submit
-          - ui.submit='submit()';
+          - ui.submit='vulpejs.model.save()';
         form(name="mainForm" role="form" ng-submit=ui.submit submitted="vulpejs.ui.form.main.submitted" novalidate shake-that ng-init="vulpejs.ui.forms.main={}")
           .panel.panel-default.box-shadow
             .panel-heading=__(ui.title)
