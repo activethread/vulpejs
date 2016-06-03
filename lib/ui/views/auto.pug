@@ -1,4 +1,5 @@
 block contents
+  include ../../../../../views/includes/auto/before
   - var controller = ui.controller.name ? ui.controller.name + 'Controller' : ui.controller + 'Controller';
   .col-sm-12.col-md-12.col-lg-12
     div(ng-controller=controller)
@@ -63,3 +64,4 @@ block contents
                   table.table.table-striped.table-bordered.table-hover
                     include includes/select/table
                   include includes/select/paginate
+  include ../../../../../views/includes/auto/after
