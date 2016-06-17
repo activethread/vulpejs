@@ -43,8 +43,9 @@ block contents
                         unless tab.focus
                           - select = "vulpejs.ui.tab.focus('" + tab.focus + "')";
                         tab(heading=__(tab.title) select=select)
-                          each input in tab.inputs
-                            include includes/input
+                          if tab.inputs
+                            each input in tab.inputs
+                              include includes/input
                   else
                     each input in ui.main.inputs
                       include includes/input
