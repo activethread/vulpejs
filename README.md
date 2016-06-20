@@ -1,7 +1,8 @@
 [![VulpeJS](https://github.com/activethread/vulpejs/raw/master/images/vulpejs.png)](http://activethread.github.io/vulpejs/)
+
 # VulpeJS
 
-Open-Source Full-Stack solution to Node.js applications with `Express.js`, `Jade`, `AngularJS` and `MongoDB`.
+Open-Source Full-Stack solution to Node.js applications with `Express.js`, `Pug`, `AngularJS` and `MongoDB`.
 
 Works on Linux (stable) & MacOSx (stable) & Windows (stable).
 
@@ -13,13 +14,16 @@ Works on Linux (stable) & MacOSx (stable) & Windows (stable).
 
 ### VulpeJS Heroku Apptest Example.
 
-- Download/Fork - https://github.com/activethread/vulpejs-heroku-apptest
-- Access Apptest - http://vulpejs-heroku-apptest.herokuapp.com/
-  * Username: admin@vulpe.org
-  * Password: vulpejs
+- Download/Fork - <https://github.com/activethread/vulpejs-heroku-apptest>
+- Access Apptest - <http://vulpejs-heroku-apptest.herokuapp.com/>
+
+  - Username: admin@vulpe.org
+  - Password: vulpejs
 
 ## Install
+
 Add VulpeJS dependency in your `package.json`
+
 ```json
 ...
 "vulpejs": "~0.1.37",
@@ -28,14 +32,18 @@ Add VulpeJS dependency in your `package.json`
 
 And run install:
 
-    npm install
+```
+npm install
+```
 
 Enjoy!
 
 ## Examples
 
 ### Creating a Simple CRUD
+
 Add Model `models/city.js`
+
 ```javascript
   "use strict";
 
@@ -71,7 +79,9 @@ Add Model `models/city.js`
     },
   });
 ```
+
 Add Route `routes/city.js`
+
 ```javascript
 "use strict";
 
@@ -178,12 +188,15 @@ module.exports = vulpejs.routes.make({
   },
 });
 ```
+
 Run it:
 
 ```bash
 $ npm start
 ```
+
 And access:
+
 ```
 http://localhost:3000/city
 ```
