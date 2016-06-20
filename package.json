@@ -74,5 +74,15 @@
   "bugs": {
     "url": "https://github.com/activethread/vulpejs/issues"
   },
-  "homepage": "https://activethread.github.io/vulpejs"
+  "homepage": "https://activethread.github.io/vulpejs",
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "node": true
+    },
+    "globals": {
+      "vulpejs": true,
+      "angular": true
+    }
+  }
 }
