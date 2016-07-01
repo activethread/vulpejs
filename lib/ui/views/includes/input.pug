@@ -49,7 +49,10 @@ unless input.validate.message
 - var divClass = 'form-group col-sm-12 col-md-12 col-lg-12';
 
 if input.mask
-  - attributes['ui-mask'] = typeof input.mask === 'string' ? input.mask : input.mask.pattern;
+  if typeof input.mask === 'string'
+    - attributes[input.mask] = '';
+  else
+    - attributes['ui-mask'] = input.mask.pattern;
 
 if input.autofocus
   - attributes['autofocus'] = '';
@@ -76,7 +79,7 @@ if input.only
   - attributes['only-' + input.only] = '';
 
 if input.currency || input.money
-  - attributes['money'] = '';
+  - attributes['ui-money-mask'] = '';
 
 if input.required
   if typeof input.required === 'string'
