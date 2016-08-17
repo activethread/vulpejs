@@ -37,6 +37,7 @@ if ui.login
 if ui.error
   link(rel="stylesheet" href=`/stylesheets/03-error${minifier}.css`)
 include ../../../../../../../views/includes/stylesheets
+script(charset="utf-8" src="/javascripts/external/01-require.min.js" type="text/javascript")
 script(charset="utf-8" src="/javascripts/external/01-moment.min.js" type="text/javascript")
 script(charset="utf-8" src="/javascripts/external/02-moment-timezone.min.js" type="text/javascript")
 script(charset="utf-8" src="/javascripts/external/04-humanize-duration.min.js" type="text/javascript")
@@ -73,8 +74,11 @@ script(charset="utf-8" src="/javascripts/external/02-angular-sanitize.min.js" ty
 script(charset="utf-8" src="/javascripts/external/03-angular-timer.min.js" type="text/javascript")
 script(charset="utf-8" src="/javascripts/external/03-angular-i18n-node.min.js" type="text/javascript")
 script(charset="utf-8" src="/javascripts/external/03-angular-translate.min.js" type="text/javascript")
-if ui.modules.uploader.flow
-  script(charset="utf-8" src="/javascripts/external/03-angular-flow-uploader.min.js" type="text/javascript")
+//- if ui.modules.uploader.flow
+script(charset="utf-8" src="/javascripts/external/01-flow.min.js" type="text/javascript")
+script(charset="utf-8" src="/javascripts/external/02-fusty-flow.min.js" type="text/javascript")
+//- if ui.modules.uploader.flow
+script(charset="utf-8" src="/javascripts/external/03-angular-flow-uploader.min.js" type="text/javascript")
 if ui.modules.colorPicker
   script(charset="utf-8" src="/javascripts/external/03-angular-minicolors.min.js" type="text/javascript")
 script(charset="utf-8" src="/javascripts/external/03-angular-masks.min.js" type="text/javascript")
@@ -82,7 +86,6 @@ if ui.modules.switch
   script(charset="utf-8" src="/javascripts/external/03-angular-toggle-switch.min.js" type="text/javascript")
 script(charset="utf-8" src="/javascripts/external/03-angular-loading-bar.min.js" type="text/javascript")
 script(charset="utf-8" src="/javascripts/external/03-angular-dir-pagination.min.js" type="text/javascript")
-script(charset="utf-8" src="/javascripts/external/03-angular-locale_pt-br.min.js" type="text/javascript")
 if ui.modules.chart
   script(charset="utf-8" src="/javascripts/external/03-chart.min.js")
   script(charset="utf-8" src="/javascripts/external/03-raphael.min.js")
@@ -117,10 +120,8 @@ script(charset="utf-8" src=`/javascripts/internal/01-services${minifier}.js` typ
 script(charset="utf-8" src=`/javascripts/internal/02-controllers${minifier}.js` type="text/javascript")
 script(charset="utf-8" src=`/javascripts/internal/02-vulpe${minifier}.js` type="text/javascript")
 script(charset="utf-8" src=`/javascripts/app${minifier}.js` type="text/javascript")
+//- script(charset="utf-8" src=`/javascripts/all-internal.min.js` type="text/javascript")
 script(charset="utf-8" src=`/javascripts/all-auto${minifier}.js` type="text/javascript")
-if ui.modules.uploader.flow
-  script(charset="utf-8" src="/javascripts/external/01-flow.min.js" type="text/javascript")
-  script(charset="utf-8" src="/javascripts/external/01-fusty-flow.min.js" type="text/javascript")
 if ui.modules.uploader.blueimp
   script(charset="utf-8" src="/javascripts/external/06-jquery.postmessage-transport.js")
   <!--[if (gte IE 8)&(lt IE 10)]>
