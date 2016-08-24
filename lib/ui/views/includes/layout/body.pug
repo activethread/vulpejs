@@ -54,6 +54,3 @@ if ui.layout.content
 if ui.layout.footer
   #footer
     include ../../../../../../../views/includes/layout/footer
-
-if !ui.minifier
-  script(charset="utf-8" src='/javascripts/internal/controllers/' + (ui.controller.name ? ui.controller.name : ui.controller) + 'Controller.js' type='text/javascript')
