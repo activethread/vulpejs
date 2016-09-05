@@ -10,6 +10,10 @@ thead
     if typeof ui.select.filter === 'string'
       td(colspan="99")
         |!{ui.select.htmlFilter}
+    else if ui.select.filter.inputs
+      td(colspan="99")
+        each input in ui.select.filter.inputs
+          include ../input
     else
       td(colspan=(ui.select.filter.search.colspan + 1))
         .col-sm-12.col-md-12.col-lg-12.input-group
@@ -43,7 +47,11 @@ thead
       th(style=style)=__(item.label)
 tbody
   tr.slide-down(ng-cloak ng-if="vulpejs.items.length === 0")
-    td(colspan=(typeof ui.select.filter === 'string' ? 99 : ui.select.filter.search.colspan + 1 + ui.select.filter.status.colspan))=__('Empty')
+    if typeof ui.select.filter === 'string' || ui.select.filter.inputs
+      - var colspan = 99;
+    else
+      - var colspan = ui.select.filter.search.colspan + 1 + ui.select.filter.status.colspan
+    td(colspan=colspan)=__('Empty')
   - var query = 'item in vulpejs.items | filter:search | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse';
   if ui.select.filter.fields
     - query = 'item in vulpejs.items | itemsPerPage: vulpejs.ui.pagination.size | orderBy:vulpejs.predicate:reverse';
