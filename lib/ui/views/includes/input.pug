@@ -187,9 +187,16 @@ div(class=divClass ng-class=divNgClass)&attributes(divAttributes)
   else if input.type === 'editor'
     text-angular(name=input.name id=input.id)&attributes(attributes)
   else if input.type === 'image-uploader'
-    div(id=input.id)
-      - var emptyImage = ngModel;
-      include flow-uploader/image
+    //div(id=input.id)
+      //- var emptyImage = ngModel;
+      //include flow-uploader/image
+    - var uploadButtonClick = "vulpe.ui.uploader.open('" + input.id + "')";
+    - var uploadFileChange = "vulpe.ui.uploader.upload('" + input.id + "')";
+    - var uploadBar = input.id + '-progressbar';
+    .progress
+      .progress-bar(id=uploadBar role="progressbar")
+    button.btn.btn-lg.upload-btn(type="button" onclick=uploadButtonClick)=__('Upload File')
+    input.hide(id=input.id type="file" name="uploads[]" multiple="multiple" onchange=uploadFileChange)
   else if input.type === 'file-uploader'
     div(id=input.id)
       include flow-uploader/file
