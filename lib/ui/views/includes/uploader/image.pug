@@ -1,0 +1,12 @@
+div
+  - var emptyImage = 'https://www.placehold.it/99x99/EFEFEF/AAAAAA&text=' + __('Empty')
+  img.thumbnail.slide-down(src=emptyImage ng-cloak ng-if=`!${ngModel}`)
+  img.thumbnail.slide-down(ng-cloak ng-if=ngModel ng-src=`/filemanager/download/{{${ngModel}}}`)
+  .btn-group
+    span.btn.btn-primary.btn-sm.slide-down(ng-click=`vulpejs.ui.uploader.open('${input.id}')` ng-cloak ng-if=`!${ngModel}`)=__('Select')
+    span.btn.btn-primary.btn-sm.slide-down(ng-cloak ng-if=ngModel)=__('Change')
+    span.btn.btn-danger.btn-sm.slide-down(ng-cloak ng-if=ngModel ng-click=`vulpejs.ui.uploader.remove('${input.name}', ${ngModel})`)=__('Remove')
+  .progress(ng-cloak ng-if=`vulpejs.now['${input.id}']`)
+    .progress-bar(id=`${input.id}-progress-bar` role="progressbar")
+  input.hide(id=`${input.id}-file` type="file" name="uploads[]" multiple="multiple" onchange=`vulpe.ui.uploader.upload('${input.id}')`)
+  input.hide(id=input.id type="text" name=input.name ng-model=`vulpejs.now['${input.id}']` ng-change=`vulpejs.ui.uploader.upload('${input.id}')`)

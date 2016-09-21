@@ -187,21 +187,9 @@ div(class=divClass ng-class=divNgClass)&attributes(divAttributes)
   else if input.type === 'editor'
     text-angular(name=input.name id=input.id)&attributes(attributes)
   else if input.type === 'image-uploader'
-    //div(id=input.id)
-      //- var emptyImage = ngModel;
-      //include flow-uploader/image
-    div
-      img.thumbnail.slide-down(ng-cloak ng-if=ngModel ng-src=`/filemanager/download/{{${ngModel}}}`)
-      .btn-group
-        span.btn.btn-primary.btn-sm.slide-down(ng-click=`vulpejs.ui.uploader.open('${input.id}')`)=__('Select')
-        span.btn.btn-danger.btn-sm.slide-down(ng-cloak ng-if=`${ngModel}` ng-click=`vulpejs.ui.uploader.remove('${input.id}')`)=__('Remove')
-      .progress
-        .progress-bar(id=`${input.id}-progress-bar` role="progressbar")
-      input.hide(id=`${input.id}-file` type="file" name="uploads[]" multiple="multiple" onchange=`vulpe.ui.uploader.upload('${input.id}')`)
-      input.hide(id=input.id type="text" name=input.name ng-model=ngModel ng-change=`vulpejs.ui.uploader.upload('${input.id}')`)
+    include uploader/image
   else if input.type === 'file-uploader'
-    div(id=input.id)
-      include flow-uploader/file
+    include uploader/file
   else if input.type === 'select'
     if input.multi
       unless input.maxHeight
