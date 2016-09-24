@@ -4,7 +4,7 @@ div
   img.thumbnail.slide-down(ng-cloak ng-if=ngModel ng-src=`/filemanager/download/{{${ngModel}}}`)
   .btn-group
     span.btn.btn-primary.btn-sm.slide-down(ng-click=`vulpejs.ui.uploader.open('${input.id}')` ng-cloak ng-if=`!${ngModel}`)=__('Select')
-    span.btn.btn-primary.btn-sm.slide-down(ng-cloak ng-if=ngModel)=__('Change')
+    span.btn.btn-primary.btn-sm.slide-down(ng-click=`vulpejs.ui.uploader.open('${input.id}')` ng-cloak ng-if=ngModel)=__('Change')
     span.btn.btn-danger.btn-sm.slide-down(ng-cloak ng-if=ngModel ng-click=`vulpejs.ui.uploader.remove('${input.name}', ${ngModel})`)=__('Remove')
   .progress(ng-cloak ng-if=`vulpejs.now['${input.id}']`)
     .progress-bar(id=`${input.id}-progress-bar` role="progressbar")
