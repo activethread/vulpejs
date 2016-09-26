@@ -26,7 +26,7 @@ Add VulpeJS dependency in your `package.json`
 
 ```json
 ...
-"vulpejs": "~0.1.37",
+"vulpejs": "~0.1.38",
 ...
 ```
 
