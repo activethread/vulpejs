@@ -2,5 +2,7 @@
   "preset": "node-style-guide",
   "requireCamelCaseOrUpperCaseIdentifiers": false,
   "maximumLineLength": false,
-  "disallowQuotedKeysInObjects": false
+  "disallowQuotedKeysInObjects": false,
+  "disallowSpacesInFunction": false,
+  "requireTrailingComma": false
 }

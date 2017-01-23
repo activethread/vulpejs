@@ -1,11 +1,11 @@
 {
   "name": "vulpejs",
-  "version": "0.1.38",
+  "version": "0.1.39",
   "dependencies": {
     "debug": "~2.6.0",
     "request": "~2.79.0",
     "express": "~4.14.0",
-    "express-session": "~1.14.1",
+    "express-session": "~1.15.0",
     "session-file-store": "~1.0.0",
     "body-parser": "~1.16.0",
     "compression": "~1.6.2",

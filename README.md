@@ -26,7 +26,7 @@ Add VulpeJS dependency in your `package.json`
 
 ```json
 ...
-"vulpejs": "~0.1.38",
+"vulpejs": "~0.1.39",
 ...
 ```
 
@@ -91,7 +91,6 @@ Add Route `routes/city.js`
  */
 module.exports = vulpejs.routes.make({
   name: 'city',
-  plural: 'cities',
   save: {
     data: ['name', 'acronym'],
   },
@@ -99,7 +98,6 @@ module.exports = vulpejs.routes.make({
     controller: {
       name: 'City',
       service: {
-        plural: 'cities',
         predicate: 'name',
         focus: 'name',
         messages: {
