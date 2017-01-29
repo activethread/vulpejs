@@ -28,7 +28,7 @@ if ui.layout.custom
 
 if ui.layout.messages
   #messages.bs-component(ng-controller="MessagesController" ng-show="messages")
-    alert(ng-cloak ng-repeat="message in messages" type="{{message.type}}" close="close($index)" class="slide-down" ng-hide="!messages")
+    div(uib-alert ng-cloak ng-repeat="message in messages" ng-class="'alert-' + message.type" close="close($index)" class="slide-down" ng-hide="!messages")
       h4(ng-cloak ng-if="message.type === 'success'")
         i.fa.fa-check-circle.fa-fw
         =__('Success!')

@@ -1,6 +1,7 @@
 block contents
   include ../../../../../views/includes/auto/before
-  - var controller = ui.controller.name ? ui.controller.name + 'Controller' : ui.controller + 'Controller';
+  - var controllerName = ui.controller.name ? ui.controller.name : ui.controller;
+  - var controller = controllerName + 'Controller';
   .col-sm-12.col-md-12.col-lg-12
     div(ng-controller=controller)
       if ui.item
@@ -37,15 +38,19 @@ block contents
                   else
                     include includes/main/actions
                   if ui.main.tabs
-                    tabset
+                    - var tabActive = 'vulpejs.ui.tab[\'' + controllerName.toLowerCase() + '\']';
+                    uib-tabset(active=tabActive)
+                      - var tabIndex = 0;
                       each tab in ui.main.tabs
                         - var select = "";
                         unless tab.focus
                           - select = "vulpejs.ui.tab.focus('" + tab.focus + "')";
-                        tab(heading=__(tab.title) select=select)
+                        uib-tab(index=tabIndex heading=__(tab.title) select=select)
                           if tab.inputs
                             each input in tab.inputs
+                              - input.tabidx = tabIndex;
                               include includes/input
+                        - tabIndex++;
                   else
                     each input in ui.main.inputs
                       include includes/input

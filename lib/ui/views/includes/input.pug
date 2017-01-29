@@ -24,8 +24,10 @@ if input.type === 'timer' && input.startTime
 if input.alias
   - ngModel = input.alias + '.' + input.model;
 
+- input.name = input.name.replace(/\./g, '-');
+
 unless input.id
-  - input.id = controllerName.toLowerCase() + '-' + input.name.replace(/\./g, '-');
+  - input.id = controllerName.toLowerCase() + '-' + formName + '-' + input.name;
 
 unless input.autofocus
   - input.autofocus = false;
@@ -133,7 +135,7 @@ else if input.items
 
 if input.type === 'typeahead'
   if input.query
-    - attributes['typeahead'] = input.query;
+    - attributes['uib-typeahead'] = input.query;
   if input.on && input.on.select
     if input.on.select.indexOf('=') !== -1
       - var parts = input.on.select.split('=');
@@ -163,10 +165,10 @@ else
 if !input.mask || !input.mask.pattern
   - attributes['placeholder'] = label;
 
-- var divNgClass = "{'has-error': vulpejs.ui.form." + formName + "." + input.name + ".$invalid && vulpejs.ui.form." + formName + ".submitted}";
+- var divNgClass = "{'has-error': vulpejs.ui.form." + formName + "['" + input.name + "'].$invalid && vulpejs.ui.form." + formName + ".submitted}";
 
 if input.readonly
-  - divNgClass = "{'has-error': vulpejs.ui.form." + formName + "." + input.name + ".$invalid && vulpejs.ui.form." + formName + ".submitted, 'col-lg-3': " + input.readonly + "}";
+  - divNgClass = "{'has-error': vulpejs.ui.form." + formName + "['" + input.name + "'].$invalid && vulpejs.ui.form." + formName + ".submitted, 'col-lg-3': " + input.readonly + "}";
 
 if input.type === 'show' || input.type === 'timer'
   if input.css['class'] === 'form-control'
@@ -288,17 +290,17 @@ div(class=divClass ng-class=divNgClass)&attributes(divAttributes)
   else
     if input.group
       .input-group&attributes(hideAttributes)
-        input.form-control(type=input.type name=input.name id=input.id)&attributes(attributes)
+        input.form-control(type=input.type tabidx=input.tabidx name=input.name id=input.id)&attributes(attributes)
         span.input-group-addon=input.group.value
     else if input.type === 'typeahead'
-      input.form-control(type="text" name=input.name id=input.id)&attributes(attributes)
+      input.form-control(type="text" tabidx=input.tabidx name=input.name id=input.id)&attributes(attributes)
     else if input.type === 'color-picker'
       div
         input.form-control(type=input.type name=input.name id=input.id minicolors)&attributes(attributes)
     else if input.type === 'checkbox'
-      input(type=input.type name=input.name id=input.id)&attributes(attributes)
+      input(type=input.type tabidx=input.tabidx name=input.name id=input.id)&attributes(attributes)
     else
-      input.form-control(type=input.type name=input.name id=input.id)&attributes(attributes)
+      input.form-control(type=input.type tabidx=input.tabidx name=input.name id=input.id)&attributes(attributes)
   if input.validate && input.validate.message
     span(class="label label-danger" ng-cloak ng-if=`${formName}.${input.name}.$error.validator`)=__(input.validate.message)
   if input.readonly && input.type !== 'star-rating'
