@@ -7,6 +7,6 @@
     "postinstall": "gulp"
   },
   "dependencies": {
-    "vulpejs": "~0.1.39"
+    "vulpejs": "~0.1.40"
   }
 }

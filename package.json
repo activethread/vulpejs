@@ -1,6 +1,6 @@
 {
   "name": "vulpejs",
-  "version": "0.1.39",
+  "version": "0.1.40",
   "dependencies": {
     "debug": "~2.6.0",
     "request": "~2.79.0",
@@ -71,7 +71,7 @@
     "pug-lang",
     "mongodb"
   ],
-  "author": "Geraldo Felipe <lordfelipe@gmail.com> (https://activethread.github.io/vulpejs)",
+  "author": "Geraldo Felipe <geraldofelipe@gmail.com> (https://activethread.github.io/vulpejs)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/activethread/vulpejs/issues"
